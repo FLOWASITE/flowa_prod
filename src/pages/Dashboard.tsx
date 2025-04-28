@@ -14,41 +14,40 @@ import {
 import { mockTopics } from '@/data/mockData';
 
 const Dashboard = () => {
-  // Content status data for chart
   const contentStatusData = [
-    { name: 'Draft', value: 12, color: '#94a3b8' },
-    { name: 'Approved', value: 8, color: '#22c55e' },
-    { name: 'Scheduled', value: 5, color: '#eab308' },
-    { name: 'Published', value: 20, color: '#3b82f6' },
+    { name: 'Nháp', value: 12, color: '#94a3b8' },
+    { name: 'Đã duyệt', value: 8, color: '#22c55e' },
+    { name: 'Đã lên lịch', value: 5, color: '#eab308' },
+    { name: 'Đã xuất bản', value: 20, color: '#3b82f6' },
   ];
 
   return (
     <Layout>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back to your brand content forge!</p>
+        <h1 className="text-3xl font-bold">Bảng điều khiển</h1>
+        <p className="text-muted-foreground">Chào mừng bạn quay trở lại!</p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
-          title="Total Brands"
+          title="Tổng số thương hiệu"
           value="3"
           icon={<Layers className="h-5 w-5 text-primary" />}
         />
         <StatCard
-          title="Active Topics"
+          title="Chủ đề đang hoạt động"
           value="6"
           icon={<PenTool className="h-5 w-5 text-primary" />}
           trend={{ value: 12, isPositive: true }}
         />
         <StatCard
-          title="Published Content"
+          title="Nội dung đã xuất bản"
           value="24"
           icon={<Share2 className="h-5 w-5 text-primary" />}
           trend={{ value: 8, isPositive: true }}
         />
         <StatCard
-          title="Chat Conversations"
+          title="Cuộc trò chuyện"
           value="18"
           icon={<MessageSquare className="h-5 w-5 text-primary" />}
           trend={{ value: 5, isPositive: false }}
