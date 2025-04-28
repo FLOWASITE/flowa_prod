@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -100,6 +99,13 @@ const translations = {
     fr: 'Modèle de tarification',
     es: 'Plantilla de precios',
     th: 'เทมเพลตราคา',
+  },
+  uploadExcel: {
+    vi: 'Tải lên file Excel',
+    en: 'Upload Excel File',
+    fr: 'Télécharger un fichier Excel',
+    es: 'Subir archivo Excel',
+    th: 'อัปโหลดไฟล์ Excel',
   }
 };
 
@@ -227,7 +233,7 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
           </DialogHeader>
           
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2">
               <input
                 type="file"
                 accept=".csv,.xlsx,.xls"
@@ -235,11 +241,11 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
                 className="hidden"
                 id="file-upload"
               />
-              <label htmlFor="file-upload" className="flex-1">
-                <Button variant="outline" className="w-full gap-2" asChild>
+              <label htmlFor="file-upload" className="flex-1 w-full">
+                <Button variant="default" className="w-full gap-2" asChild>
                   <span>
                     <Upload className="h-4 w-4" />
-                    {t('selectFile')}
+                    {t('uploadExcel')}
                   </span>
                 </Button>
               </label>
@@ -247,6 +253,7 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
                 variant="outline" 
                 size="sm" 
                 onClick={() => setTemplateDialogOpen(true)}
+                className="w-full md:w-auto"
               >
                 {t('downloadTemplate')}
               </Button>

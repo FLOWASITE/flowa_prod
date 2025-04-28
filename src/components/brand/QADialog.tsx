@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Plus, FileText, Trash } from 'lucide-react';
+import { Plus, FileText, Trash, Upload } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { ImportDialog } from './ImportDialog';
@@ -108,6 +108,13 @@ const translations = {
     fr: 'Total Q&R: ',
     es: 'Total de preguntas y respuestas: ',
     th: 'คำถามและคำตอบทั้งหมด: ',
+  },
+  importExcel: {
+    vi: 'Nhập từ Excel',
+    en: 'Import from Excel',
+    fr: 'Importer depuis Excel',
+    es: 'Importar desde Excel',
+    th: 'นำเข้าจาก Excel',
   }
 };
 
@@ -212,7 +219,26 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
         <div className="grid grid-cols-1 gap-4 mt-4">
           <div className="flex justify-between items-center">
             <h3 className="font-medium">{t('qaList')}</h3>
-            <ImportDialog type="qa" onImport={handleImportQA} />
+            <div className="flex gap-2">
+              <Button 
+                variant="default" 
+                size="sm" 
+                className="gap-1"
+                onClick={() => document.getElementById('qa-import-trigger')?.click()}
+              >
+                <Upload className="h-4 w-4" />
+                {t('importExcel')}
+              </Button>
+              <div className="hidden">
+                <ImportDialog type="qa" onImport={handleImportQA} />
+              </div>
+              <span id="qa-import-trigger" className="hidden" onClick={() => {
+                const importButton = document.querySelector('.gap-2 button');
+                if (importButton) {
+                  (importButton as HTMLElement).click();
+                }
+              }}></span>
+            </div>
           </div>
 
           <div className="space-y-4 border p-4 rounded-md">
