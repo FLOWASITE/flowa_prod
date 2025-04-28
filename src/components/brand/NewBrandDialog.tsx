@@ -23,6 +23,7 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command"
 import {
   Popover,
@@ -132,6 +133,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -283,7 +285,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
 
             <div className="grid gap-2">
               <Label>{t('themeTypes')}</Label>
-              <Popover>
+              <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="justify-start">
                     {selectedThemes.length > 0
@@ -293,25 +295,29 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 </PopoverTrigger>
                 <PopoverContent className="w-[300px] p-0" align="start">
                   <Command>
-                    <CommandEmpty>{t('noThemeTypesFound')}</CommandEmpty>
-                    <CommandGroup>
-                      {defaultThemeCategories.map((theme) => (
-                        <CommandItem
-                          key={theme.name}
-                          value={theme.name}
-                          onSelect={() => toggleTheme(theme.name)}
-                        >
-                          <div className="flex items-center gap-2">
-                            {selectedThemes.includes(theme.name) && (
-                              <Check className="h-4 w-4" />
-                            )}
-                            <span className={selectedThemes.includes(theme.name) ? "font-medium" : ""}>
-                              {theme.name}
-                            </span>
-                          </div>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
+                    <CommandList>
+                      <CommandEmpty>{t('noThemeTypesFound')}</CommandEmpty>
+                      <CommandGroup>
+                        {defaultThemeCategories.map((theme) => (
+                          <CommandItem
+                            key={theme.name}
+                            value={theme.name}
+                            onSelect={() => {
+                              toggleTheme(theme.name);
+                            }}
+                          >
+                            <div className="flex items-center gap-2">
+                              {selectedThemes.includes(theme.name) && (
+                                <Check className="h-4 w-4" />
+                              )}
+                              <span className={selectedThemes.includes(theme.name) ? "font-medium" : ""}>
+                                {theme.name}
+                              </span>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
                   </Command>
                 </PopoverContent>
               </Popover>
