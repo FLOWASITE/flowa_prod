@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -40,27 +41,27 @@ export function OnboardingSteps() {
   const steps = [
     {
       number: 1,
-      title: 'Connect social accounts',
-      description: 'to increase your online presence.',
-      action: 'Connect'
+      title: 'Kết nối tài khoản mạng xã hội',
+      description: 'để tăng sự hiện diện trực tuyến của bạn.',
+      action: 'Kết nối'
     },
     {
       number: 2,
-      title: 'Define your content categories',
-      description: 'to manage and diversify your posting strategy.',
-      action: 'Manage'
+      title: 'Xác định danh mục nội dung',
+      description: 'để quản lý và đa dạng hóa chiến lược đăng bài của bạn.',
+      action: 'Quản lý'
     },
     {
       number: 3,
-      title: 'Schedule categories',
-      description: 'to craft the perfect posting plan.',
-      action: 'Schedule'
+      title: 'Lên lịch danh mục',
+      description: 'để tạo kế hoạch đăng bài hoàn hảo.',
+      action: 'Lên lịch'
     },
     {
       number: 4,
-      title: 'Create',
-      description: 'and customize posts for each network.',
-      action: 'Create'
+      title: 'Tạo',
+      description: 'và tùy chỉnh bài đăng cho từng mạng xã hội.',
+      action: 'Tạo'
     }
   ];
 
