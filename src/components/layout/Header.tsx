@@ -1,16 +1,18 @@
 
 import React from 'react';
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuLabel, 
   DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LanguageSelector } from './LanguageSelector';
 
 export function Header() {
@@ -22,7 +24,7 @@ export function Header() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
             <Input
               type="search"
-              placeholder="Search..."
+              placeholder="Tìm kiếm..."
               className="w-full bg-gray-50 dark:bg-gray-800 pl-8"
             />
           </div>
@@ -30,6 +32,7 @@ export function Header() {
         
         <div className="flex items-center space-x-4">
           <LanguageSelector />
+          
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -38,15 +41,47 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="h-5 w-5" />
+                <Avatar>
+                  <AvatarImage src="/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png" />
+                  <AvatarFallback>U</AvatarFallback>
+                </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuContent className="w-64" align="end">
+              <div className="flex items-center p-2 space-x-2">
+                <Avatar>
+                  <AvatarImage src="/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png" />
+                  <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col space-y-0.5">
+                  <p className="text-sm font-medium">Duy Vo</p>
+                  <p className="text-xs text-gray-500">flowasite@gmail.com</p>
+                </div>
+              </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <DollarSign className="mr-2" />
+                  <span>Định giá</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2" />
+                  <span>Thiết lập không gian làm việc</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2" />
+                  <span>Người dùng không gian làm việc</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <HelpCircle className="mr-2" />
+                  <span>Trung tâm trợ giúp</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-600">
+                <LogOut className="mr-2" />
+                <span>Đăng xuất</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
