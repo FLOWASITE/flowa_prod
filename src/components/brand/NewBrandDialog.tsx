@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -175,6 +176,19 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      logo: '',
+      website: '',
+      primaryColor: '#2563eb',
+      secondaryColor: '#0d9488',
+    });
+    setSelectedThemes([]);
+    setSelectedTones(['Professional']);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -207,16 +221,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       title: t('brandCreated'),
     });
     
-    setFormData({
-      name: '',
-      description: '',
-      logo: '',
-      website: '',
-      primaryColor: '#2563eb',
-      secondaryColor: '#0d9488',
-    });
-    setSelectedThemes([]);
-    setSelectedTones(['Professional']);
+    resetForm();
     setOpen(false);
   };
 
@@ -225,7 +230,16 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog 
+      open={open} 
+      onOpenChange={(newOpen) => {
+        if (newOpen === false) {
+          // When dialog closes without submitting, reset the form
+          resetForm();
+        }
+        setOpen(newOpen);
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="default" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 shadow-lg hover:shadow-xl">
           <Plus className="mr-2 h-4 w-4" />
@@ -338,7 +352,15 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           </div>
           
           <DialogFooter className="p-6 bg-gray-50 dark:bg-gray-900/50 border-t">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="transition-all duration-200">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => {
+                resetForm();
+                setOpen(false);
+              }} 
+              className="transition-all duration-200"
+            >
               {t('cancel')}
             </Button>
             <Button 
