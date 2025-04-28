@@ -6,6 +6,8 @@ import { NewBrandDialog } from '@/components/brand/NewBrandDialog';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
+import { supabase } from '@/lib/supabase';
+import { useToast } from '@/hooks/use-toast';
 
 const translations = {
   brands: {
@@ -21,20 +23,122 @@ const translations = {
     fr: 'Gérez les identités et les paramètres de votre marque',
     es: 'Administre las identidades y configuraciones de su marca',
     th: 'จัดการข้อมูลและการตั้งค่าแบรนด์ของคุณ',
+  },
+  loadingError: {
+    en: 'Error loading brands',
+    vi: 'Lỗi khi tải thương hiệu',
+    fr: 'Erreur lors du chargement des marques',
+    es: 'Error al cargar marcas',
+    th: 'เกิดข้อผิดพลาดในการโหลดแบรนด์',
   }
 };
 
 const Brands = () => {
   const { currentLanguage } = useLanguage();
-  const [brands, setBrands] = useState<Brand[]>([...mockBrands]);
+  const { toast } = useToast();
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
 
-  // Hàm để thêm thương hiệu mới vào danh sách
-  const handleAddBrand = (newBrand: Brand) => {
-    setBrands(prev => [...prev, newBrand]);
+  // Tải danh sách thương hiệu từ Supabase khi component được mount
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
+  const fetchBrands = async () => {
+    try {
+      setLoading(true);
+      
+      // Kiểm tra xem đã kết nối Supabase chưa
+      if (!supabase) {
+        // Nếu chưa kết nối Supabase, sử dụng dữ liệu mẫu
+        console.log('Supabase not connected, using mock data');
+        setBrands([...mockBrands]);
+        return;
+      }
+      
+      const { data, error } = await supabase
+        .from('brands')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching brands:', error);
+        throw error;
+      }
+      
+      // Chuyển đổi dữ liệu từ Supabase sang định dạng Brand
+      const mappedBrands: Brand[] = data.map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        logo: item.logo || undefined,
+        colors: {
+          primary: item.primary_color,
+          secondary: item.secondary_color,
+        },
+        createdAt: new Date(item.created_at),
+        updatedAt: new Date(item.updated_at),
+      }));
+      
+      setBrands(mappedBrands);
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+      toast({
+        title: t('loadingError'),
+        variant: 'destructive',
+      });
+      
+      // Fallback to mock data if there's an error
+      setBrands([...mockBrands]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Hàm để thêm thương hiệu mới vào database
+  const handleAddBrand = async (newBrand: Brand) => {
+    try {
+      // Kiểm tra xem đã kết nối Supabase chưa
+      if (!supabase) {
+        // Nếu chưa kết nối Supabase, chỉ cập nhật state
+        setBrands(prev => [...prev, newBrand]);
+        return;
+      }
+      
+      // Chuẩn bị dữ liệu để lưu vào Supabase
+      const brandData = {
+        id: newBrand.id,
+        name: newBrand.name,
+        description: newBrand.description,
+        logo: newBrand.logo || null,
+        primary_color: newBrand.colors.primary,
+        secondary_color: newBrand.colors.secondary,
+        created_at: newBrand.createdAt.toISOString(),
+        updated_at: newBrand.updatedAt.toISOString(),
+      };
+      
+      // Thêm thương hiệu vào database
+      const { error } = await supabase.from('brands').insert(brandData);
+      
+      if (error) {
+        console.error('Error adding brand:', error);
+        throw error;
+      }
+      
+      // Cập nhật danh sách thương hiệu
+      setBrands(prev => [...prev, newBrand]);
+    } catch (error) {
+      console.error('Error adding brand:', error);
+      toast({
+        title: 'Error adding brand',
+        description: 'There was an error adding your brand. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -49,9 +153,22 @@ const Brands = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {brands.map(brand => (
-          <BrandCard key={brand.id} brand={brand} />
-        ))}
+        {loading ? (
+          // Hiển thị trạng thái loading
+          Array(3).fill(0).map((_, idx) => (
+            <div key={idx} className="h-40 rounded-lg bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+          ))
+        ) : brands.length > 0 ? (
+          // Hiển thị danh sách thương hiệu
+          brands.map(brand => (
+            <BrandCard key={brand.id} brand={brand} />
+          ))
+        ) : (
+          // Hiển thị thông báo khi không có thương hiệu
+          <div className="col-span-3 text-center py-10">
+            <p className="text-gray-500 dark:text-gray-400">Chưa có thương hiệu nào được tạo. Hãy tạo thương hiệu đầu tiên của bạn!</p>
+          </div>
+        )}
       </div>
     </Layout>
   );
