@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,7 @@ const translations = {
   },
   suggestions: {
     en: 'Suggested Tone Types',
-    vi: 'Giọng điệu gợi ý',
+    vi: 'Thêm giọng điệu gợi ý',
     fr: 'Tons suggérés',
     es: 'Tonos sugeridos',
     th: 'โทนที่แนะนำ',
