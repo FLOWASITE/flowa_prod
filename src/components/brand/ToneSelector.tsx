@@ -65,7 +65,7 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
+    if ((e.key === 'Enter' || e.key === ' ') && inputValue.trim()) {
       e.preventDefault();
       addTone(inputValue.trim());
       setInputValue('');
@@ -74,11 +74,11 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
 
   const addTone = (tone: string) => {
     if (!selectedTones.includes(tone)) {
-      // If this is a custom tone not in the suggestions, add it to customTones
       if (!suggestedTones.includes(tone) && !customTones.includes(tone)) {
         setCustomTones([...customTones, tone]);
       }
       onTonesChange([...selectedTones, tone]);
+      setInputValue(''); // Clear input after adding
     }
   };
 
@@ -86,16 +86,12 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
     onTonesChange(selectedTones.filter(t => t !== tone));
   };
   
-  // Function to handle adding a custom tone through the badge click
   const handleAddCustomTone = () => {
-    // If there's text in the input, add it
     if (inputValue.trim()) {
       addTone(inputValue.trim());
-      setInputValue('');
     } else {
-      // Otherwise, open a prompt to get custom tone input
       const customTone = prompt(t('enterTone'));
-      if (customTone && customTone.trim()) {
+      if (customTone?.trim()) {
         addTone(customTone.trim());
       }
     }
@@ -139,13 +135,15 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
                 key={tone}
                 variant="outline"
                 className="cursor-pointer hover:bg-accent"
-                onClick={() => addTone(tone)}
+                onClick={() => {
+                  addTone(tone);
+                  setInputValue('');
+                }}
               >
                 {tone}
               </Badge>
             ))}
           
-          {/* Add a button for adding custom tones */}
           {(allSuggestionsSelected || customTones.length > 0) && (
             <Badge
               variant="outline"

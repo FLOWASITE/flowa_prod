@@ -65,7 +65,7 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
+    if ((e.key === 'Enter' || e.key === ' ') && inputValue.trim()) {
       e.preventDefault();
       addTheme(inputValue.trim());
       setInputValue('');
@@ -74,11 +74,11 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
 
   const addTheme = (theme: string) => {
     if (!selectedThemes.includes(theme)) {
-      // If this is a custom theme not in the suggestions, add it to customThemes
       if (!suggestedThemes.includes(theme) && !customThemes.includes(theme)) {
         setCustomThemes([...customThemes, theme]);
       }
       onThemesChange([...selectedThemes, theme]);
+      setInputValue(''); // Clear input after adding
     }
   };
 
@@ -86,16 +86,12 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
     onThemesChange(selectedThemes.filter(t => t !== theme));
   };
   
-  // Function to handle adding a custom theme through the badge click
   const handleAddCustomTheme = () => {
-    // If there's text in the input, add it
     if (inputValue.trim()) {
       addTheme(inputValue.trim());
-      setInputValue('');
     } else {
-      // Otherwise, open a prompt to get custom theme input
       const customTheme = prompt(t('enterTheme'));
-      if (customTheme && customTheme.trim()) {
+      if (customTheme?.trim()) {
         addTheme(customTheme.trim());
       }
     }
@@ -139,7 +135,10 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
                 key={theme}
                 variant="outline"
                 className="cursor-pointer hover:bg-accent"
-                onClick={() => addTheme(theme)}
+                onClick={() => {
+                  addTheme(theme);
+                  setInputValue('');
+                }}
               >
                 {theme}
               </Badge>
