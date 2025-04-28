@@ -1,3 +1,4 @@
+
 export interface Brand {
   id: string;
   name: string;
@@ -16,6 +17,12 @@ export interface Brand {
     values: string;
     targetAudience: string;
     guidelines: string;
+    qaPairs?: Array<{
+      question: string;
+      answer: string;
+    }>;
+    productPricing?: string;
+    productBenefits?: string;
   };
   createdAt: Date;
   updatedAt: Date;

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -185,7 +184,10 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     history: '',
     values: '',
     targetAudience: '',
-    guidelines: ''
+    guidelines: '',
+    qaPairs: [],
+    productPricing: '',
+    productBenefits: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -209,7 +211,10 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       history: '',
       values: '',
       targetAudience: '',
-      guidelines: ''
+      guidelines: '',
+      qaPairs: [],
+      productPricing: '',
+      productBenefits: ''
     });
   };
 
