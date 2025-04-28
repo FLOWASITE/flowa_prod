@@ -7,7 +7,7 @@ import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
 import { useToast } from '@/hooks/use-toast';
-import { save, edit } from 'lucide-react';
+import { Save, Edit } from 'lucide-react';
 
 const translations = {
   edit: {
@@ -67,12 +67,12 @@ const BrandDetails = () => {
           >
             {isEditing ? (
               <>
-                <save className="h-4 w-4" />
+                <Save className="h-4 w-4" />
                 {t('save')}
               </>
             ) : (
               <>
-                <edit className="h-4 w-4" />
+                <Edit className="h-4 w-4" />
                 {t('edit')}
               </>
             )}
