@@ -5,11 +5,36 @@ import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
+import { Package2, Speaker, MessageSquare } from 'lucide-react';
 
 const translations = {
   brandDetails: {
     en: 'Brand Details',
     vi: 'Chi tiết thương hiệu',
+  },
+  products: {
+    en: 'Products & Services',
+    vi: 'Sản phẩm & Dịch vụ',
+  },
+  tone: {
+    en: 'Voice Tone',
+    vi: 'Giọng điệu',
+  },
+  themes: {
+    en: 'Theme Types',
+    vi: 'Loại chủ đề',
+  },
+  features: {
+    en: 'Features',
+    vi: 'Tính năng',
+  },
+  noProducts: {
+    en: 'No products or services added',
+    vi: 'Chưa có sản phẩm hoặc dịch vụ',
+  },
+  noThemes: {
+    en: 'No theme types added',
+    vi: 'Chưa có loại chủ đề',
   }
 };
 
@@ -42,6 +67,7 @@ const BrandDetails = () => {
         </div>
 
         <div className="space-y-8">
+          {/* Brand Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Brand Info */}
             <div className="space-y-6 p-6 bg-white rounded-lg shadow-sm border">
@@ -123,9 +149,13 @@ const BrandDetails = () => {
           </div>
 
           {/* Products Section */}
-          {brand.products && brand.products.length > 0 && (
-            <div className="p-6 bg-white rounded-lg shadow-sm border">
-              <h2 className="text-xl font-semibold mb-4">Products</h2>
+          <div className="p-6 bg-white rounded-lg shadow-sm border">
+            <div className="flex items-center gap-2 mb-4">
+              <Package2 className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">{t('products')}</h2>
+            </div>
+            
+            {brand.products && brand.products.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {brand.products.map((product) => (
                   <div key={product.id} className="p-4 border rounded-lg">
@@ -133,7 +163,7 @@ const BrandDetails = () => {
                     <p className="text-muted-foreground mb-4">{product.description}</p>
                     {product.features && product.features.length > 0 && (
                       <div>
-                        <h4 className="font-medium mb-2">Features</h4>
+                        <h4 className="font-medium mb-2">{t('features')}</h4>
                         <ul className="list-disc list-inside text-sm text-muted-foreground">
                           {product.features.map((feature, index) => (
                             <li key={index}>{feature}</li>
@@ -144,8 +174,39 @@ const BrandDetails = () => {
                   </div>
                 ))}
               </div>
+            ) : (
+              <p className="text-muted-foreground">{t('noProducts')}</p>
+            )}
+          </div>
+
+          {/* Voice Tone Section */}
+          <div className="p-6 bg-white rounded-lg shadow-sm border">
+            <div className="flex items-center gap-2 mb-4">
+              <Speaker className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">{t('tone')}</h2>
             </div>
-          )}
+            <p className="text-muted-foreground">{brand.tone}</p>
+          </div>
+
+          {/* Theme Types Section */}
+          <div className="p-6 bg-white rounded-lg shadow-sm border">
+            <div className="flex items-center gap-2 mb-4">
+              <MessageSquare className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">{t('themes')}</h2>
+            </div>
+            
+            {brand.themes && brand.themes.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {brand.themes.map((theme, index) => (
+                  <div key={index} className="p-3 border rounded-lg bg-muted/50">
+                    <p>{theme}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">{t('noThemes')}</p>
+            )}
+          </div>
         </div>
       </div>
     </Layout>
