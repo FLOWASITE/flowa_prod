@@ -1,4 +1,3 @@
-
 export interface Brand {
   id: string;
   name: string;
@@ -8,6 +7,7 @@ export interface Brand {
     primary: string;
     secondary: string;
   };
+  tone: 'casual' | 'neutral' | 'formal';
   createdAt: Date;
   updatedAt: Date;
 }

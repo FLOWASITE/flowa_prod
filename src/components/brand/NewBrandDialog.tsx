@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -30,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const translations = {
   newBrand: {
@@ -122,7 +122,35 @@ const translations = {
     fr: 'Marque créée avec succès!',
     es: '¡Marca creada con éxito!',
     th: 'สร้างแบรนด์สำเร็จ!',
-  }
+  },
+  toneOfVoice: {
+    en: 'Tone of Voice',
+    vi: 'Tông giọng',
+    fr: 'Ton de voix',
+    es: 'Tono de voz',
+    th: 'น้ำเสียง',
+  },
+  casual: {
+    en: 'Casual',
+    vi: 'Thân thiện',
+    fr: 'Décontracté',
+    es: 'Casual',
+    th: 'เป็นกันเอง',
+  },
+  neutral: {
+    en: 'Neutral',
+    vi: 'Trung lập',
+    fr: 'Neutre',
+    es: 'Neutral',
+    th: 'เป็นกลาง',
+  },
+  formal: {
+    en: 'Formal',
+    vi: 'Trang trọng',
+    fr: 'Formel',
+    es: 'Formal',
+    th: 'เป็นทางการ',
+  },
 };
 
 interface NewBrandDialogProps {
@@ -141,10 +169,11 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     secondaryColor: '#0d9488',
   });
 
-  // Initialize selectedThemes with the default theme categories
   const [selectedThemes, setSelectedThemes] = useState<string[]>(
     defaultThemeCategories.map(theme => theme.name)
   );
+
+  const [selectedTone, setSelectedTone] = useState<'casual' | 'neutral' | 'formal'>('neutral');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -179,6 +208,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
+      tone: selectedTone,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -195,6 +225,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       secondaryColor: '#0d9488',
     });
     setSelectedThemes(defaultThemeCategories.map(theme => theme.name));
+    setSelectedTone('neutral');
     setOpen(false);
   };
 
@@ -281,6 +312,28 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label>{t('toneOfVoice')}</Label>
+              <RadioGroup
+                value={selectedTone}
+                onValueChange={(value: 'casual' | 'neutral' | 'formal') => setSelectedTone(value)}
+                className="flex space-x-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="casual" id="casual" />
+                  <Label htmlFor="casual">{t('casual')}</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="neutral" id="neutral" />
+                  <Label htmlFor="neutral">{t('neutral')}</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="formal" id="formal" />
+                  <Label htmlFor="formal">{t('formal')}</Label>
+                </div>
+              </RadioGroup>
             </div>
 
             <div className="grid gap-2">
