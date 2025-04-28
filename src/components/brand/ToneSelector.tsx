@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,13 @@ const translations = {
     fr: 'Appuyez sur Entrée pour ajouter un nouveau ton',
     es: 'Presione Enter para agregar nuevo tono',
     th: 'กด Enter เพื่อเพิ่มโทนใหม่',
+  },
+  addCustomTone: {
+    en: 'Add custom tone',
+    vi: 'Thêm tông giọng tùy chỉnh',
+    fr: 'Ajouter un ton personnalisé',
+    es: 'Agregar tono personalizado',
+    th: 'เพิ่มโทนที่กำหนดเอง',
   }
 };
 
@@ -49,6 +57,9 @@ interface ToneSelectorProps {
 export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps) {
   const { currentLanguage } = useLanguage();
   const [inputValue, setInputValue] = useState('');
+  const [customTones, setCustomTones] = useState<string[]>([]);
+  
+  const allSuggestionsSelected = suggestedTones.every(tone => selectedTones.includes(tone));
 
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
@@ -64,6 +75,10 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
 
   const addTone = (tone: string) => {
     if (!selectedTones.includes(tone)) {
+      // If this is a custom tone not in the suggestions, add it to customTones
+      if (!suggestedTones.includes(tone) && !customTones.includes(tone)) {
+        setCustomTones([...customTones, tone]);
+      }
       onTonesChange([...selectedTones, tone]);
     }
   };
@@ -115,6 +130,16 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
                 {tone}
               </Badge>
             ))}
+            
+          {(allSuggestionsSelected || customTones.length > 0) && (
+            <Badge
+              variant="outline"
+              className="cursor-pointer hover:bg-accent bg-primary/10"
+              onClick={() => inputValue.trim() && addTone(inputValue.trim())}
+            >
+              {t('addCustomTone')}
+            </Badge>
+          )}
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -130,7 +131,7 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
               </Badge>
             ))}
           
-          {allSuggestionsSelected && (
+          {(allSuggestionsSelected || customThemes.length > 0) && (
             <Badge
               variant="outline"
               className="cursor-pointer hover:bg-accent bg-primary/10"
