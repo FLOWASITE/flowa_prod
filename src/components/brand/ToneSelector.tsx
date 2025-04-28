@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
+import { X, MessageCircle } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const translations = {
@@ -99,8 +100,12 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center gap-2 mb-4">
+        <MessageCircle className="h-5 w-5 text-primary" />
+        <h3 className="text-lg font-semibold">{t('toneOfVoice')}</h3>
+      </div>
+
       <div className="space-y-2">
-        <Label>{t('toneOfVoice')}</Label>
         <Input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
