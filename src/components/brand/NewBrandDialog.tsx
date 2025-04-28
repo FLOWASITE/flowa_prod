@@ -11,13 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types';
-import { ToneSelector } from './ToneSelector';
-import { ThemeSelector } from './ThemeSelector';
+import { defaultThemeCategories } from '@/data/defaultThemeTypes';
 
 const translations = {
   newBrand: {
@@ -139,6 +139,13 @@ const translations = {
     es: 'Formal',
     th: 'เป็นทางการ',
   },
+  suggestedThemes: {
+    en: 'Suggested Theme Types',
+    vi: 'Loại chủ đề gợi ý',
+    fr: 'Types de thèmes suggérés',
+    es: 'Tipos de temas sugeridos',
+    th: 'ประเภทธีมที่แนะนำ',
+  },
 };
 
 interface NewBrandDialogProps {
@@ -149,7 +156,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [popoverOpen, setPopoverOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -158,11 +164,18 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   });
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [selectedTones, setSelectedTones] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleThemeToggle = (themeName: string) => {
+    setSelectedThemes(prev => 
+      prev.includes(themeName)
+        ? prev.filter(t => t !== themeName)
+        : [...prev, themeName]
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -184,7 +197,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
-      tone: selectedTones.join(', '),
       themes: selectedThemes,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -202,7 +214,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       secondaryColor: '#0d9488',
     });
     setSelectedThemes([]);
-    setSelectedTones([]);
     setOpen(false);
   };
 
@@ -218,7 +229,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           {t('newBrand')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[800px] p-0 overflow-hidden bg-gradient-to-b from-background to-background/95 backdrop-blur-sm border-2">
+      <DialogContent className="max-w-[800px] p-0 overflow-hidden bg-white dark:bg-gray-950 border-2">
         <form onSubmit={handleSubmit} className="space-y-4">
           <DialogHeader className="p-6 pb-0">
             <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
@@ -226,8 +237,8 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="px-6 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="px-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="name">{t('brandName')}</Label>
                 <Input
@@ -274,29 +285,28 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                required
                 className="min-h-[80px] transition-all duration-200 hover:border-primary/50 focus:border-primary"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <ToneSelector
-                  selectedTones={selectedTones}
-                  onTonesChange={setSelectedTones}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <ThemeSelector
-                  selectedThemes={selectedThemes}
-                  onThemesChange={setSelectedThemes}
-                />
+            <div className="space-y-3">
+              <Label>{t('suggestedThemes')}</Label>
+              <div className="flex flex-wrap gap-2">
+                {defaultThemeCategories.map((theme) => (
+                  <Badge
+                    key={theme.name}
+                    variant={selectedThemes.includes(theme.name) ? "default" : "outline"}
+                    className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
+                    onClick={() => handleThemeToggle(theme.name)}
+                  >
+                    {theme.name}
+                  </Badge>
+                ))}
               </div>
             </div>
           </div>
           
-          <DialogFooter className="p-6 bg-muted/5 border-t">
+          <DialogFooter className="p-6 bg-gray-50 dark:bg-gray-900/50 border-t">
             <Button type="button" variant="outline" onClick={() => setOpen(false)} className="transition-all duration-200">
               {t('cancel')}
             </Button>
