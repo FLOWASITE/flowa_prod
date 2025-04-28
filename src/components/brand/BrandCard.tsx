@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Brand } from '@/types';
-import { Link } from 'react-router-dom';
 
 interface BrandCardProps {
   brand: Brand;
@@ -18,58 +17,50 @@ interface BrandCardProps {
 
 export function BrandCard({ brand }: BrandCardProps) {
   return (
-    <Card className="overflow-hidden">
-      <div 
-        className="h-3"
-        style={{ backgroundColor: brand.colors.primary }}
-      />
-      <CardContent className="p-6">
-        <div className="flex justify-between items-start">
-          <div>
-            <div className="h-16 w-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3">
-              {brand.logo ? (
-                <img src={brand.logo} alt={brand.name} className="w-12 h-12 object-contain" />
-              ) : (
-                <div 
-                  className="w-10 h-10 rounded-md flex items-center justify-center"
-                  style={{ backgroundColor: brand.colors.secondary }}
-                >
-                  <span className="text-white font-bold text-xl">
-                    {brand.name[0]}
-                  </span>
-                </div>
-              )}
-            </div>
-            <h3 className="font-semibold text-xl">{brand.name}</h3>
-            <p className="text-muted-foreground mt-1 line-clamp-2">{brand.description}</p>
+    <Card className="group bg-white dark:bg-gray-800 transition-all duration-200 hover:shadow-md3-2">
+      <div className="p-6 space-y-4">
+        <div className="flex items-start justify-between">
+          <div className="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            {brand.logo ? (
+              <img src={brand.logo} alt={brand.name} className="w-8 h-8 object-contain" />
+            ) : (
+              <span className="text-xl font-semibold text-gray-500">
+                {brand.name[0]}
+              </span>
+            )}
           </div>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Pencil className="mr-2 h-4 w-4" />
-                <span>Edit</span>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem className="cursor-pointer">
+                Chỉnh sửa
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
-                <Trash className="mr-2 h-4 w-4" />
-                <span>Delete</span>
+              <DropdownMenuItem className="cursor-pointer text-destructive">
+                Xóa
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </CardContent>
-      <CardFooter className="bg-gray-50 dark:bg-gray-900 px-6 py-4">
-        <Button asChild className="w-full">
-          <Link to={`/brands/${brand.id}`}>
-            View Details
-          </Link>
+
+        <div>
+          <h3 className="font-semibold text-lg text-left">{brand.name}</h3>
+          <p className="text-sm text-muted-foreground mt-1 text-left line-clamp-2">
+            {brand.description}
+          </p>
+        </div>
+
+        <Button 
+          variant="default" 
+          className="w-full bg-primary/10 hover:bg-primary/20 text-primary"
+        >
+          Xem chi tiết
         </Button>
-      </CardFooter>
+      </div>
     </Card>
   );
 }

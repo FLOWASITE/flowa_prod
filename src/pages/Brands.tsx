@@ -146,29 +146,41 @@ const Brands = () => {
 
   return (
     <Layout>
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('brands')}</h1>
-          <p className="text-gray-500 dark:text-gray-400">{t('description')}</p>
+      <div className="max-w-[1400px] mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Thương hiệu</h1>
+            <p className="text-muted-foreground">Quản lý danh tính và cài đặt thương hiệu của bạn</p>
+          </div>
+          
+          <NewBrandDialog onBrandCreated={handleAddBrand} />
         </div>
         
-        <NewBrandDialog onBrandCreated={handleAddBrand} />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading ? (
-          Array(3).fill(0).map((_, idx) => (
-            <div key={idx} className="h-40 rounded-lg bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
-          ))
-        ) : brands.length > 0 ? (
-          brands.map(brand => (
-            <BrandCard key={brand.id} brand={brand} />
-          ))
-        ) : (
-          <div className="col-span-3 text-center py-10">
-            <p className="text-gray-500 dark:text-gray-400">Chưa có thương hiệu nào được tạo. Hãy tạo thương hiệu đầu tiên của bạn!</p>
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading ? (
+            Array(3).fill(0).map((_, idx) => (
+              <Card key={idx} className="h-[200px] animate-pulse">
+                <div className="p-6 space-y-4">
+                  <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-gray-700" />
+                  <div className="space-y-2">
+                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                  </div>
+                </div>
+              </Card>
+            ))
+          ) : brands.length > 0 ? (
+            brands.map(brand => (
+              <BrandCard key={brand.id} brand={brand} />
+            ))
+          ) : (
+            <div className="col-span-3 text-center py-10">
+              <p className="text-muted-foreground">
+                Chưa có thương hiệu nào được tạo. Hãy tạo thương hiệu đầu tiên của bạn!
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );
