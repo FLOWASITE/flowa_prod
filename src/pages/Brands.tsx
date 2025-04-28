@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { BrandCard } from '@/components/brand/BrandCard';
@@ -5,9 +6,10 @@ import { NewBrandDialog } from '@/components/brand/NewBrandDialog';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
-import { supabase, isSupabaseConnected } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
+import { toast as sonnerToast } from 'sonner';
 
 const translations = {
   brands: {
@@ -69,6 +71,8 @@ const Brands = () => {
         throw error;
       }
       
+      console.log('Fetched brands data:', data); // Debug log
+      
       const mappedBrands: Brand[] = data.map(item => ({
         id: item.id,
         name: item.name,
@@ -86,6 +90,7 @@ const Brands = () => {
       }));
       
       setBrands(mappedBrands);
+      sonnerToast.success('Brands loaded successfully');
     } catch (error) {
       console.error('Error fetching brands:', error);
       toast({

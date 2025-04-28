@@ -4,8 +4,8 @@ import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand, ProductType } from '@/types';
-import { Package2, Speaker, MessageSquare } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { Package2, Speaker, MessageSquare, ArrowLeft } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 
@@ -70,6 +70,7 @@ const BrandDetails = () => {
     const fetchBrandDetails = async () => {
       try {
         setLoading(true);
+        console.log('Fetching brand details for ID:', id); // Debug log
         
         // Fetch the brand
         const { data: brandData, error: brandError } = await supabase
@@ -79,12 +80,16 @@ const BrandDetails = () => {
           .single();
         
         if (brandError) {
+          console.error('Brand fetch error:', brandError); // Debug log
           throw brandError;
         }
         
         if (!brandData) {
+          console.error('No brand data found'); // Debug log
           throw new Error('Brand not found');
         }
+        
+        console.log('Fetched brand data:', brandData); // Debug log
         
         // Fetch related products
         const { data: productsData, error: productsError } = await supabase
@@ -163,6 +168,14 @@ const BrandDetails = () => {
             title: t('fallbackData'),
             variant: 'default',
           });
+        } else {
+          // If no mock data found for this ID, navigate back
+          navigate('/brands');
+          toast({
+            title: 'Brand not found',
+            description: 'The requested brand could not be found',
+            variant: 'destructive',
+          });
         }
       } finally {
         setLoading(false);
@@ -172,7 +185,7 @@ const BrandDetails = () => {
     if (id) {
       fetchBrandDetails();
     }
-  }, [id, toast]);
+  }, [id, toast, navigate]);
 
   if (loading) {
     return (
@@ -199,7 +212,15 @@ const BrandDetails = () => {
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto">
-        <div className="mb-8">
+        <div className="mb-8 flex items-center">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/brands')} 
+            className="mr-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
           <h1 className="text-2xl font-semibold">{t('brandDetails')}</h1>
         </div>
 
