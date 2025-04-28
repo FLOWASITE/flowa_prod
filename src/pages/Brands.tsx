@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { BrandCard } from '@/components/brand/BrandCard';
@@ -8,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
 import { supabase, isSupabaseConnected } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { Card } from '@/components/ui/card';
 
 const translations = {
   brands: {
