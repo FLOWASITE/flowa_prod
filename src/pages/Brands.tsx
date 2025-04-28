@@ -6,10 +6,12 @@ import { NewBrandDialog } from '@/components/brand/NewBrandDialog';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConnected } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
 import { toast as sonnerToast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { DatabaseZap, AlertTriangle } from 'lucide-react';
 
 const translations = {
   brands: {
@@ -39,6 +41,13 @@ const translations = {
     fr: 'Supabase n\'est pas connecté. Utilisation de données fictives.',
     es: 'Supabase no está conectado. Usando datos ficticios.',
     th: 'Supabase ไม่ได้เชื่อมต่อ กำลังใช้ข้อมูลจำลอง',
+  },
+  tryReconnect: {
+    en: 'Try reconnecting',
+    vi: 'Thử kết nối lại',
+    fr: 'Essayez de vous reconnecter',
+    es: 'Intenta reconectar',
+    th: 'ลองเชื่อมต่ออีกครั้ง',
   }
 };
 
@@ -47,18 +56,39 @@ const Brands = () => {
   const { toast } = useToast();
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
   
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
 
   useEffect(() => {
-    fetchBrands();
+    checkSupabaseConnection();
   }, []);
+
+  const checkSupabaseConnection = async () => {
+    console.log("Checking Supabase connection...");
+    const connected = await isSupabaseConnected();
+    console.log("Supabase connected:", connected);
+    setIsConnected(connected);
+    
+    if (connected) {
+      fetchBrands();
+    } else {
+      setLoading(false);
+      setBrands([...mockBrands]);
+      toast({
+        title: t('supabaseNotConnected'),
+        description: 'Using mock data instead.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const fetchBrands = async () => {
     try {
       setLoading(true);
+      console.log("Fetching brands from Supabase...");
       
       // Fetch from Supabase
       const { data, error } = await supabase
@@ -184,12 +214,34 @@ const Brands = () => {
       <div className="max-w-[1400px] mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Thương hiệu</h1>
-            <p className="text-muted-foreground">Quản lý danh tính và cài đặt thương hiệu của bạn</p>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              {t('brands')}
+            </h1>
+            <p className="text-muted-foreground">{t('description')}</p>
           </div>
+          
+          {isConnected === false && (
+            <Button 
+              variant="outline" 
+              onClick={checkSupabaseConnection} 
+              className="flex items-center gap-2"
+            >
+              <DatabaseZap size={16} />
+              {t('tryReconnect')}
+            </Button>
+          )}
           
           <NewBrandDialog onBrandCreated={handleAddBrand} />
         </div>
+        
+        {isConnected === false && (
+          <div className="mb-6 p-4 border border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg flex items-center gap-3">
+            <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500" />
+            <p className="text-sm text-yellow-700 dark:text-yellow-400">
+              {t('supabaseNotConnected')}
+            </p>
+          </div>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading ? (
