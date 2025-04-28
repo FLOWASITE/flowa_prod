@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -9,7 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const translations = {
   themes: {
     en: 'Theme Types',
-    vi: 'Loại chủ đề',
+    vi: 'Chủ đề gợi ý',
     fr: 'Types de thèmes',
     es: 'Tipos de temas',
     th: 'ประเภทธีม',
@@ -86,6 +85,21 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
   const removeTheme = (theme: string) => {
     onThemesChange(selectedThemes.filter(t => t !== theme));
   };
+  
+  // Function to handle adding a custom theme through the badge click
+  const handleAddCustomTheme = () => {
+    // If there's text in the input, add it
+    if (inputValue.trim()) {
+      addTheme(inputValue.trim());
+      setInputValue('');
+    } else {
+      // Otherwise, open a prompt to get custom theme input
+      const customTheme = prompt(t('enterTheme'));
+      if (customTheme && customTheme.trim()) {
+        addTheme(customTheme.trim());
+      }
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -135,7 +149,7 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
             <Badge
               variant="outline"
               className="cursor-pointer hover:bg-accent bg-primary/10"
-              onClick={() => inputValue.trim() && addTheme(inputValue.trim())}
+              onClick={handleAddCustomTheme}
             >
               {t('addCustomTheme')}
             </Badge>

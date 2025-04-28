@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -86,6 +85,21 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
   const removeTone = (tone: string) => {
     onTonesChange(selectedTones.filter(t => t !== tone));
   };
+  
+  // Function to handle adding a custom tone through the badge click
+  const handleAddCustomTone = () => {
+    // If there's text in the input, add it
+    if (inputValue.trim()) {
+      addTone(inputValue.trim());
+      setInputValue('');
+    } else {
+      // Otherwise, open a prompt to get custom tone input
+      const customTone = prompt(t('enterTone'));
+      if (customTone && customTone.trim()) {
+        addTone(customTone.trim());
+      }
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -135,7 +149,7 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
             <Badge
               variant="outline"
               className="cursor-pointer hover:bg-accent bg-primary/10"
-              onClick={() => inputValue.trim() && addTone(inputValue.trim())}
+              onClick={handleAddCustomTone}
             >
               {t('addCustomTone')}
             </Badge>
