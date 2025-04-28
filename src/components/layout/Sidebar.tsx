@@ -60,19 +60,19 @@ export function Sidebar() {
   return (
     <aside 
       className={cn(
-        "min-h-screen bg-sidebar flex flex-col border-r border-gray-200 dark:border-gray-800 transition-all duration-300",
+        "min-h-screen bg-white dark:bg-gray-900 flex flex-col border-r border-gray-200 dark:border-gray-800 transition-all duration-300",
         collapsed ? "w-16" : "w-64"
       )}
     >
-      <div className="p-4 flex items-center justify-center">
+      <div className="p-4 flex items-center justify-center border-b border-gray-200 dark:border-gray-800">
         {!collapsed ? (
           <Link to="/" className="flex flex-col items-center gap-1">
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-8 object-contain"
+              className="h-10 object-contain"
             />
-            <span className="text-xs font-medium text-brand-dark-red">Auto AI Content. All Socials</span>
+            <span className="text-sm font-medium text-brand-red-dark">Auto AI Content</span>
           </Link>
         ) : (
           <Link to="/" className="flex items-center">
@@ -94,14 +94,16 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center rounded-md px-3 py-2 transition-colors",
                   location.pathname.startsWith(item.href)
-                    ? "bg-brand-bright-red/10 text-brand-dark-red font-medium"
-                    : "text-sidebar-foreground hover:bg-brand-bright-red/5",
+                    ? "bg-brand-red/10 text-brand-red-dark font-medium"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-brand-red/5 hover:text-brand-red-dark",
                   collapsed && "justify-center"
                 )}
               >
                 <item.icon className={cn(
                   "h-5 w-5 flex-shrink-0",
-                  location.pathname.startsWith(item.href) ? "text-brand-dark-red" : "text-gray-500",
+                  location.pathname.startsWith(item.href) 
+                    ? "text-brand-red-dark" 
+                    : "text-gray-500 group-hover:text-brand-red-dark",
                   collapsed && "mx-auto"
                 )} />
                 {!collapsed && <span className="ml-3">{item.label}</span>}
@@ -115,7 +117,7 @@ export function Sidebar() {
         <Button
           variant="ghost"
           size="icon"
-          className="w-full flex justify-center text-brand-dark-red hover:text-brand-bright-red hover:bg-brand-bright-red/5"
+          className="w-full flex justify-center text-brand-red-dark hover:text-brand-red hover:bg-brand-red/5"
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? (
