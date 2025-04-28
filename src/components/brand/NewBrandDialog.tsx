@@ -15,7 +15,7 @@ import { Globe, Image, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
-import { Brand } from '@/types';
+import { Brand, ProductType } from '@/types';
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
 import { ProductSelector } from './ProductSelector';
@@ -138,7 +138,7 @@ const translations = {
     vi: 'Giọng điệu gợi ý',
     fr: 'Tons suggérés',
     es: 'Tonos sugeridos',
-    th: 'โ���นเสียงที่แนะนำ',
+    th: 'โนเสียงที่แนะนำ',
     id: 'Nada yang Disarankan'
   },
   suggestedThemes: {
