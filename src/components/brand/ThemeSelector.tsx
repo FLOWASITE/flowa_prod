@@ -35,8 +35,8 @@ const translations = {
     th: 'กด Enter เพื่อเพิ่มประเภทธีมใหม่',
   },
   addCustomTheme: {
-    en: 'Add custom theme type',
-    vi: 'Thêm loại chủ đề tùy chỉnh',
+    en: 'Add custom theme',
+    vi: 'Thêm gợi ý loại chủ đề',
     fr: 'Ajouter un thème personnalisé',
     es: 'Agregar tema personalizado',
     th: 'เพิ่มธีมที่กำหนดเอง',
