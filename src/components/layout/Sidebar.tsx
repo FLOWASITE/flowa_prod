@@ -54,12 +54,12 @@ export function Sidebar() {
       id: 'Konten'
     },
     chat: {
-      vi: 'Trò chuyện',
-      en: 'Chat',
-      fr: 'Discussion',
-      es: 'Chat',
-      th: 'แชท',
-      id: 'Obrolan'
+      vi: 'Chatbot AI',
+      en: 'Chatbot AI',
+      fr: 'Chatbot IA',
+      es: 'Chatbot IA',
+      th: 'แชทบอท AI',
+      id: 'Chatbot AI'
     },
     schedule: {
       vi: 'Lịch trình',

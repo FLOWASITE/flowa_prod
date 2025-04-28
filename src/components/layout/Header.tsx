@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
@@ -78,7 +79,7 @@ export function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuItem className="py-2">
                   <HelpCircle className="mr-3 h-5 w-5" />
-                  <span>{currentLanguage.code === 'vi' ? "Trung tâm tr�� giúp" : "Help Center"}</span>
+                  <span>{currentLanguage.code === 'vi' ? "Trung tâm trợ giúp" : "Help Center"}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator className="bg-gray-200/50 dark:bg-gray-700/50" />
