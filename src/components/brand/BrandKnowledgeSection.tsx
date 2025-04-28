@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { QADialog } from './QADialog';
 import { ImportDialog } from './ImportDialog';
+import { toast } from 'react-toastify';
 
 const translations = {
   brandKnowledge: {
@@ -136,6 +137,11 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
     onUpdate({
       ...normalizedData,
       productPricing: formattedPricing,
+    });
+    
+    toast({
+      title: `${importedData.length} product prices imported`,
+      description: "Product pricing has been updated",
     });
   };
 

@@ -177,6 +177,11 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
 
   const handleImportQA = (importedData: Array<{ question: string; answer: string }>) => {
     setLocalQAPairs([...localQAPairs, ...importedData]);
+    
+    toast({
+      title: `${importedData.length} Q&A pairs imported`,
+      description: "Q&A pairs have been added to your list",
+    });
   };
 
   return (
