@@ -19,6 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
+import { Brand } from '@/types';
 
 const translations = {
   newBrand: {
@@ -156,7 +157,11 @@ const translations = {
   }
 };
 
-export function NewBrandDialog() {
+interface NewBrandDialogProps {
+  onBrandCreated: (newBrand: Brand) => void;
+}
+
+export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -214,7 +219,7 @@ export function NewBrandDialog() {
     }
 
     // Tạo dữ liệu thương hiệu mới
-    const newBrand = {
+    const newBrand: Brand = {
       id: uuidv4(),
       name: formData.name,
       description: formData.description,
@@ -222,16 +227,14 @@ export function NewBrandDialog() {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
-      themeTypes: themeTypes.map(theme => ({
-        name: theme.name,
-        description: theme.description,
-        keywords: theme.keywords.split(',').map(k => k.trim()),
-      })),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
     console.log('Creating brand:', newBrand);
+    
+    // Gọi hàm callback để cập nhật danh sách thương hiệu
+    onBrandCreated(newBrand);
     
     // Hiển thị thông báo thành công
     toast({

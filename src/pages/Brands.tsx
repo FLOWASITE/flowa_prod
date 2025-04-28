@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { BrandCard } from '@/components/brand/BrandCard';
 import { NewBrandDialog } from '@/components/brand/NewBrandDialog';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Brand } from '@/types';
 
 const translations = {
   brands: {
@@ -25,9 +26,15 @@ const translations = {
 
 const Brands = () => {
   const { currentLanguage } = useLanguage();
+  const [brands, setBrands] = useState<Brand[]>([...mockBrands]);
   
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
+  };
+
+  // Hàm để thêm thương hiệu mới vào danh sách
+  const handleAddBrand = (newBrand: Brand) => {
+    setBrands(prev => [...prev, newBrand]);
   };
 
   return (
@@ -38,11 +45,11 @@ const Brands = () => {
           <p className="text-gray-500 dark:text-gray-400">{t('description')}</p>
         </div>
         
-        <NewBrandDialog />
+        <NewBrandDialog onBrandCreated={handleAddBrand} />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockBrands.map(brand => (
+        {brands.map(brand => (
           <BrandCard key={brand.id} brand={brand} />
         ))}
       </div>
