@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
 import { mockTopics } from '@/data/mockData';
@@ -13,11 +13,13 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Edit, Eye, Plus } from 'lucide-react';
+import { Check, CheckCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const Topics = () => {
   const { currentLanguage } = useLanguage();
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   
   const translations = {
     title: {
@@ -91,6 +93,28 @@ const Topics = () => {
     return translations[key][lang] || translations[key]['en'];
   };
 
+  const handleSelectTopic = (topicId: string) => {
+    setSelectedTopics(prev => {
+      if (prev.includes(topicId)) {
+        return prev.filter(id => id !== topicId);
+      }
+      return [...prev, topicId];
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedTopics.length === mockTopics.length) {
+      setSelectedTopics([]);
+    } else {
+      setSelectedTopics(mockTopics.map(topic => topic.id));
+    }
+  };
+
+  const handleBulkApprove = () => {
+    console.log('Bulk approving topics:', selectedTopics);
+    setSelectedTopics([]);
+  };
+
   const statusBadge = (status: string) => {
     const statusClasses = {
       draft: "bg-gray-100 text-gray-800",
@@ -117,20 +141,33 @@ const Topics = () => {
               <h1 className="text-3xl font-bold">{getTranslation('title')}</h1>
               <p className="text-muted-foreground">{getTranslation('subtitle')}</p>
             </div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Tạo chủ đề mới
-            </Button>
+            <div className="flex gap-2">
+              {selectedTopics.length > 0 && (
+                <Button onClick={handleBulkApprove} variant="default">
+                  <CheckCheck className="mr-2 h-4 w-4" />
+                  Approve Selected ({selectedTopics.length})
+                </Button>
+              )}
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Tạo chủ đề mới
+              </Button>
+            </div>
           </div>
 
           <div className="rounded-lg border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[50px]">
+                    <Checkbox 
+                      checked={selectedTopics.length === mockTopics.length}
+                      onCheckedChange={handleSelectAll}
+                    />
+                  </TableHead>
                   <TableHead className="w-[50px]">#</TableHead>
                   <TableHead>Chủ đề</TableHead>
-                  <TableHead>Mô tả</TableHead>
-                  <TableHead>Nguồn</TableHead>
+                  <TableHead>Phân loại</TableHead>
                   <TableHead>Ngày tạo</TableHead>
                   <TableHead>Trạng thái</TableHead>
                   <TableHead className="text-right">Hành động</TableHead>
@@ -139,28 +176,34 @@ const Topics = () => {
               <TableBody>
                 {mockTopics.map((topic, index) => (
                   <TableRow key={topic.id}>
+                    <TableCell>
+                      <Checkbox 
+                        checked={selectedTopics.includes(topic.id)}
+                        onCheckedChange={() => handleSelectTopic(topic.id)}
+                      />
+                    </TableCell>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
                       <div className="font-medium">{topic.title}</div>
                     </TableCell>
-                    <TableCell className="max-w-[300px]">
-                      <p className="line-clamp-2">{topic.description}</p>
-                    </TableCell>
                     <TableCell>
-                      <Badge variant="outline">
-                        {topic.createdBy === 'user' ? 'Manual' : 'AI Generated'}
+                      <Badge variant="secondary">
+                        {topic.category || 'General'}
                       </Badge>
                     </TableCell>
                     <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
                     <TableCell>{statusBadge(topic.status)}</TableCell>
                     <TableCell>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                      <div className="flex justify-end">
+                        {topic.status === 'draft' && (
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => console.log('Approve topic:', topic.id)}
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
