@@ -27,6 +27,13 @@ const translations = {
     fr: 'Entrez le type de thème ou sélectionnez parmi les suggestions',
     es: 'Ingrese el tipo de tema o seleccione de las sugerencias',
     th: 'ป้อนประเภทธีมหรือเลือกจากข้อเสนอแนะ',
+  },
+  addNewTheme: {
+    en: 'Press Enter to add new theme type',
+    vi: 'Nhấn Enter để thêm loại chủ đề mới',
+    fr: 'Appuyez sur Entrée pour ajouter un nouveau type de thème',
+    es: 'Presione Enter para agregar nuevo tipo de tema',
+    th: 'กด Enter เพื่อเพิ่มประเภทธีมใหม่',
   }
 };
 
@@ -74,7 +81,7 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleInputKeyDown}
-          placeholder={t('enterTheme')}
+          placeholder={inputValue.trim() ? t('addNewTheme') : t('enterTheme')}
         />
       </div>
 

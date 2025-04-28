@@ -27,6 +27,13 @@ const translations = {
     fr: 'Entrez le ton ou sélectionnez parmi les suggestions',
     es: 'Ingrese el tono o seleccione de las sugerencias',
     th: 'ป้อนโทนหรือเลือกจากข้อเสนอแนะ',
+  },
+  addNewTone: {
+    en: 'Press Enter to add new tone',
+    vi: 'Nhấn Enter để thêm tông giọng mới',
+    fr: 'Appuyez sur Entrée pour ajouter un nouveau ton',
+    es: 'Presione Enter para agregar nuevo tono',
+    th: 'กด Enter เพื่อเพิ่มโทนใหม่',
   }
 };
 
@@ -74,7 +81,7 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleInputKeyDown}
-          placeholder={t('enterTone')}
+          placeholder={inputValue.trim() ? t('addNewTone') : t('enterTone')}
         />
       </div>
 
