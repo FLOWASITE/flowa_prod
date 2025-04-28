@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
@@ -13,7 +14,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Check, CheckCheck } from 'lucide-react';
+import { Check, CheckCheck, Plus } from 'lucide-react'; // Added Plus import
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -188,7 +189,7 @@ const Topics = () => {
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary">
-                        {topic.category || 'General'}
+                        {topic.themeTypeId || 'General'}
                       </Badge>
                     </TableCell>
                     <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
