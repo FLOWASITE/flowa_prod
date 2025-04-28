@@ -7,9 +7,9 @@ import {
   Linkedin,
   Youtube,
   Twitter,
-  Pinterest,
-  Tiktok,
-  UniversalPosting
+  MessageSquare,
+  Share2,
+  MessagesSquare
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -67,17 +67,17 @@ export function SocialConnections() {
     },
     {
       name: 'Pinterest',
-      icon: Pinterest,
+      icon: Share2, // Using Share2 icon instead of Pinterest
       actions: ['+ Profile']
     },
     {
       name: 'TikTok',
-      icon: Tiktok,
+      icon: MessageSquare, // Using MessageSquare icon instead of Tiktok
       actions: ['+ Profile']
     },
     {
       name: 'Universal Posting',
-      icon: UniversalPosting,
+      icon: MessagesSquare, // Using MessagesSquare icon instead of UniversalPosting
       actions: ['+ Add']
     }
   ];
