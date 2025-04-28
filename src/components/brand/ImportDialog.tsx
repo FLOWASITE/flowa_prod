@@ -3,12 +3,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { File, Upload } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -118,7 +114,6 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [previewData, setPreviewData] = useState<any[]>([]);
-  const [open, setOpen] = useState(false);
   const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
 
   const t = (key: keyof typeof translations) => {
@@ -191,7 +186,6 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
 
   const handleImport = () => {
     onImport(previewData);
-    setOpen(false);
     setPreviewData([]);
     
     toast({
@@ -219,99 +213,91 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
-            <File className="h-4 w-4" />
-            {t('importData')}
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{t('importData')}</DialogTitle>
-            <DialogDescription>{t('importDescription')}</DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row items-center gap-2">
-              <input
-                type="file"
-                accept=".csv,.xlsx,.xls"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="file-upload"
-              />
-              <label htmlFor="file-upload" className="flex-1 w-full">
-                <Button variant="default" className="w-full gap-2" asChild>
-                  <span>
-                    <Upload className="h-4 w-4" />
-                    {t('uploadExcel')}
-                  </span>
-                </Button>
-              </label>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setTemplateDialogOpen(true)}
-                className="w-full md:w-auto"
-              >
-                {t('downloadTemplate')}
+      <div className="p-6">
+        <DialogHeader>
+          <DialogTitle>{t('importData')}</DialogTitle>
+          <DialogDescription>{t('importDescription')}</DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-4 mt-4">
+          <div className="flex flex-col md:flex-row items-center gap-2">
+            <input
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="file-upload"
+            />
+            <label htmlFor="file-upload" className="flex-1 w-full">
+              <Button variant="default" className="w-full gap-2" asChild>
+                <span>
+                  <Upload className="h-4 w-4" />
+                  {t('uploadExcel')}
+                </span>
               </Button>
-            </div>
+            </label>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setTemplateDialogOpen(true)}
+              className="w-full md:w-auto"
+            >
+              {t('downloadTemplate')}
+            </Button>
+          </div>
 
-            {previewData.length > 0 && (
-              <div className="border rounded-lg">
-                <h3 className="font-medium px-4 py-2 border-b">{t('preview')}</h3>
-                <div className="max-h-[400px] overflow-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
+          {previewData.length > 0 && (
+            <div className="border rounded-lg">
+              <h3 className="font-medium px-4 py-2 border-b">{t('preview')}</h3>
+              <div className="max-h-[400px] overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {type === 'qa' ? (
+                        <>
+                          <TableHead>Question</TableHead>
+                          <TableHead>Answer</TableHead>
+                        </>
+                      ) : (
+                        <>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Price</TableHead>
+                        </>
+                      )}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {previewData.map((row, index) => (
+                      <TableRow key={index}>
                         {type === 'qa' ? (
                           <>
-                            <TableHead>Question</TableHead>
-                            <TableHead>Answer</TableHead>
+                            <TableCell className="align-top">{row.question}</TableCell>
+                            <TableCell className="align-top">{row.answer}</TableCell>
                           </>
                         ) : (
                           <>
-                            <TableHead>Product</TableHead>
-                            <TableHead>Price</TableHead>
+                            <TableCell>{row.product}</TableCell>
+                            <TableCell>{row.price}</TableCell>
                           </>
                         )}
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {previewData.map((row, index) => (
-                        <TableRow key={index}>
-                          {type === 'qa' ? (
-                            <>
-                              <TableCell className="align-top">{row.question}</TableCell>
-                              <TableCell className="align-top">{row.answer}</TableCell>
-                            </>
-                          ) : (
-                            <>
-                              <TableCell>{row.product}</TableCell>
-                              <TableCell>{row.price}</TableCell>
-                            </>
-                          )}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              {t('cancel')}
-            </Button>
-            <Button onClick={handleImport} disabled={previewData.length === 0}>
-              {t('import')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <DialogFooter className="mt-6">
+          <Button variant="outline" onClick={() => window.history.back()}>
+            {t('cancel')}
+          </Button>
+          <Button onClick={handleImport} disabled={previewData.length === 0}>
+            {t('import')}
+          </Button>
+        </DialogFooter>
+      </div>
 
       <AlertDialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
         <AlertDialogContent>

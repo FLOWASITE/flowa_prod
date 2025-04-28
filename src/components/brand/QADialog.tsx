@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { 
@@ -132,6 +133,7 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [localQAPairs, setLocalQAPairs] = useState<QAPair[]>([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
@@ -195,121 +197,120 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
       title: `${importedData.length} Q&A pairs imported`,
       description: "Q&A pairs have been added to your list",
     });
+    
+    setImportDialogOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full flex justify-between items-center gap-2">
-          <div className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span>{t('manageQA')}</span>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {t('totalQA')} {qaPairs.length}
-          </div>
-        </Button>
-      </DialogTrigger>
-      
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>{t('manageQA')}</DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="w-full flex justify-between items-center gap-2">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>{t('manageQA')}</span>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {t('totalQA')} {qaPairs.length}
+            </div>
+          </Button>
+        </DialogTrigger>
         
-        <div className="grid grid-cols-1 gap-4 mt-4">
-          <div className="flex justify-between items-center">
-            <h3 className="font-medium">{t('qaList')}</h3>
-            <div className="flex gap-2">
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{t('manageQA')}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 gap-4 mt-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium">{t('qaList')}</h3>
               <Button 
-                variant="default" 
+                variant="outline"
                 size="sm" 
-                className="gap-1"
-                onClick={() => document.getElementById('qa-import-trigger')?.click()}
+                className="flex items-center gap-2"
+                onClick={() => setImportDialogOpen(true)}
               >
                 <Upload className="h-4 w-4" />
                 {t('importExcel')}
               </Button>
-              <div className="hidden">
-                <ImportDialog type="qa" onImport={handleImportQA} />
-              </div>
-              <span id="qa-import-trigger" className="hidden" onClick={() => {
-                const importButton = document.querySelector('.gap-2 button');
-                if (importButton) {
-                  (importButton as HTMLElement).click();
-                }
-              }}></span>
             </div>
-          </div>
 
-          <div className="space-y-4 border p-4 rounded-md">
-            <h3 className="font-medium">{t('addQA')}</h3>
-            <div className="space-y-2">
-              <Label htmlFor="newQuestion">{t('question')}</Label>
-              <Input
-                id="newQuestion"
-                value={newQuestion}
-                onChange={(e) => setNewQuestion(e.target.value)}
-                placeholder={t('newQuestion')}
-              />
+            <div className="space-y-4 border p-4 rounded-md">
+              <h3 className="font-medium">{t('addQA')}</h3>
+              <div className="space-y-2">
+                <Label htmlFor="newQuestion">{t('question')}</Label>
+                <Input
+                  id="newQuestion"
+                  value={newQuestion}
+                  onChange={(e) => setNewQuestion(e.target.value)}
+                  placeholder={t('newQuestion')}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="newAnswer">{t('answer')}</Label>
+                <Textarea
+                  id="newAnswer"
+                  value={newAnswer}
+                  onChange={(e) => setNewAnswer(e.target.value)}
+                  placeholder={t('answer')}
+                  rows={3}
+                />
+              </div>
+              
+              <Button type="button" onClick={handleAddQA} className="w-full">
+                <Plus className="h-4 w-4 mr-2" /> {t('add')}
+              </Button>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="newAnswer">{t('answer')}</Label>
-              <Textarea
-                id="newAnswer"
-                value={newAnswer}
-                onChange={(e) => setNewAnswer(e.target.value)}
-                placeholder={t('answer')}
-                rows={3}
-              />
+            <div>
+              <h3 className="font-medium mb-2">{t('qaList')}</h3>
+              <ScrollArea className="h-[40vh] border rounded-md">
+                {localQAPairs.length > 0 ? (
+                  <div className="p-4 space-y-4">
+                    {localQAPairs.map((pair, index) => (
+                      <div key={index} className="border rounded-md p-3 bg-gray-50 dark:bg-gray-900 relative">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          className="absolute top-2 right-2 h-6 w-6 p-0 text-destructive"
+                          onClick={() => handleDeleteQA(index)}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                        <p className="font-medium text-sm">{t('question')}:</p>
+                        <p className="mb-2">{pair.question}</p>
+                        <p className="font-medium text-sm">{t('answer')}:</p>
+                        <p className="text-muted-foreground">{pair.answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-muted-foreground">
+                    <p>No Q&A pairs added yet</p>
+                  </div>
+                )}
+              </ScrollArea>
             </div>
-            
-            <Button type="button" onClick={handleAddQA} className="w-full">
-              <Plus className="h-4 w-4 mr-2" /> {t('add')}
-            </Button>
           </div>
           
-          <div>
-            <h3 className="font-medium mb-2">{t('qaList')}</h3>
-            <ScrollArea className="h-[40vh] border rounded-md">
-              {localQAPairs.length > 0 ? (
-                <div className="p-4 space-y-4">
-                  {localQAPairs.map((pair, index) => (
-                    <div key={index} className="border rounded-md p-3 bg-gray-50 dark:bg-gray-900 relative">
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        className="absolute top-2 right-2 h-6 w-6 p-0 text-destructive"
-                        onClick={() => handleDeleteQA(index)}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                      <p className="font-medium text-sm">{t('question')}:</p>
-                      <p className="mb-2">{pair.question}</p>
-                      <p className="font-medium text-sm">{t('answer')}:</p>
-                      <p className="text-muted-foreground">{pair.answer}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-8 text-center text-muted-foreground">
-                  <p>No Q&A pairs added yet</p>
-                </div>
-              )}
-            </ScrollArea>
-          </div>
-        </div>
-        
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            {t('cancel')}
-          </Button>
-          <Button onClick={handleSave}>
-            {t('save')}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button onClick={handleSave}>
+              {t('save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogContent className="p-0 max-w-3xl overflow-hidden">
+          <ImportDialog type="qa" onImport={handleImportQA} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
