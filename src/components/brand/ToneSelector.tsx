@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -15,11 +14,11 @@ const translations = {
     th: 'น้ำเสียง',
   },
   suggestions: {
-    en: 'Suggestions',
-    vi: 'Gợi ý',
-    fr: 'Suggestions',
-    es: 'Sugerencias',
-    th: 'ข้อเสนอแนะ',
+    en: 'Suggested Tones',
+    vi: 'Tông giọng gợi ý',
+    fr: 'Tons suggérés',
+    es: 'Tonos sugeridos',
+    th: 'โทนที่แนะนำ',
   },
   enterTone: {
     en: 'Enter tone or select from suggestions',
@@ -38,8 +37,8 @@ const translations = {
 };
 
 const suggestedTones = [
-  'Professional', 'Casual', 'Friendly', 'Formal', 'Playful', 'Serious',
-  'Enthusiastic', 'Technical', 'Conversational', 'Authoritative'
+  'Professional', 'Friendly', 'Playful', 'Enthusiastic', 'Conversational',
+  'Authoritative', 'Technical', 'Serious', 'Formal', 'Casual'
 ];
 
 interface ToneSelectorProps {

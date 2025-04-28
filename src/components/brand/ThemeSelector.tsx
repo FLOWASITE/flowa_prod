@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -15,11 +14,11 @@ const translations = {
     th: 'ประเภทธีม',
   },
   suggestions: {
-    en: 'Suggestions',
-    vi: 'Gợi ý',
-    fr: 'Suggestions',
-    es: 'Sugerencias',
-    th: 'ข้อเสนอแนะ',
+    en: 'Suggested Themes',
+    vi: 'Chủ đề gợi ý',
+    fr: 'Thèmes suggérés',
+    es: 'Temas sugeridos',
+    th: 'ธีมที่แนะนำ',
   },
   enterTheme: {
     en: 'Enter theme type or select from suggestions',
