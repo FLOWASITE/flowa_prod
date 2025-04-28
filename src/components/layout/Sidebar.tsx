@@ -4,58 +4,110 @@ import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   BriefcaseBusiness, 
-  MessageCircle, 
   FileText, 
   Image, 
+  MessageCircle, 
   Calendar,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-
-type NavItem = {
-  label: string;
-  icon: React.ElementType;
-  href: string;
-};
-
-const navItems: NavItem[] = [
-  {
-    label: 'Bảng điều khiển',
-    icon: LayoutDashboard,
-    href: '/dashboard',
-  },
-  {
-    label: 'Thương hiệu',
-    icon: BriefcaseBusiness,
-    href: '/brands',
-  },
-  {
-    label: 'Chủ đề',
-    icon: FileText,
-    href: '/topics',
-  },
-  {
-    label: 'Nội dung',
-    icon: Image,
-    href: '/content',
-  },
-  {
-    label: 'Trò chuyện',
-    icon: MessageCircle,
-    href: '/chat',
-  },
-  {
-    label: 'Lịch trình',
-    icon: Calendar,
-    href: '/schedule',
-  },
-];
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { currentLanguage } = useLanguage();
+  
+  const translations = {
+    dashboard: {
+      vi: 'Bảng điều khiển',
+      en: 'Dashboard',
+      fr: 'Tableau de bord',
+      es: 'Panel de control',
+      th: 'แดชบอร์ด',
+      id: 'Dasbor'
+    },
+    brands: {
+      vi: 'Thương hiệu',
+      en: 'Brands',
+      fr: 'Marques',
+      es: 'Marcas',
+      th: 'แบรนด์',
+      id: 'Merek'
+    },
+    topics: {
+      vi: 'Chủ đề',
+      en: 'Topics',
+      fr: 'Sujets',
+      es: 'Temas',
+      th: 'หัวข้อ',
+      id: 'Topik'
+    },
+    content: {
+      vi: 'Nội dung',
+      en: 'Content',
+      fr: 'Contenu',
+      es: 'Contenido',
+      th: 'เนื้อหา',
+      id: 'Konten'
+    },
+    chat: {
+      vi: 'Trò chuyện',
+      en: 'Chat',
+      fr: 'Discussion',
+      es: 'Chat',
+      th: 'แชท',
+      id: 'Obrolan'
+    },
+    schedule: {
+      vi: 'Lịch trình',
+      en: 'Schedule',
+      fr: 'Calendrier',
+      es: 'Horario',
+      th: 'กำหนดการ',
+      id: 'Jadwal'
+    }
+  };
+  
+  const getTranslation = (key) => {
+    const lang = currentLanguage.code;
+    return translations[key][lang] || translations[key]['en']; // Fallback to English
+  };
+  
+  const navItems = [
+    {
+      label: getTranslation('dashboard'),
+      icon: LayoutDashboard,
+      href: '/dashboard',
+    },
+    {
+      label: getTranslation('brands'),
+      icon: BriefcaseBusiness,
+      href: '/brands',
+    },
+    {
+      label: getTranslation('topics'),
+      icon: FileText,
+      href: '/topics',
+    },
+    {
+      label: getTranslation('content'),
+      icon: Image,
+      href: '/content',
+    },
+    {
+      label: getTranslation('chat'),
+      icon: MessageCircle,
+      href: '/chat',
+    },
+    {
+      label: getTranslation('schedule'),
+      icon: Calendar,
+      href: '/schedule',
+    },
+  ];
   
   return (
     <aside 
