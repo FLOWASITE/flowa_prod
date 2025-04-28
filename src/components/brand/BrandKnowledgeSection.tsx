@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { BookText } from 'lucide-react';
+import { BookText, FileText } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { QADialog } from './QADialog';
 
 const translations = {
   brandKnowledge: {
@@ -50,27 +49,6 @@ const translations = {
     es: 'Directrices de marca',
     th: 'แนวทางแบรนด์',
   },
-  addQA: {
-    vi: 'Thêm câu hỏi và trả lời',
-    en: 'Add Q&A',
-    fr: 'Ajouter Q&R',
-    es: 'Añadir preguntas y respuestas',
-    th: 'เพิ่มคำถามและคำตอบ',
-  },
-  question: {
-    vi: 'Câu hỏi',
-    en: 'Question',
-    fr: 'Question',
-    es: 'Pregunta',
-    th: 'คำถาม',
-  },
-  answer: {
-    vi: 'Trả lời',
-    en: 'Answer',
-    fr: 'Réponse',
-    es: 'Respuesta',
-    th: 'คำตอบ',
-  },
   productPricing: {
     vi: 'Giá sản phẩm',
     en: 'Product Pricing',
@@ -85,19 +63,12 @@ const translations = {
     es: 'Beneficios del producto',
     th: 'ประโยชน์ของสินค้า',
   },
-  addItem: {
-    vi: 'Thêm mục',
-    en: 'Add item',
-    fr: 'Ajouter un élément',
-    es: 'Añadir elemento',
-    th: 'เพิ่มรายการ',
-  },
-  delete: {
-    vi: 'Xóa',
-    en: 'Delete',
-    fr: 'Supprimer',
-    es: 'Eliminar',
-    th: 'ลบ',
+  manageQA: {
+    vi: 'Quản lý câu hỏi & trả lời',
+    en: 'Manage Q&A',
+    fr: 'Gérer Q&R',
+    es: 'Gestionar preguntas y respuestas',
+    th: 'จัดการคำถามและคำตอบ',
   }
 };
 
@@ -151,32 +122,10 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
     });
   };
 
-  const handleQAChange = (index: number, field: keyof QAPair, value: string) => {
-    const updatedQAPairs = [...normalizedData.qaPairs];
-    updatedQAPairs[index] = { 
-      ...updatedQAPairs[index], 
-      [field]: value 
-    };
-    
+  const handleQAChange = (newQAPairs: QAPair[]) => {
     onUpdate({
       ...normalizedData,
-      qaPairs: updatedQAPairs,
-    });
-  };
-
-  const addQAPair = () => {
-    onUpdate({
-      ...normalizedData,
-      qaPairs: [...normalizedData.qaPairs, { question: '', answer: '' }],
-    });
-  };
-
-  const removeQAPair = (index: number) => {
-    const updatedQAPairs = normalizedData.qaPairs.filter((_, i) => i !== index);
-    
-    onUpdate({
-      ...normalizedData,
-      qaPairs: updatedQAPairs,
+      qaPairs: newQAPairs,
     });
   };
 
@@ -257,55 +206,12 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
           />
         </div>
 
-        <div className="space-y-4 border-t pt-4">
-          <div className="flex justify-between items-center">
-            <Label className="text-md font-medium">{t('addQA')}</Label>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={addQAPair}
-              className="flex items-center gap-1"
-            >
-              <Plus className="h-4 w-4" /> {t('addItem')}
-            </Button>
-          </div>
-          
-          <div className="space-y-6">
-            {normalizedData.qaPairs.map((qaPair, index) => (
-              <div key={index} className="space-y-3 p-4 border rounded-md bg-gray-50 dark:bg-gray-900/50 relative">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  className="absolute top-2 right-2 text-destructive"
-                  onClick={() => removeQAPair(index)}
-                >
-                  {t('delete')}
-                </Button>
-                
-                <div className="space-y-2">
-                  <Label htmlFor={`question-${index}`}>{t('question')}</Label>
-                  <Textarea
-                    id={`question-${index}`}
-                    value={qaPair.question}
-                    onChange={(e) => handleQAChange(index, 'question', e.target.value)}
-                    placeholder="Ví dụ: Sản phẩm có phù hợp cho da nhạy cảm không?"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor={`answer-${index}`}>{t('answer')}</Label>
-                  <Textarea
-                    id={`answer-${index}`}
-                    value={qaPair.answer}
-                    onChange={(e) => handleQAChange(index, 'answer', e.target.value)}
-                    placeholder="Ví dụ: Có, sản phẩm đã được kiểm nghiệm an toàn cho mọi loại da..."
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="space-y-2 border-t pt-4">
+          <Label className="text-md font-medium">{t('manageQA')}</Label>
+          <QADialog 
+            qaPairs={normalizedData.qaPairs}
+            onChange={handleQAChange}
+          />
         </div>
       </div>
     </div>
