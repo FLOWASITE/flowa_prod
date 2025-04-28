@@ -1,13 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand, ProductType } from '@/types';
 import { Package2, Speaker, MessageSquare } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 const translations = {
   brandDetails: {
@@ -56,6 +56,7 @@ const BrandDetails = () => {
   const { id } = useParams();
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<ProductType[]>([]);
