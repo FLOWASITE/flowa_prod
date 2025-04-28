@@ -4,10 +4,15 @@ import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand, ProductType } from '@/types';
-import { Package2, Speaker, MessageSquare, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import { BrandBasicInfo } from '@/components/brand/details/BrandBasicInfo';
+import { BrandProductsSection } from '@/components/brand/details/BrandProductsSection';
+import { BrandVoiceToneSection } from '@/components/brand/details/BrandVoiceToneSection';
+import { BrandThemesSection } from '@/components/brand/details/BrandThemesSection';
+import { BrandKnowledgeSection } from '@/components/brand/BrandKnowledgeSection';
 
 const translations = {
   brandDetails: {
@@ -225,146 +230,25 @@ const BrandDetails = () => {
         </div>
 
         <div className="space-y-8">
-          {/* Brand Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Brand Info */}
-            <div className="space-y-6 p-6 bg-white rounded-lg shadow-sm border">
-              <div className="flex items-center gap-4">
-                {brand.logo ? (
-                  <img src={brand.logo} alt={brand.name} className="w-16 h-16 object-contain rounded-lg" />
-                ) : (
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl font-semibold text-gray-400">{brand.name[0]}</span>
-                  </div>
-                )}
-                <div>
-                  <h2 className="text-xl font-semibold">{brand.name}</h2>
-                  <p className="text-muted-foreground">{brand.description}</p>
-                </div>
-              </div>
-
-              {brand.website && (
-                <div>
-                  <h3 className="font-medium mb-2">Website</h3>
-                  <a href={brand.website} target="_blank" rel="noopener noreferrer" 
-                     className="text-primary hover:underline">
-                    {brand.website}
-                  </a>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-medium mb-2">Primary Color</h3>
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-6 h-6 rounded border"
-                      style={{ backgroundColor: brand.colors.primary }}
-                    />
-                    <span>{brand.colors.primary}</span>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Secondary Color</h3>
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-6 h-6 rounded border"
-                      style={{ backgroundColor: brand.colors.secondary }}
-                    />
-                    <span>{brand.colors.secondary}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Brand Knowledge */}
-            <div className="space-y-6 p-6 bg-white rounded-lg shadow-sm border">
-              <h2 className="text-xl font-semibold">Brand Knowledge</h2>
-              
-              {brand.knowledge && (
-                <>
-                  {brand.knowledge.history && (
-                    <div>
-                      <h3 className="font-medium mb-2">History</h3>
-                      <p className="text-muted-foreground">{brand.knowledge.history}</p>
-                    </div>
-                  )}
-                  {brand.knowledge.values && (
-                    <div>
-                      <h3 className="font-medium mb-2">Values</h3>
-                      <p className="text-muted-foreground">{brand.knowledge.values}</p>
-                    </div>
-                  )}
-                  {brand.knowledge.targetAudience && (
-                    <div>
-                      <h3 className="font-medium mb-2">Target Audience</h3>
-                      <p className="text-muted-foreground">{brand.knowledge.targetAudience}</p>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+            <BrandBasicInfo brand={brand} />
+            <BrandKnowledgeSection 
+              onUpdate={(knowledge) => setKnowledge(knowledge)}
+              data={brand.knowledge || {
+                history: '',
+                values: '',
+                targetAudience: '',
+                guidelines: '',
+                qaPairs: [],
+                productPricing: '',
+                productBenefits: ''
+              }}
+            />
           </div>
 
-          {/* Products Section */}
-          <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <div className="flex items-center gap-2 mb-4">
-              <Package2 className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">{t('products')}</h2>
-            </div>
-            
-            {products && products.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => (
-                  <div key={product.id} className="p-4 border rounded-lg">
-                    <h3 className="font-medium mb-2">{product.name}</h3>
-                    <p className="text-muted-foreground mb-4">{product.description}</p>
-                    {product.features && product.features.length > 0 && (
-                      <div>
-                        <h4 className="font-medium mb-2">{t('features')}</h4>
-                        <ul className="list-disc list-inside text-sm text-muted-foreground">
-                          {product.features.map((feature, index) => (
-                            <li key={index}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground">{t('noProducts')}</p>
-            )}
-          </div>
-
-          {/* Voice Tone Section */}
-          <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <div className="flex items-center gap-2 mb-4">
-              <Speaker className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">{t('tone')}</h2>
-            </div>
-            <p className="text-muted-foreground">{brand.tone}</p>
-          </div>
-
-          {/* Theme Types Section */}
-          <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <div className="flex items-center gap-2 mb-4">
-              <MessageSquare className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-semibold">{t('themes')}</h2>
-            </div>
-            
-            {brand.themes && brand.themes.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {brand.themes.map((theme, index) => (
-                  <div key={index} className="p-3 border rounded-lg bg-muted/50">
-                    <p>{theme}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground">{t('noThemes')}</p>
-            )}
-          </div>
+          <BrandProductsSection products={products} />
+          <BrandVoiceToneSection tone={brand.tone} />
+          <BrandThemesSection themes={brand.themes || []} />
         </div>
       </div>
     </Layout>
