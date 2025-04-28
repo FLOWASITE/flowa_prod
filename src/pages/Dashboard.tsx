@@ -4,11 +4,12 @@ import { Layout } from '@/components/layout/Layout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { RecentTopics } from '@/components/dashboard/RecentTopics';
 import { ContentOverview } from '@/components/dashboard/ContentOverview';
+import { OnboardingSteps } from '@/components/dashboard/OnboardingSteps';
+import { SocialConnections } from '@/components/dashboard/SocialConnections';
 import { 
   Layers, 
   MessageSquare, 
   PenTool, 
-  Calendar,
   Share2
 } from 'lucide-react';
 import { mockTopics } from '@/data/mockData';
@@ -104,6 +105,10 @@ const Dashboard = () => {
         <h1 className="text-3xl font-bold">{getTranslation('dashboard')}</h1>
         <p className="text-muted-foreground">{getTranslation('welcome')}</p>
       </div>
+
+      <OnboardingSteps />
+      
+      <SocialConnections />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
