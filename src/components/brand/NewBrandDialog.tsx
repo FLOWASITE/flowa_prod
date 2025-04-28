@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -11,25 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Check } from 'lucide-react';
-import { defaultThemeCategories } from '@/data/defaultThemeTypes';
+import { Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
 
@@ -227,100 +214,123 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant="default" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 shadow-lg hover:shadow-xl">
           <Plus className="mr-2 h-4 w-4" />
           {t('newBrand')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[600px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>{t('createNewBrand')}</DialogTitle>
+      <DialogContent className="max-w-[600px] p-0 overflow-hidden bg-gradient-to-b from-background to-background/95 backdrop-blur-sm border-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+              {t('createNewBrand')}
+            </DialogTitle>
           </DialogHeader>
           
-          <div className="grid gap-6 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">{t('brandName')}</Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
+          <div className="px-6 space-y-6">
+            <div className="grid gap-4 transition-all duration-200 hover:shadow-sm rounded-lg p-4">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium">
+                  {t('brandName')}
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-sm font-medium">
+                  {t('description')}
+                </Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                  className="min-h-[100px] transition-all duration-200 hover:border-primary/50 focus:border-primary"
+                />
+              </div>
             </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="description">{t('description')}</Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="primaryColor">{t('primaryColor')}</Label>
-                <div className="flex items-center">
+
+            <div className="grid grid-cols-2 gap-4 transition-all duration-200 hover:shadow-sm rounded-lg p-4">
+              <div className="space-y-2">
+                <Label htmlFor="primaryColor" className="text-sm font-medium">
+                  {t('primaryColor')}
+                </Label>
+                <div className="flex items-center gap-2">
                   <Input
                     id="primaryColor"
                     name="primaryColor"
                     type="color"
                     value={formData.primaryColor}
                     onChange={handleChange}
-                    className="w-10 h-10 p-1"
+                    className="w-10 h-10 p-1 rounded-lg transition-all duration-200"
                   />
                   <Input
                     type="text"
                     value={formData.primaryColor}
                     onChange={handleChange}
                     name="primaryColor"
-                    className="ml-2"
+                    className="flex-1 transition-all duration-200"
                   />
                 </div>
               </div>
               
-              <div className="grid gap-2">
-                <Label htmlFor="secondaryColor">{t('secondaryColor')}</Label>
-                <div className="flex items-center">
+              <div className="space-y-2">
+                <Label htmlFor="secondaryColor" className="text-sm font-medium">
+                  {t('secondaryColor')}
+                </Label>
+                <div className="flex items-center gap-2">
                   <Input
                     id="secondaryColor"
                     name="secondaryColor"
                     type="color"
                     value={formData.secondaryColor}
                     onChange={handleChange}
-                    className="w-10 h-10 p-1"
+                    className="w-10 h-10 p-1 rounded-lg transition-all duration-200"
                   />
                   <Input
                     type="text"
                     value={formData.secondaryColor}
                     onChange={handleChange}
                     name="secondaryColor"
-                    className="ml-2"
+                    className="flex-1 transition-all duration-200"
                   />
                 </div>
               </div>
             </div>
 
-            <ToneSelector
-              selectedTones={selectedTones}
-              onTonesChange={setSelectedTones}
-            />
-            
-            <ThemeSelector
-              selectedThemes={selectedThemes}
-              onThemesChange={setSelectedThemes}
-            />
+            <div className="transition-all duration-200 hover:shadow-sm rounded-lg p-4">
+              <ToneSelector
+                selectedTones={selectedTones}
+                onTonesChange={setSelectedTones}
+              />
+            </div>
+
+            <div className="transition-all duration-200 hover:shadow-sm rounded-lg p-4">
+              <ThemeSelector
+                selectedThemes={selectedThemes}
+                onThemesChange={setSelectedThemes}
+              />
+            </div>
           </div>
           
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+          <DialogFooter className="p-6 bg-muted/5 border-t">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="transition-all duration-200">
               {t('cancel')}
             </Button>
-            <Button type="submit">{t('create')}</Button>
+            <Button 
+              type="submit"
+              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 shadow-md hover:shadow-lg"
+            >
+              {t('create')}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
