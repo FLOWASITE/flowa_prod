@@ -1,11 +1,11 @@
 import React from 'react';
-import { BookText, FileText } from 'lucide-react';
+import { BookText } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { QADialog } from './QADialog';
 import { ImportDialog } from './ImportDialog';
-import { toast } from 'react-toastify';
+import { useToast } from '@/hooks/use-toast';
 
 const translations = {
   brandKnowledge: {
@@ -101,6 +101,7 @@ interface BrandKnowledgeSectionProps {
 
 export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionProps) {
   const { currentLanguage } = useLanguage();
+  const { toast } = useToast();
   
   const normalizedData = {
     ...data,
