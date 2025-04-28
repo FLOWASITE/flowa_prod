@@ -24,6 +24,18 @@ export const mockBrands: Brand[] = [
     },
     createdAt: new Date('2024-02-10'),
     updatedAt: new Date('2024-04-05'),
+  },
+  {
+    id: '3',
+    name: 'Nhà hàng Sagiang',
+    description: 'Nhà hàng ẩm thực Hàn Quốc',
+    logo: '/placeholder.svg',
+    colors: {
+      primary: '#E74C3C',
+      secondary: '#C0392B',
+    },
+    createdAt: new Date('2024-04-28'),
+    updatedAt: new Date('2024-04-28'),
   }
 ];
 

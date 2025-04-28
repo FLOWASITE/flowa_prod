@@ -26,28 +26,29 @@ export function BrandSwitcher() {
   const { currentLanguage } = useLanguage();
   const [selectedBrand, setSelectedBrand] = React.useState(mockBrands[0]);
 
-  const getTranslation = (key: keyof typeof translations) => {
-    const lang = currentLanguage.code;
-    return translations[key][lang] || translations[key]['en'];
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-[200px] justify-between font-medium text-sm">
+        <Button 
+          variant="outline" 
+          className="w-[200px] justify-between font-medium text-sm bg-white dark:bg-gray-900"
+        >
           <Building className="mr-2 h-4 w-4" />
           {selectedBrand.name}
           <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[200px] bg-white dark:bg-gray-900">
+      <DropdownMenuContent align="start" className="w-[200px] bg-white dark:bg-gray-900">
         {mockBrands.map((brand) => (
           <DropdownMenuItem
             key={brand.id}
             onClick={() => setSelectedBrand(brand)}
             className="justify-between"
           >
-            {brand.name}
+            <div className="flex items-center">
+              <Building className="mr-2 h-4 w-4" />
+              {brand.name}
+            </div>
             {selectedBrand.id === brand.id && (
               <Check className="h-4 w-4" />
             )}
