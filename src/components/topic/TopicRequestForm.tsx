@@ -1,16 +1,8 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
 import { 
   Card,
   CardContent,
@@ -20,22 +12,12 @@ import {
   CardDescription
 } from '@/components/ui/card';
 import { Send } from 'lucide-react';
-import { mockBrands, mockProductTypes, mockThemeTypes } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export function TopicRequestForm() {
-  const [selectedBrand, setSelectedBrand] = useState("");
   const [promptText, setPromptText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const { currentLanguage } = useLanguage();
-  
-  const filteredProductTypes = mockProductTypes.filter(
-    product => product.brandId === selectedBrand
-  );
-  
-  const filteredThemeTypes = mockThemeTypes.filter(
-    theme => theme.brandId === selectedBrand
-  );
   
   const translations = {
     cardTitle: {
@@ -53,22 +35,6 @@ export function TopicRequestForm() {
       es: 'Describa los temas que necesita y nuestra IA generará sugerencias para usted.',
       th: 'อธิบายหัวข้อที่คุณต้องการและ AI ของเราจะสร้างข้อเสนอแนะให้คุณ',
       id: 'Jelaskan topik yang Anda butuhkan dan AI kami akan menghasilkan saran untuk Anda.'
-    },
-    selectBrand: {
-      vi: 'Chọn thương hiệu',
-      en: 'Select Brand',
-      fr: 'Sélectionner une marque',
-      es: 'Seleccionar marca',
-      th: 'เลือกแบรนด์',
-      id: 'Pilih Merek'
-    },
-    selectBrandPlaceholder: {
-      vi: 'Chọn một thương hiệu',
-      en: 'Select a brand',
-      fr: 'Sélectionner une marque',
-      es: 'Seleccionar una marca',
-      th: 'เลือกแบรนด์',
-      id: 'Pilih merek'
     },
     yourRequest: {
       vi: 'Yêu cầu của bạn',
@@ -162,21 +128,18 @@ export function TopicRequestForm() {
 
   const getTranslation = (key) => {
     const lang = currentLanguage.code;
-    return translations[key][lang] || translations[key]['en']; // Fallback to English
+    return translations[key][lang] || translations[key]['en'];
   };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
     
-    // Simulate API call
     setTimeout(() => {
       console.log('Sending request:', {
-        brand: selectedBrand,
         prompt: promptText
       });
       setIsSending(false);
-      // Reset form
       setPromptText("");
     }, 2000);
   };
@@ -192,25 +155,6 @@ export function TopicRequestForm() {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="brand">{getTranslation('selectBrand')}</Label>
-              <Select 
-                value={selectedBrand} 
-                onValueChange={setSelectedBrand}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={getTranslation('selectBrandPlaceholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {mockBrands.map(brand => (
-                    <SelectItem key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
             <div className="grid gap-2">
               <Label htmlFor="prompt">{getTranslation('yourRequest')}</Label>
               <Textarea
@@ -255,7 +199,7 @@ export function TopicRequestForm() {
           </div>
           
           <CardFooter className="px-0 pt-6">
-            <Button type="submit" className="w-full" disabled={!selectedBrand || !promptText || isSending}>
+            <Button type="submit" className="w-full" disabled={!promptText || isSending}>
               {isSending ? (
                 <>
                   <span className="animate-pulse">{getTranslation('generatingTopics')}</span>
