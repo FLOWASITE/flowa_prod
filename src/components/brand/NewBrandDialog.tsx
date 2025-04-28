@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -219,20 +218,18 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           {t('newBrand')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[600px] p-0 overflow-hidden bg-gradient-to-b from-background to-background/95 backdrop-blur-sm border-2">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <DialogContent className="max-w-[800px] p-0 overflow-hidden bg-gradient-to-b from-background to-background/95 backdrop-blur-sm border-2">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <DialogHeader className="p-6 pb-0">
             <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
               {t('createNewBrand')}
             </DialogTitle>
           </DialogHeader>
           
-          <div className="px-6 space-y-6">
-            <div className="grid gap-4 transition-all duration-200 hover:shadow-sm rounded-lg p-4">
+          <div className="px-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">
-                  {t('brandName')}
-                </Label>
+                <Label htmlFor="name">{t('brandName')}</Label>
                 <Input
                   id="name"
                   name="name"
@@ -242,82 +239,60 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
                 />
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-medium">
-                  {t('description')}
-                </Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
-                  className="min-h-[100px] transition-all duration-200 hover:border-primary/50 focus:border-primary"
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4 transition-all duration-200 hover:shadow-sm rounded-lg p-4">
-              <div className="space-y-2">
-                <Label htmlFor="primaryColor" className="text-sm font-medium">
-                  {t('primaryColor')}
-                </Label>
-                <div className="flex items-center gap-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="primaryColor">{t('primaryColor')}</Label>
                   <Input
                     id="primaryColor"
                     name="primaryColor"
                     type="color"
                     value={formData.primaryColor}
                     onChange={handleChange}
-                    className="w-10 h-10 p-1 rounded-lg transition-all duration-200"
-                  />
-                  <Input
-                    type="text"
-                    value={formData.primaryColor}
-                    onChange={handleChange}
-                    name="primaryColor"
-                    className="flex-1 transition-all duration-200"
+                    className="h-10 p-1 rounded-lg transition-all duration-200"
                   />
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="secondaryColor" className="text-sm font-medium">
-                  {t('secondaryColor')}
-                </Label>
-                <div className="flex items-center gap-2">
+                
+                <div className="space-y-2">
+                  <Label htmlFor="secondaryColor">{t('secondaryColor')}</Label>
                   <Input
                     id="secondaryColor"
                     name="secondaryColor"
                     type="color"
                     value={formData.secondaryColor}
                     onChange={handleChange}
-                    className="w-10 h-10 p-1 rounded-lg transition-all duration-200"
-                  />
-                  <Input
-                    type="text"
-                    value={formData.secondaryColor}
-                    onChange={handleChange}
-                    name="secondaryColor"
-                    className="flex-1 transition-all duration-200"
+                    className="h-10 p-1 rounded-lg transition-all duration-200"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="transition-all duration-200 hover:shadow-sm rounded-lg p-4">
-              <ToneSelector
-                selectedTones={selectedTones}
-                onTonesChange={setSelectedTones}
+            <div className="space-y-2">
+              <Label htmlFor="description">{t('description')}</Label>
+              <Textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                required
+                className="min-h-[80px] transition-all duration-200 hover:border-primary/50 focus:border-primary"
               />
             </div>
 
-            <div className="transition-all duration-200 hover:shadow-sm rounded-lg p-4">
-              <ThemeSelector
-                selectedThemes={selectedThemes}
-                onThemesChange={setSelectedThemes}
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <ToneSelector
+                  selectedTones={selectedTones}
+                  onTonesChange={setSelectedTones}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <ThemeSelector
+                  selectedThemes={selectedThemes}
+                  onThemesChange={setSelectedThemes}
+                />
+              </div>
             </div>
           </div>
           
