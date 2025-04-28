@@ -179,15 +179,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const toggleTheme = (themeName: string) => {
-    setSelectedThemes(current => {
-      if (current.includes(themeName)) {
-        return current.filter(t => t !== themeName);
-      }
-      return [...current, themeName];
-    });
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -208,6 +199,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         secondary: formData.secondaryColor,
       },
       tone: selectedTones.join(', '),
+      themes: selectedThemes,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -8,6 +8,7 @@ export interface Brand {
     secondary: string;
   };
   tone: string;
+  themes?: string[];  // Add optional themes array
   createdAt: Date;
   updatedAt: Date;
 }

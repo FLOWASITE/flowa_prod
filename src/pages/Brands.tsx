@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { BrandCard } from '@/components/brand/BrandCard';
@@ -120,6 +121,7 @@ const Brands = () => {
         primary_color: newBrand.colors.primary,
         secondary_color: newBrand.colors.secondary,
         tone: newBrand.tone,
+        themes: newBrand.themes || [],  // Add themes to saved data
         created_at: newBrand.createdAt.toISOString(),
         updated_at: newBrand.updatedAt.toISOString(),
       };
