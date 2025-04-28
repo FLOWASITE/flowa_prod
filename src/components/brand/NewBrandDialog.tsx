@@ -30,6 +30,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ToneSelector } from './ToneSelector';
 
 const translations = {
   newBrand: {
@@ -173,7 +174,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     defaultThemeCategories.map(theme => theme.name)
   );
 
-  const [selectedTone, setSelectedTone] = useState<'casual' | 'neutral' | 'formal'>('neutral');
+  const [selectedTones, setSelectedTones] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -208,7 +209,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
-      tone: selectedTone,
+      tone: selectedTones.join(', '),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -225,7 +226,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       secondaryColor: '#0d9488',
     });
     setSelectedThemes(defaultThemeCategories.map(theme => theme.name));
-    setSelectedTone('neutral');
+    setSelectedTones([]);
     setOpen(false);
   };
 
@@ -314,28 +315,11 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label>{t('toneOfVoice')}</Label>
-              <RadioGroup
-                value={selectedTone}
-                onValueChange={(value: 'casual' | 'neutral' | 'formal') => setSelectedTone(value)}
-                className="flex space-x-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="casual" id="casual" />
-                  <Label htmlFor="casual">{t('casual')}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="neutral" id="neutral" />
-                  <Label htmlFor="neutral">{t('neutral')}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="formal" id="formal" />
-                  <Label htmlFor="formal">{t('formal')}</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
+            <ToneSelector
+              selectedTones={selectedTones}
+              onTonesChange={setSelectedTones}
+            />
+            
             <div className="grid gap-2">
               <Label>{t('themeTypes')}</Label>
               <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>

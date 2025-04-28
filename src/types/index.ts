@@ -7,7 +7,7 @@ export interface Brand {
     primary: string;
     secondary: string;
   };
-  tone: 'casual' | 'neutral' | 'formal';
+  tone: string;
   createdAt: Date;
   updatedAt: Date;
 }

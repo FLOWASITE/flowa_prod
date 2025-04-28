@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { BrandCard } from '@/components/brand/BrandCard';
@@ -50,7 +49,6 @@ const Brands = () => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
 
-  // Tải danh sách thương hiệu từ Supabase khi component được mount
   useEffect(() => {
     fetchBrands();
   }, []);
@@ -59,9 +57,7 @@ const Brands = () => {
     try {
       setLoading(true);
       
-      // Kiểm tra xem đã kết nối Supabase chưa
       if (!isSupabaseConnected()) {
-        // Nếu chưa kết nối Supabase, sử dụng dữ liệu mẫu
         console.log('Supabase not connected, using mock data');
         setBrands([...mockBrands]);
         toast({
@@ -81,7 +77,6 @@ const Brands = () => {
         throw error;
       }
       
-      // Chuyển đổi dữ liệu từ Supabase sang định dạng Brand
       const mappedBrands: Brand[] = data.map(item => ({
         id: item.id,
         name: item.name,
@@ -91,7 +86,7 @@ const Brands = () => {
           primary: item.primary_color,
           secondary: item.secondary_color,
         },
-        tone: item.tone || 'neutral',
+        tone: item.tone || 'Professional',
         createdAt: new Date(item.created_at),
         updatedAt: new Date(item.updated_at),
       }));
@@ -104,24 +99,19 @@ const Brands = () => {
         variant: 'destructive',
       });
       
-      // Fallback to mock data if there's an error
       setBrands([...mockBrands]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Hàm để thêm thương hiệu mới vào database
   const handleAddBrand = async (newBrand: Brand) => {
     try {
-      // Kiểm tra xem đã kết nối Supabase chưa
       if (!isSupabaseConnected()) {
-        // Nếu chưa kết nối Supabase, chỉ cập nhật state
         setBrands(prev => [...prev, newBrand]);
         return;
       }
       
-      // Chuẩn bị dữ liệu để lưu vào Supabase
       const brandData = {
         id: newBrand.id,
         name: newBrand.name,
@@ -134,7 +124,6 @@ const Brands = () => {
         updated_at: newBrand.updatedAt.toISOString(),
       };
       
-      // Thêm thương hiệu vào database
       const { error } = await supabase!.from('brands').insert(brandData);
       
       if (error) {
@@ -142,7 +131,6 @@ const Brands = () => {
         throw error;
       }
       
-      // Cập nhật danh sách thương hiệu
       setBrands(prev => [...prev, newBrand]);
     } catch (error) {
       console.error('Error adding brand:', error);
@@ -167,17 +155,14 @@ const Brands = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          // Hiển thị trạng thái loading
           Array(3).fill(0).map((_, idx) => (
             <div key={idx} className="h-40 rounded-lg bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
           ))
         ) : brands.length > 0 ? (
-          // Hiển thị danh sách thương hiệu
           brands.map(brand => (
             <BrandCard key={brand.id} brand={brand} />
           ))
         ) : (
-          // Hiển thị thông báo khi không có thương hiệu
           <div className="col-span-3 text-center py-10">
             <p className="text-gray-500 dark:text-gray-400">Chưa có thương hiệu nào được tạo. Hãy tạo thương hiệu đầu tiên của bạn!</p>
           </div>

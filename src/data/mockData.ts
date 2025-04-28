@@ -4,14 +4,14 @@ import { Brand, ThemeType, ProductType, ContentTone, Topic, Content, ChatConvers
 export const mockBrands: Brand[] = [
   {
     id: '1',
-    name: 'Kiểm toán TAF',
-    description: 'Công ty kiểm toán chuyên nghiệp',
+    name: 'TechCorp Solutions',
+    description: 'Leading provider of innovative technology solutions',
     logo: '/placeholder.svg',
     colors: {
       primary: '#2C3E50',
       secondary: '#34495E',
     },
-    tone: 'formal',
+    tone: 'Professional, Technical, Authoritative',
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-03-20'),
   },
