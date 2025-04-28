@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, ChevronDown, Building } from 'lucide-react';
+import { Check, ChevronDown, Store } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +33,7 @@ export function BrandSwitcher() {
           variant="outline" 
           className="w-[200px] justify-between font-medium text-sm bg-white dark:bg-gray-900"
         >
-          <Building className="mr-2 h-4 w-4" />
+          <Store className="mr-2 h-4 w-4" />
           {selectedBrand.name}
           <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
         </Button>
@@ -46,7 +46,7 @@ export function BrandSwitcher() {
             className="justify-between"
           >
             <div className="flex items-center">
-              <Building className="mr-2 h-4 w-4" />
+              <Store className="mr-2 h-4 w-4" />
               {brand.name}
             </div>
             {selectedBrand.id === brand.id && (
@@ -58,3 +58,4 @@ export function BrandSwitcher() {
     </DropdownMenu>
   );
 }
+
