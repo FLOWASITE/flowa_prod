@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -18,6 +19,8 @@ import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types';
 import { defaultThemeCategories } from '@/data/defaultThemeTypes';
+import { ToneSelector } from './ToneSelector';
+import { ThemeSelector } from './ThemeSelector';
 
 const translations = {
   newBrand: {
@@ -167,27 +170,13 @@ const translations = {
     es: 'Entusiasta',
     th: 'กระตือรือร้น',
   },
-  themeTypes: {
-    en: 'Theme Types',
-    vi: 'Loại chủ đề',
-    fr: 'Types de thèmes',
-    es: 'Tipos de temas',
-    th: 'ประเภทธีม',
-  },
-  selectThemeTypes: {
-    en: 'Select theme types...',
-    vi: 'Chọn loại chủ đề...',
-    fr: 'Sélectionnez les types de thèmes...',
-    es: 'Seleccione tipos de temas...',
-    th: 'เลือกประเภทธีม...',
-  },
-  noThemeTypesFound: {
-    en: 'No theme types found.',
-    vi: 'Không tìm thấy loại chủ đề.',
-    fr: 'Aucun type de thème trouvé.',
-    es: 'No se encontraron tipos de temas.',
-    th: 'ไม่พบประเภทธีม',
-  },
+  suggestedThemes: {
+    en: 'Suggested Themes',
+    vi: 'Chủ đề gợi ý',
+    fr: 'Thèmes suggérés',
+    es: 'Temas sugeridos',
+    th: 'ธีมที่แนะนำ',
+  }
 };
 
 interface NewBrandDialogProps {
