@@ -91,6 +91,7 @@ const Brands = () => {
           primary: item.primary_color,
           secondary: item.secondary_color,
         },
+        tone: item.tone || 'neutral',
         createdAt: new Date(item.created_at),
         updatedAt: new Date(item.updated_at),
       }));
@@ -128,6 +129,7 @@ const Brands = () => {
         logo: newBrand.logo || null,
         primary_color: newBrand.colors.primary,
         secondary_color: newBrand.colors.secondary,
+        tone: newBrand.tone,
         created_at: newBrand.createdAt.toISOString(),
         updated_at: newBrand.updatedAt.toISOString(),
       };

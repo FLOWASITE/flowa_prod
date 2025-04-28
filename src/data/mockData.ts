@@ -1,3 +1,4 @@
+
 import { Brand, ThemeType, ProductType, ContentTone, Topic, Content, ChatConversation, ChatMessage } from '../types';
 
 export const mockBrands: Brand[] = [
@@ -10,6 +11,7 @@ export const mockBrands: Brand[] = [
       primary: '#2C3E50',
       secondary: '#34495E',
     },
+    tone: 'formal',
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-03-20'),
   },
@@ -22,6 +24,7 @@ export const mockBrands: Brand[] = [
       primary: '#3498DB',
       secondary: '#2980B9',
     },
+    tone: 'neutral',
     createdAt: new Date('2024-02-10'),
     updatedAt: new Date('2024-04-05'),
   },
@@ -34,6 +37,7 @@ export const mockBrands: Brand[] = [
       primary: '#E74C3C',
       secondary: '#C0392B',
     },
+    tone: 'casual',
     createdAt: new Date('2024-04-28'),
     updatedAt: new Date('2024-04-28'),
   }
