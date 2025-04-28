@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { BrandCard } from '@/components/brand/BrandCard';
@@ -101,6 +100,10 @@ const Brands = () => {
         throw error;
       }
       
+      if (!data) {
+        throw new Error('No data returned');
+      }
+      
       console.log('Fetched brands data:', data); // Debug log
       
       const mappedBrands: Brand[] = data.map(item => ({
@@ -157,6 +160,10 @@ const Brands = () => {
       if (error) {
         console.error('Error adding brand:', error);
         throw error;
+      }
+      
+      if (!data || !data[0]) {
+        throw new Error('No data returned after brand creation');
       }
       
       if (newBrand.knowledge) {

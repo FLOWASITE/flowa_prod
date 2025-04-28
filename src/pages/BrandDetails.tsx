@@ -53,7 +53,7 @@ const translations = {
 };
 
 const BrandDetails = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();

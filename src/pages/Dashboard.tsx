@@ -1,10 +1,12 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { RecentTopics } from '@/components/dashboard/RecentTopics';
 import { ContentOverview } from '@/components/dashboard/ContentOverview';
 import { OnboardingSteps } from '@/components/dashboard/OnboardingSteps';
 import { SocialConnections } from '@/components/dashboard/SocialConnections';
+import { BackendStatus } from '@/components/dashboard/BackendStatus'; 
 import { 
   Layers, 
   MessageSquare, 
@@ -13,9 +15,30 @@ import {
 } from 'lucide-react';
 import { mockTopics } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { isSupabaseConnected } from '@/integrations/supabase/client';
+import { useState } from 'react';
 
-const Dashboard = () => {
+interface DashboardProps {
+  backendStatus?: 'checking' | 'connected' | 'disconnected';
+}
+
+const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
   const { currentLanguage } = useLanguage();
+  const [status, setStatus] = useState<'checking' | 'connected' | 'disconnected'>(
+    initialStatus || 'checking'
+  );
+
+  useEffect(() => {
+    if (initialStatus) {
+      setStatus(initialStatus);
+    }
+  }, [initialStatus]);
+
+  const checkSupabaseConnection = async () => {
+    setStatus('checking');
+    const connected = await isSupabaseConnected();
+    setStatus(connected ? 'connected' : 'disconnected');
+  };
   
   const contentStatusData = [
     { 
@@ -91,7 +114,7 @@ const Dashboard = () => {
     }
   };
 
-  const getTranslation = (key) => {
+  const getTranslation = (key: keyof typeof translations) => {
     const lang = currentLanguage.code;
     return translations[key][lang] || translations[key]['en'];
   };
@@ -100,6 +123,10 @@ const Dashboard = () => {
     <Layout>
       <div className="mb-8">
         <h1 className="text-4xl font-bold">Duy Vo</h1>
+      </div>
+
+      <div className="mb-8">
+        <BackendStatus status={status} onRefresh={checkSupabaseConnection} />
       </div>
 
       <OnboardingSteps />

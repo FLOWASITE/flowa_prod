@@ -19,8 +19,6 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
       'x-app-version': '1.0.0', // Add custom headers for API tracking
     },
   },
-  // Better error handling with debug logs in development
-  debug: import.meta.env.MODE === 'development',
 });
 
 // Helper function to check if Supabase is connected
@@ -53,16 +51,19 @@ export const api = {
       .select('*')
       .order('created_at', { ascending: false }),
       
-    getById: async (id: string) => await supabase
-      .from('brands')
-      .select(`
-        *,
-        brand_knowledge (*),
-        products (*),
-        qa_pairs (*)
-      `)
-      .eq('id', id)
-      .single(),
+    getById: async (id: string | undefined) => {
+      if (!id) return { data: null, error: new Error('Invalid ID') };
+      return await supabase
+        .from('brands')
+        .select(`
+          *,
+          brand_knowledge (*),
+          products (*),
+          qa_pairs (*)
+        `)
+        .eq('id', id)
+        .single();
+    },
       
     create: async (brandData: any) => await supabase
       .from('brands')
@@ -72,26 +73,35 @@ export const api = {
   
   // Product management
   products: {
-    getByBrandId: async (brandId: string) => await supabase
-      .from('products')
-      .select('*')
-      .eq('brand_id', brandId)
+    getByBrandId: async (brandId: string | undefined) => {
+      if (!brandId) return { data: null, error: new Error('Invalid brand ID') };
+      return await supabase
+        .from('products')
+        .select('*')
+        .eq('brand_id', brandId);
+    }
   },
   
   // Knowledge management
   knowledge: {
-    getByBrandId: async (brandId: string) => await supabase
-      .from('brand_knowledge')
-      .select('*')
-      .eq('brand_id', brandId)
-      .single()
+    getByBrandId: async (brandId: string | undefined) => {
+      if (!brandId) return { data: null, error: new Error('Invalid brand ID') };
+      return await supabase
+        .from('brand_knowledge')
+        .select('*')
+        .eq('brand_id', brandId)
+        .single();
+    }
   },
   
   // QA pairs management
   qaPairs: {
-    getByBrandId: async (brandId: string) => await supabase
-      .from('qa_pairs')
-      .select('*')
-      .eq('brand_id', brandId)
+    getByBrandId: async (brandId: string | undefined) => {
+      if (!brandId) return { data: null, error: new Error('Invalid brand ID') };
+      return await supabase
+        .from('qa_pairs')
+        .select('*')
+        .eq('brand_id', brandId);
+    }
   }
 };
