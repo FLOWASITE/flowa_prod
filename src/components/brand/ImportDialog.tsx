@@ -170,7 +170,7 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
     let csvContent = '';
     
     if (templateType === 'qa') {
-      csvContent = 'Question,Answer\n"What is your company's mission?","Our mission is to provide excellent products and services."\n"How can I contact support?","You can reach our support team at support@example.com."';
+      csvContent = 'Question,Answer\n"What is your company\'s mission?","Our mission is to provide excellent products and services."\n"How can I contact support?","You can reach our support team at support@example.com."';
     } else {
       csvContent = 'Product,Price\n"Basic Package","$99"\n"Premium Service","$199"';
     }
