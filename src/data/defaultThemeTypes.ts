@@ -1,6 +1,5 @@
 
-import { ThemeType } from '@/types';
-import { book, newspaper, headphones, "shopping-bag", handshake, users, lightbulb } from 'lucide-react';
+import { book, newspaper, headphones, ShoppingBag, handshake, users, lightbulb } from 'lucide-react';
 
 export const defaultThemeCategories = [
   {
@@ -25,7 +24,7 @@ export const defaultThemeCategories = [
     name: 'Sản phẩm/Dịch vụ',
     description: 'Giới thiệu, thúc đẩy bán hàng',
     keywords: ['sản phẩm', 'dịch vụ', 'bán hàng'],
-    icon: "shopping-bag"
+    icon: ShoppingBag
   },
   {
     name: 'Câu chuyện Khách hàng & Bằng chứng Xã hội',
