@@ -20,6 +20,7 @@ import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
 import { ProductSelector } from './ProductSelector';
 import { SocialConnectionsSelector } from './SocialConnectionsSelector';
+import { BrandKnowledgeSection } from './BrandKnowledgeSection';
 
 const translations = {
   newBrand: {
@@ -132,7 +133,7 @@ const translations = {
     vi: 'Giọng điệu',
     fr: 'Ton de voix',
     es: 'Tono de voz',
-    th: 'น้ำเสียง',
+    th: 'น้ำเสี��ง',
   },
   suggestedTones: {
     en: 'Suggested Tones',
@@ -179,6 +180,12 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
   const [products, setProducts] = useState<Array<{ name: string; description: string; features: string[] }>>([]);
+  const [brandKnowledge, setBrandKnowledge] = useState({
+    history: '',
+    values: '',
+    targetAudience: '',
+    guidelines: ''
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -197,6 +204,12 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     setSelectedThemes([]);
     setSelectedTones(['Professional']);
     setProducts([]);
+    setBrandKnowledge({
+      history: '',
+      values: '',
+      targetAudience: '',
+      guidelines: ''
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -212,7 +225,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
 
     const newProducts: ProductType[] = products.map(p => ({
       id: uuidv4(),
-      brandId: uuidv4(), // This will be replaced with actual brandId
+      brandId: uuidv4(),
       name: p.name,
       description: p.description,
       features: p.features,
@@ -235,6 +248,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       products: newProducts,
       createdAt: new Date(),
       updatedAt: new Date(),
+      knowledge: brandKnowledge
     };
 
     onBrandCreated(newBrand);
@@ -379,6 +393,11 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   onProductsChange={setProducts}
                 />
               </div>
+
+              <BrandKnowledgeSection
+                data={brandKnowledge}
+                onUpdate={setBrandKnowledge}
+              />
             </div>
 
             <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">

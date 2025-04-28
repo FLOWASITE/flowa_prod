@@ -11,6 +11,12 @@ export interface Brand {
   tone: string;
   themes?: string[];
   products?: ProductType[];
+  knowledge?: {
+    history: string;
+    values: string;
+    targetAudience: string;
+    guidelines: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
