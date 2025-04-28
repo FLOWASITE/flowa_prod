@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,12 +9,15 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Brand } from '@/types';
+import { useNavigate } from 'react-router-dom';
 
 interface BrandCardProps {
   brand: Brand;
 }
 
 export function BrandCard({ brand }: BrandCardProps) {
+  const navigate = useNavigate();
+
   return (
     <Card className="group bg-white dark:bg-gray-800 transition-all duration-200 hover:shadow-md3-2">
       <div className="p-6 space-y-4">
@@ -57,6 +59,7 @@ export function BrandCard({ brand }: BrandCardProps) {
         <Button 
           variant="default" 
           className="w-full bg-primary/10 hover:bg-primary/20 text-primary"
+          onClick={() => navigate(`/brands/${brand.id}`)}
         >
           Xem chi tiết
         </Button>
