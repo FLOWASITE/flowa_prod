@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Globe, Image, Plus } from 'lucide-react';
+import { Globe, Image, Plus, Package } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
@@ -148,6 +148,13 @@ const translations = {
     es: 'Tipos de temas sugeridos',
     th: 'ประเภทธีมที่แนะนำ',
     id: 'Jenis Tema yang Disarankan'
+  },
+  products: {
+    en: 'Products & Services',
+    vi: 'Sản phẩm & Dịch vụ',
+    fr: 'Produits & Services',
+    es: 'Productos y servicios',
+    th: 'สินค้าและบริการ',
   }
 };
 
@@ -266,7 +273,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             </DialogTitle>
           </DialogHeader>
           
-          <div className="px-6 space-y-6">
+          <div className="px-6 space-y-6 max-h-[70vh] overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="name">{t('brandName')}</Label>
@@ -361,10 +368,16 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 onThemesChange={setSelectedThemes}
               />
 
-              <ProductSelector 
-                products={products}
-                onProductsChange={setProducts}
-              />
+              <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
+                <div className="flex items-center gap-2 mb-4">
+                  <Package className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-semibold">{t('products')}</h3>
+                </div>
+                <ProductSelector 
+                  products={products}
+                  onProductsChange={setProducts}
+                />
+              </div>
             </div>
           </div>
           
