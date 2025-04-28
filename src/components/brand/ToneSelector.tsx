@@ -7,14 +7,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const translations = {
   toneOfVoice: {
-    en: 'Tone of Voice',
+    en: 'Voice Tone',
     vi: 'Tông giọng',
     fr: 'Ton de voix',
     es: 'Tono de voz',
     th: 'น้ำเสียง',
   },
   suggestions: {
-    en: 'Suggested Tones',
+    en: 'Suggested Tone Types',
     vi: 'Thêm gợi ý giọng điệu',
     fr: 'Tons suggérés',
     es: 'Tonos sugeridos',
@@ -35,8 +35,8 @@ const translations = {
     th: 'กด Enter เพื่อเพิ่มโทนใหม่',
   },
   addCustomTone: {
-    en: 'Add custom tone',
-    vi: 'Thêm tông giọng tùy chỉnh',
+    en: 'Add custom tone type',
+    vi: 'Thêm giọng điệu tùy chỉnh',
     fr: 'Ajouter un ton personnalisé',
     es: 'Agregar tono personalizado',
     th: 'เพิ่มโทนที่กำหนดเอง',
@@ -74,7 +74,6 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
 
   const addTone = (tone: string) => {
     if (!selectedTones.includes(tone)) {
-      // If this is a custom tone not in the suggestions, add it to customTones
       if (!suggestedTones.includes(tone) && !customTones.includes(tone)) {
         setCustomTones([...customTones, tone]);
       }
@@ -86,14 +85,11 @@ export function ToneSelector({ selectedTones, onTonesChange }: ToneSelectorProps
     onTonesChange(selectedTones.filter(t => t !== tone));
   };
   
-  // Function to handle adding a custom tone through the badge click
   const handleAddCustomTone = () => {
-    // If there's text in the input, add it
     if (inputValue.trim()) {
       addTone(inputValue.trim());
       setInputValue('');
     } else {
-      // Otherwise, open a prompt to get custom tone input
       const customTone = prompt(t('enterTone'));
       if (customTone && customTone.trim()) {
         addTone(customTone.trim());
