@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { StatCard } from '@/components/dashboard/StatCard';
@@ -18,7 +17,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const Dashboard = () => {
   const { currentLanguage } = useLanguage();
   
-  // Get the appropriate content based on the current language
   const contentStatusData = [
     { 
       name: currentLanguage.code === 'vi' ? 'Nháp' : 'Draft', 
@@ -93,17 +91,15 @@ const Dashboard = () => {
     }
   };
 
-  // Use the current language code to get the appropriate translation
   const getTranslation = (key) => {
     const lang = currentLanguage.code;
-    return translations[key][lang] || translations[key]['en']; // Fallback to English
+    return translations[key][lang] || translations[key]['en'];
   };
 
   return (
     <Layout>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{getTranslation('dashboard')}</h1>
-        <p className="text-muted-foreground">{getTranslation('welcome')}</p>
+        <h1 className="text-4xl font-bold">Duy Vo</h1>
       </div>
 
       <OnboardingSteps />

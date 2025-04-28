@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -9,12 +8,12 @@ export function OnboardingSteps() {
   
   const translations = {
     gettingStarted: {
-      vi: 'Bắt đầu với SocialBee',
-      en: 'Getting started with SocialBee',
-      fr: 'Commencer avec SocialBee',
-      es: 'Empezar con SocialBee',
-      th: 'เริ่มต้นใช้งาน SocialBee',
-      id: 'Memulai dengan SocialBee'
+      vi: 'Bắt đầu với Flowa',
+      en: 'Getting started with Flowa',
+      fr: 'Commencer avec Flowa',
+      es: 'Empezar con Flowa',
+      th: 'เริ่มต้นใช้งาน Flowa',
+      id: 'Memulai dengan Flowa'
     },
     setupAccount: {
       vi: 'Thiết lập tài khoản của bạn chỉ trong vài bước.',
@@ -66,7 +65,7 @@ export function OnboardingSteps() {
   ];
 
   return (
-    <Card className="p-6 mb-8 bg-[#FFC107]">
+    <Card className="p-6 mb-8 bg-primary/10">
       <div className="mb-4">
         <h2 className="text-xl font-semibold">{getTranslation('gettingStarted')}</h2>
         <p className="text-sm text-gray-700 mt-1">{getTranslation('setupAccount')}</p>
@@ -88,7 +87,7 @@ export function OnboardingSteps() {
               <p className="text-sm text-gray-500 mb-4 flex-grow">
                 {step.description}
               </p>
-              <button className="w-full py-2 px-4 bg-[#FFC107] text-black rounded-md hover:bg-[#FFB300] transition-colors">
+              <button className="w-full py-2 px-4 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors">
                 {step.action}
               </button>
             </div>

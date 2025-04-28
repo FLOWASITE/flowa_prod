@@ -43,42 +43,50 @@ export function SocialConnections() {
     { 
       name: 'Facebook',
       icon: Facebook,
-      actions: ['+ Profile', '+ Page']
+      actions: ['+ Profile', '+ Page'],
+      color: '#1877F2'
     },
     {
       name: 'Instagram',
       icon: Instagram,
-      actions: ['+ Profile', '+ Business']
+      actions: ['+ Profile', '+ Business'],
+      color: '#E4405F'
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
-      actions: ['+ Profile', '+ Company']
+      actions: ['+ Profile', '+ Company'],
+      color: '#0A66C2'
     },
     {
       name: 'X (Twitter)',
       icon: Twitter,
-      actions: ['+ Profile']
+      actions: ['+ Profile'],
+      color: '#000000'
     },
     {
       name: 'YouTube',
       icon: Youtube,
-      actions: ['+ Channel']
+      actions: ['+ Channel'],
+      color: '#FF0000'
     },
     {
       name: 'Pinterest',
-      icon: Share2, // Using Share2 icon instead of Pinterest
-      actions: ['+ Profile']
+      icon: Share2,
+      actions: ['+ Profile'],
+      color: '#BD081C'
     },
     {
       name: 'TikTok',
-      icon: MessageSquare, // Using MessageSquare icon instead of Tiktok
-      actions: ['+ Profile']
+      icon: MessageSquare,
+      actions: ['+ Profile'],
+      color: '#000000'
     },
     {
       name: 'Universal Posting',
-      icon: MessagesSquare, // Using MessagesSquare icon instead of UniversalPosting
-      actions: ['+ Add']
+      icon: MessagesSquare,
+      actions: ['+ Add'],
+      color: '#6366f1'
     }
   ];
 
@@ -93,7 +101,7 @@ export function SocialConnections() {
         {socialPlatforms.map((platform) => (
           <div key={platform.name} className="space-y-2">
             <div className="flex items-center gap-2 text-gray-700">
-              <platform.icon className="h-5 w-5" />
+              <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
               <span>{platform.name}</span>
             </div>
             {platform.actions.map((action) => (
