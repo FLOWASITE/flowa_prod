@@ -6,7 +6,7 @@ import { NewBrandDialog } from '@/components/brand/NewBrandDialog';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConnected } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const translations = {
@@ -30,6 +30,13 @@ const translations = {
     fr: 'Erreur lors du chargement des marques',
     es: 'Error al cargar marcas',
     th: 'เกิดข้อผิดพลาดในการโหลดแบรนด์',
+  },
+  supabaseNotConnected: {
+    en: 'Supabase is not connected. Using mock data.',
+    vi: 'Supabase chưa được kết nối. Đang sử dụng dữ liệu mẫu.',
+    fr: 'Supabase n\'est pas connecté. Utilisation de données fictives.',
+    es: 'Supabase no está conectado. Usando datos ficticios.',
+    th: 'Supabase ไม่ได้เชื่อมต่อ กำลังใช้ข้อมูลจำลอง',
   }
 };
 
@@ -53,14 +60,18 @@ const Brands = () => {
       setLoading(true);
       
       // Kiểm tra xem đã kết nối Supabase chưa
-      if (!supabase) {
+      if (!isSupabaseConnected()) {
         // Nếu chưa kết nối Supabase, sử dụng dữ liệu mẫu
         console.log('Supabase not connected, using mock data');
         setBrands([...mockBrands]);
+        toast({
+          title: t('supabaseNotConnected'),
+          variant: 'default',
+        });
         return;
       }
       
-      const { data, error } = await supabase
+      const { data, error } = await supabase!
         .from('brands')
         .select('*')
         .order('created_at', { ascending: false });
@@ -103,7 +114,7 @@ const Brands = () => {
   const handleAddBrand = async (newBrand: Brand) => {
     try {
       // Kiểm tra xem đã kết nối Supabase chưa
-      if (!supabase) {
+      if (!isSupabaseConnected()) {
         // Nếu chưa kết nối Supabase, chỉ cập nhật state
         setBrands(prev => [...prev, newBrand]);
         return;
@@ -122,7 +133,7 @@ const Brands = () => {
       };
       
       // Thêm thương hiệu vào database
-      const { error } = await supabase.from('brands').insert(brandData);
+      const { error } = await supabase!.from('brands').insert(brandData);
       
       if (error) {
         console.error('Error adding brand:', error);
