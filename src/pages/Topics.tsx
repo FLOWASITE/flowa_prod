@@ -1,11 +1,20 @@
-
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { TopicCard } from '@/components/topic/TopicCard';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
 import { mockTopics } from '@/data/mockData';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { 
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell 
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { Edit, Eye, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Topics = () => {
   const { currentLanguage } = useLanguage();
@@ -79,96 +88,90 @@ const Topics = () => {
 
   const getTranslation = (key) => {
     const lang = currentLanguage.code;
-    return translations[key][lang] || translations[key]['en']; // Fallback to English
+    return translations[key][lang] || translations[key]['en'];
   };
-  
-  const handleApproveTopic = (id: string) => {
-    console.log(`Approving topic with id: ${id}`);
-  };
-  
-  const handleRejectTopic = (id: string) => {
-    console.log(`Rejecting topic with id: ${id}`);
-  };
-  
-  const draftTopics = mockTopics.filter(topic => topic.status === 'draft');
-  const approvedTopics = mockTopics.filter(topic => topic.status === 'approved' || topic.status === 'generating');
-  const completedTopics = mockTopics.filter(topic => topic.status === 'completed');
 
+  const statusBadge = (status: string) => {
+    const statusClasses = {
+      draft: "bg-gray-100 text-gray-800",
+      approved: "bg-green-100 text-green-800",
+      rejected: "bg-red-100 text-red-800",
+      generating: "bg-blue-100 text-blue-800",
+      completed: "bg-purple-100 text-purple-800",
+    };
+    
+    return (
+      <Badge variant="outline" className={statusClasses[status]}>
+        {status}
+      </Badge>
+    );
+  };
+  
   return (
     <Layout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">{getTranslation('title')}</h1>
-        <p className="text-muted-foreground">{getTranslation('subtitle')}</p>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <Tabs defaultValue="drafts" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="drafts">
-                {getTranslation('drafts')} ({draftTopics.length})
-              </TabsTrigger>
-              <TabsTrigger value="approved">
-                {getTranslation('approved')} ({approvedTopics.length})
-              </TabsTrigger>
-              <TabsTrigger value="completed">
-                {getTranslation('completed')} ({completedTopics.length})
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="drafts">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {draftTopics.map(topic => (
-                  <TopicCard 
-                    key={topic.id} 
-                    topic={topic}
-                    onApprove={handleApproveTopic}
-                    onReject={handleRejectTopic}
-                  />
-                ))}
-                {draftTopics.length === 0 && (
-                  <div className="col-span-2 text-center py-12 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                    <p className="text-muted-foreground">{getTranslation('noDrafts')}</p>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="approved">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {approvedTopics.map(topic => (
-                  <TopicCard 
-                    key={topic.id} 
-                    topic={topic}
-                  />
-                ))}
-                {approvedTopics.length === 0 && (
-                  <div className="col-span-2 text-center py-12 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                    <p className="text-muted-foreground">{getTranslation('noApproved')}</p>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="completed">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {completedTopics.map(topic => (
-                  <TopicCard 
-                    key={topic.id} 
-                    topic={topic}
-                  />
-                ))}
-                {completedTopics.length === 0 && (
-                  <div className="col-span-2 text-center py-12 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                    <p className="text-muted-foreground">{getTranslation('noCompleted')}</p>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-        
+      <div className="space-y-8">
+        {/* Topic Management Section */}
         <div>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-3xl font-bold">{getTranslation('title')}</h1>
+              <p className="text-muted-foreground">{getTranslation('subtitle')}</p>
+            </div>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Tạo chủ đề mới
+            </Button>
+          </div>
+
+          <div className="rounded-lg border bg-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[50px]">#</TableHead>
+                  <TableHead>Chủ đề</TableHead>
+                  <TableHead>Mô tả</TableHead>
+                  <TableHead>Nguồn</TableHead>
+                  <TableHead>Ngày tạo</TableHead>
+                  <TableHead>Trạng thái</TableHead>
+                  <TableHead className="text-right">Hành động</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockTopics.map((topic, index) => (
+                  <TableRow key={topic.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      <div className="font-medium">{topic.title}</div>
+                    </TableCell>
+                    <TableCell className="max-w-[300px]">
+                      <p className="line-clamp-2">{topic.description}</p>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">
+                        {topic.createdBy === 'user' ? 'Manual' : 'AI Generated'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
+                    <TableCell>{statusBadge(topic.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="ghost" size="icon">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Topic Request Form Section */}
+        <div className="max-w-xl">
           <TopicRequestForm />
         </div>
       </div>
