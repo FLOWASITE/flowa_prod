@@ -145,6 +145,11 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
   const handleSave = () => {
     onChange(localQAPairs);
     setOpen(false);
+    
+    toast({
+      title: `${localQAPairs.length} Q&A pairs saved`,
+      description: "Your Q&A knowledge base has been updated",
+    });
   };
 
   const handleAddQA = () => {
@@ -176,6 +181,7 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
   };
 
   const handleImportQA = (importedData: Array<{ question: string; answer: string }>) => {
+    console.log("Importing QA data:", importedData);
     setLocalQAPairs([...localQAPairs, ...importedData]);
     
     toast({
@@ -205,7 +211,7 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
         
         <div className="grid grid-cols-1 gap-4 mt-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-medium">{t('addQA')}</h3>
+            <h3 className="font-medium">{t('qaList')}</h3>
             <ImportDialog type="qa" onImport={handleImportQA} />
           </div>
 

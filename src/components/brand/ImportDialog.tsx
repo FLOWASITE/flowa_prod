@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { FileSpreadsheet } from 'lucide-react';
+import { FileExcel, Upload } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -124,27 +124,55 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
     if (!file) return;
 
     try {
+      // Parse CSV file
       const text = await file.text();
-      const rows = text.split('\n').map(row => row.split(','));
+      const rows = text.split('\n').map(row => {
+        // Handle quoted CSV fields that may contain commas
+        const result = [];
+        let inQuote = false;
+        let current = '';
+        
+        for (let i = 0; i < row.length; i++) {
+          const char = row[i];
+          
+          if (char === '"') {
+            inQuote = !inQuote;
+          } else if (char === ',' && !inQuote) {
+            result.push(current);
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        
+        // Add the last field
+        result.push(current);
+        return result;
+      });
       
       if (type === 'qa') {
         const qaPairs = rows.slice(1) // Skip header row
           .filter(row => row.length >= 2 && row[0] && row[1])
           .map(row => ({
-            question: row[0].trim(),
-            answer: row[1].trim()
+            question: row[0].trim().replace(/^"|"$/g, ''),
+            answer: row[1].trim().replace(/^"|"$/g, '')
           }));
+          
         setPreviewData(qaPairs);
+        console.log("Parsed QA data:", qaPairs);
       } else {
         const pricing = rows.slice(1) // Skip header row
           .filter(row => row.length >= 2 && row[0] && row[1])
           .map(row => ({
-            product: row[0].trim(),
-            price: row[1].trim()
+            product: row[0].trim().replace(/^"|"$/g, ''),
+            price: row[1].trim().replace(/^"|"$/g, '')
           }));
+          
         setPreviewData(pricing);
+        console.log("Parsed pricing data:", pricing);
       }
     } catch (error) {
+      console.error("CSV parsing error:", error);
       toast({
         title: t('invalidFormat'),
         variant: 'destructive',
@@ -188,7 +216,7 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
-            <FileSpreadsheet className="h-4 w-4" />
+            <FileExcel className="h-4 w-4" />
             {t('importData')}
           </Button>
         </DialogTrigger>
@@ -210,7 +238,7 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
               <label htmlFor="file-upload" className="flex-1">
                 <Button variant="outline" className="w-full gap-2" asChild>
                   <span>
-                    <FileSpreadsheet className="h-4 w-4" />
+                    <Upload className="h-4 w-4" />
                     {t('selectFile')}
                   </span>
                 </Button>
@@ -249,8 +277,8 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
                         <TableRow key={index}>
                           {type === 'qa' ? (
                             <>
-                              <TableCell>{row.question}</TableCell>
-                              <TableCell>{row.answer}</TableCell>
+                              <TableCell className="align-top">{row.question}</TableCell>
+                              <TableCell className="align-top">{row.answer}</TableCell>
                             </>
                           ) : (
                             <>
