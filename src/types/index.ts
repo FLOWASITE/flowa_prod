@@ -3,13 +3,14 @@ export interface Brand {
   name: string;
   description: string;
   logo?: string;
-  website?: string;  // Add optional website property
+  website?: string;
   colors: {
     primary: string;
     secondary: string;
   };
   tone: string;
   themes?: string[];
+  products?: ProductType[];
   createdAt: Date;
   updatedAt: Date;
 }

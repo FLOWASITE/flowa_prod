@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -19,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types';
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
+import { ProductSelector } from './ProductSelector';
 
 const translations = {
   newBrand: {
@@ -138,7 +138,7 @@ const translations = {
     vi: 'Giọng điệu gợi ý',
     fr: 'Tons suggérés',
     es: 'Tonos sugeridos',
-    th: 'โทนเสียงที่แนะนำ',
+    th: 'โ���นเสียงที่แนะนำ',
     id: 'Nada yang Disarankan'
   },
   suggestedThemes: {
@@ -170,6 +170,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
+  const [products, setProducts] = useState<Array<{ name: string; description: string; features: string[] }>>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -187,6 +188,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     });
     setSelectedThemes([]);
     setSelectedTones(['Professional']);
+    setProducts([]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -200,6 +202,16 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       return;
     }
 
+    const newProducts: ProductType[] = products.map(p => ({
+      id: uuidv4(),
+      brandId: uuidv4(), // This will be replaced with actual brandId
+      name: p.name,
+      description: p.description,
+      features: p.features,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+
     const newBrand: Brand = {
       id: uuidv4(),
       name: formData.name,
@@ -212,6 +224,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       },
       tone: selectedTones.join(', '),
       themes: selectedThemes,
+      products: newProducts,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -234,7 +247,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       open={open} 
       onOpenChange={(newOpen) => {
         if (newOpen === false) {
-          // When dialog closes without submitting, reset the form
           resetForm();
         }
         setOpen(newOpen);
@@ -347,6 +359,11 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               <ThemeSelector
                 selectedThemes={selectedThemes}
                 onThemesChange={setSelectedThemes}
+              />
+
+              <ProductSelector 
+                products={products}
+                onProductsChange={setProducts}
               />
             </div>
           </div>
