@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, Building } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,12 +34,13 @@ export function BrandSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-[200px] justify-between">
+        <Button variant="outline" className="w-[200px] justify-between font-medium text-sm">
+          <Building className="mr-2 h-4 w-4" />
           {selectedBrand.name}
           <ChevronDown className="ml-2 h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[200px]">
+      <DropdownMenuContent className="w-[200px] bg-white dark:bg-gray-900">
         {mockBrands.map((brand) => (
           <DropdownMenuItem
             key={brand.id}
