@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { FileExcel, Upload } from 'lucide-react';
+import { File, Upload } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -216,7 +216,7 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
-            <FileExcel className="h-4 w-4" />
+            <File className="h-4 w-4" />
             {t('importData')}
           </Button>
         </DialogTrigger>
