@@ -9,11 +9,11 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       <Sidebar />
       <div className="flex-1">
         <Header />
-        <main className="px-6 py-8">
+        <main className="p-6">
           {children}
         </main>
       </div>

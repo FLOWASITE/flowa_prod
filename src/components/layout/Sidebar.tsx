@@ -7,7 +7,7 @@ import {
   MessageCircle, 
   FileText, 
   Image, 
-  Calendar, 
+  Calendar,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -60,50 +60,49 @@ export function Sidebar() {
   return (
     <aside 
       className={cn(
-        "min-h-screen bg-white dark:bg-gray-900 flex flex-col border-r border-gray-200 dark:border-gray-800 transition-all duration-300",
+        "min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-all duration-300 border-r border-gray-200 dark:border-gray-800",
         collapsed ? "w-16" : "w-64"
       )}
     >
-      <div className="p-4 flex items-center justify-center border-b border-gray-200 dark:border-gray-800">
+      <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
         {!collapsed ? (
           <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-16 object-contain"
+              className="h-8 object-contain"
             />
           </Link>
         ) : (
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center justify-center w-full">
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-12 w-12 object-contain"
+              className="h-6 w-6 object-contain"
             />
           </Link>
         )}
       </div>
       
-      <nav className="flex-1 p-2">
+      <nav className="flex-1 overflow-y-auto p-2">
         <ul className="space-y-1">
           {navItems.map((item) => (
             <li key={item.href}>
               <Link 
                 to={item.href}
                 className={cn(
-                  "flex items-center rounded-md px-3 py-2 transition-colors",
+                  "flex items-center px-3 py-2 rounded-md transition-colors relative",
                   location.pathname.startsWith(item.href)
-                    ? "bg-brand-red/10 text-brand-red-dark font-medium"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-brand-red/5 hover:text-brand-red-dark",
+                    ? "bg-yellow-400/20 text-yellow-700"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-yellow-400/10 hover:text-yellow-600",
                   collapsed && "justify-center"
                 )}
               >
                 <item.icon className={cn(
                   "h-5 w-5 flex-shrink-0",
                   location.pathname.startsWith(item.href) 
-                    ? "text-brand-red-dark" 
-                    : "text-gray-500 group-hover:text-brand-red-dark",
-                  collapsed && "mx-auto"
+                    ? "text-yellow-600" 
+                    : "text-gray-500"
                 )} />
                 {!collapsed && <span className="ml-3">{item.label}</span>}
               </Link>
@@ -112,11 +111,11 @@ export function Sidebar() {
         </ul>
       </nav>
       
-      <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+      <div className="p-2 border-t border-gray-200 dark:border-gray-800">
         <Button
           variant="ghost"
-          size="icon"
-          className="w-full flex justify-center text-brand-red-dark hover:text-brand-red hover:bg-brand-red/5"
+          size="sm"
+          className="w-full flex justify-center hover:bg-yellow-400/10 hover:text-yellow-600"
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? (
