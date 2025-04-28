@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Globe } from 'lucide-react';
 import {
@@ -47,8 +46,10 @@ export function LanguageSelector() {
               handleLanguageSelect(language);
             }}
           >
-            <span className="font-medium">{language.nativeName}</span>
-            <span className="ml-2 text-gray-500">({language.name})</span>
+            <div className="flex flex-col">
+              <span className="font-medium">{language.nativeName}</span>
+              <span className="text-sm text-gray-500">({language.name})</span>
+            </div>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
