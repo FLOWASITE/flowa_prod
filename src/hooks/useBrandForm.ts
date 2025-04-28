@@ -77,8 +77,8 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
     e.preventDefault();
 
     const newProducts: ProductType[] = products.map(p => ({
-      id: uuidv4(),
-      brandId: uuidv4(),
+      id: uuidv4(), // This will be replaced with the actual ID from Supabase
+      brandId: uuidv4(), // This will be replaced with the actual brand ID from Supabase
       name: p.name,
       description: p.description,
       features: p.features,
@@ -87,7 +87,7 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
     }));
 
     const newBrand: Brand = {
-      id: uuidv4(),
+      id: uuidv4(), // This will be replaced with the actual ID from Supabase
       name: formData.name,
       description: formData.description,
       logo: formData.logo || undefined,
@@ -101,10 +101,19 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
       products: newProducts,
       createdAt: new Date(),
       updatedAt: new Date(),
-      knowledge: brandKnowledge
+      knowledge: {
+        history: brandKnowledge.history,
+        values: brandKnowledge.values,
+        targetAudience: brandKnowledge.targetAudience,
+        guidelines: brandKnowledge.guidelines,
+        qaPairs: brandKnowledge.qaPairs,
+        productPricing: brandKnowledge.productPricing,
+        productBenefits: brandKnowledge.productBenefits
+      }
     };
 
     onBrandCreated(newBrand);
+    resetForm();
   };
 
   return {

@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Brand } from '@/types';
+import { Brand, ProductType } from '@/types';
 import { Package2, Speaker, MessageSquare } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const translations = {
   brandDetails: {
@@ -35,19 +37,153 @@ const translations = {
   noThemes: {
     en: 'No theme types added',
     vi: 'Chưa có loại chủ đề',
+  },
+  loading: {
+    en: 'Loading brand details...',
+    vi: 'Đang tải chi tiết thương hiệu...',
+  },
+  error: {
+    en: 'Failed to load brand details',
+    vi: 'Không thể tải chi tiết thương hiệu',
+  },
+  fallbackData: {
+    en: 'Using fallback data',
+    vi: 'Đang sử dụng dữ liệu dự phòng',
   }
 };
 
 const BrandDetails = () => {
   const { id } = useParams();
   const { currentLanguage } = useLanguage();
-  const [brand] = useState<Brand | null>(() => {
-    return mockBrands.find(b => b.id === id) || null;
-  });
+  const { toast } = useToast();
+  const [brand, setBrand] = useState<Brand | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [knowledge, setKnowledge] = useState<any>(null);
 
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
+
+  useEffect(() => {
+    const fetchBrandDetails = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch the brand
+        const { data: brandData, error: brandError } = await supabase
+          .from('brands')
+          .select('*')
+          .eq('id', id)
+          .single();
+        
+        if (brandError) {
+          throw brandError;
+        }
+        
+        if (!brandData) {
+          throw new Error('Brand not found');
+        }
+        
+        // Fetch related products
+        const { data: productsData, error: productsError } = await supabase
+          .from('products')
+          .select('*')
+          .eq('brand_id', id);
+        
+        if (productsError) {
+          console.error('Error fetching products:', productsError);
+        }
+        
+        // Fetch brand knowledge
+        const { data: knowledgeData, error: knowledgeError } = await supabase
+          .from('brand_knowledge')
+          .select('*')
+          .eq('brand_id', id)
+          .maybeSingle();
+        
+        if (knowledgeError) {
+          console.error('Error fetching brand knowledge:', knowledgeError);
+        }
+        
+        // Map the data to our Brand type
+        const mappedBrand: Brand = {
+          id: brandData.id,
+          name: brandData.name,
+          description: brandData.description,
+          logo: brandData.logo || undefined,
+          website: brandData.website || undefined,
+          colors: {
+            primary: brandData.primary_color,
+            secondary: brandData.secondary_color,
+          },
+          tone: brandData.tone || 'Professional',
+          themes: brandData.themes || [],
+          createdAt: new Date(brandData.created_at),
+          updatedAt: new Date(brandData.updated_at),
+          knowledge: knowledgeData ? {
+            history: knowledgeData.history,
+            values: knowledgeData.values,
+            targetAudience: knowledgeData.target_audience,
+            guidelines: knowledgeData.guidelines,
+            productPricing: knowledgeData.product_pricing,
+            productBenefits: knowledgeData.product_benefits,
+          } : undefined
+        };
+        
+        // Map products
+        const mappedProducts: ProductType[] = productsData ? productsData.map((product: any) => ({
+          id: product.id,
+          brandId: product.brand_id,
+          name: product.name,
+          description: product.description,
+          features: product.features || [],
+          image: product.image,
+          createdAt: new Date(product.created_at),
+          updatedAt: new Date(product.updated_at)
+        })) : [];
+        
+        setBrand(mappedBrand);
+        setProducts(mappedProducts);
+        setKnowledge(knowledgeData);
+      } catch (error: any) {
+        console.error('Error fetching brand details:', error);
+        toast({
+          title: t('error'),
+          description: error.message,
+          variant: 'destructive',
+        });
+        
+        // Fallback to mock data if available
+        const mockBrand = mockBrands.find(b => b.id === id);
+        if (mockBrand) {
+          setBrand(mockBrand);
+          toast({
+            title: t('fallbackData'),
+            variant: 'default',
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (id) {
+      fetchBrandDetails();
+    }
+  }, [id, toast]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="max-w-[1400px] mx-auto p-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-pulse text-xl text-muted-foreground">{t('loading')}</div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!brand) {
     return (
@@ -155,9 +291,9 @@ const BrandDetails = () => {
               <h2 className="text-xl font-semibold">{t('products')}</h2>
             </div>
             
-            {brand.products && brand.products.length > 0 ? (
+            {products && products.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {brand.products.map((product) => (
+                {products.map((product) => (
                   <div key={product.id} className="p-4 border rounded-lg">
                     <h3 className="font-medium mb-2">{product.name}</h3>
                     <p className="text-muted-foreground mb-4">{product.description}</p>

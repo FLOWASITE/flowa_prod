@@ -9,7 +9,171 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      brand_knowledge: {
+        Row: {
+          brand_id: string
+          created_at: string
+          guidelines: string | null
+          history: string | null
+          id: string
+          product_benefits: string | null
+          product_pricing: string | null
+          target_audience: string | null
+          updated_at: string
+          values: string | null
+        }
+        Insert: {
+          brand_id: string
+          created_at?: string
+          guidelines?: string | null
+          history?: string | null
+          id?: string
+          product_benefits?: string | null
+          product_pricing?: string | null
+          target_audience?: string | null
+          updated_at?: string
+          values?: string | null
+        }
+        Update: {
+          brand_id?: string
+          created_at?: string
+          guidelines?: string | null
+          history?: string | null
+          id?: string
+          product_benefits?: string | null
+          product_pricing?: string | null
+          target_audience?: string | null
+          updated_at?: string
+          values?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_knowledge_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: true
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brands: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          logo: string | null
+          name: string
+          primary_color: string
+          secondary_color: string
+          themes: string[] | null
+          tone: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          logo?: string | null
+          name: string
+          primary_color?: string
+          secondary_color?: string
+          themes?: string[] | null
+          tone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          logo?: string | null
+          name?: string
+          primary_color?: string
+          secondary_color?: string
+          themes?: string[] | null
+          tone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          brand_id: string
+          created_at: string
+          description: string
+          features: string[] | null
+          id: string
+          image: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id: string
+          created_at?: string
+          description: string
+          features?: string[] | null
+          id?: string
+          image?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string
+          created_at?: string
+          description?: string
+          features?: string[] | null
+          id?: string
+          image?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qa_pairs: {
+        Row: {
+          answer: string
+          brand_id: string
+          created_at: string
+          id: string
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          brand_id: string
+          created_at?: string
+          id?: string
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          brand_id?: string
+          created_at?: string
+          id?: string
+          question?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qa_pairs_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

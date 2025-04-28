@@ -58,17 +58,8 @@ const Brands = () => {
     try {
       setLoading(true);
       
-      if (!isSupabaseConnected()) {
-        console.log('Supabase not connected, using mock data');
-        setBrands([...mockBrands]);
-        toast({
-          title: t('supabaseNotConnected'),
-          variant: 'default',
-        });
-        return;
-      }
-      
-      const { data, error } = await supabase!
+      // Fetch from Supabase
+      const { data, error } = await supabase
         .from('brands')
         .select('*')
         .order('created_at', { ascending: false });
@@ -83,11 +74,13 @@ const Brands = () => {
         name: item.name,
         description: item.description,
         logo: item.logo || undefined,
+        website: item.website || undefined,
         colors: {
           primary: item.primary_color,
           secondary: item.secondary_color,
         },
         tone: item.tone || 'Professional',
+        themes: item.themes || [],
         createdAt: new Date(item.created_at),
         updatedAt: new Date(item.updated_at),
       }));
@@ -101,39 +94,76 @@ const Brands = () => {
       });
       
       setBrands([...mockBrands]);
+      toast({
+        title: t('supabaseNotConnected'),
+        description: 'Using mock data instead.',
+        variant: 'default',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleAddBrand = async (newBrand: Brand) => {
-    try {
-      if (!isSupabaseConnected()) {
-        setBrands(prev => [...prev, newBrand]);
-        return;
-      }
-      
+    try {      
       const brandData = {
-        id: newBrand.id,
         name: newBrand.name,
         description: newBrand.description,
         logo: newBrand.logo || null,
+        website: newBrand.website || null,
         primary_color: newBrand.colors.primary,
         secondary_color: newBrand.colors.secondary,
         tone: newBrand.tone,
-        themes: newBrand.themes || [],  // Add themes to saved data
-        created_at: newBrand.createdAt.toISOString(),
-        updated_at: newBrand.updatedAt.toISOString(),
+        themes: newBrand.themes || [],
       };
       
-      const { error } = await supabase!.from('brands').insert(brandData);
+      const { data, error } = await supabase.from('brands').insert(brandData).select();
       
       if (error) {
         console.error('Error adding brand:', error);
         throw error;
       }
       
-      setBrands(prev => [...prev, newBrand]);
+      if (newBrand.knowledge) {
+        const knowledgeData = {
+          brand_id: data[0].id,
+          history: newBrand.knowledge.history,
+          values: newBrand.knowledge.values,
+          target_audience: newBrand.knowledge.targetAudience,
+          guidelines: newBrand.knowledge.guidelines,
+          product_pricing: newBrand.knowledge.productPricing,
+          product_benefits: newBrand.knowledge.productBenefits
+        };
+        
+        const { error: knowledgeError } = await supabase.from('brand_knowledge').insert(knowledgeData);
+        
+        if (knowledgeError) {
+          console.error('Error adding brand knowledge:', knowledgeError);
+        }
+      }
+      
+      if (newBrand.products && newBrand.products.length > 0) {
+        const productsData = newBrand.products.map(product => ({
+          brand_id: data[0].id,
+          name: product.name,
+          description: product.description,
+          features: product.features || [],
+          image: product.image || null,
+        }));
+        
+        const { error: productsError } = await supabase.from('products').insert(productsData);
+        
+        if (productsError) {
+          console.error('Error adding products:', productsError);
+        }
+      }
+      
+      toast({
+        title: 'Brand created successfully',
+        variant: 'default',
+      });
+      
+      fetchBrands(); // Refresh the brands list
     } catch (error) {
       console.error('Error adding brand:', error);
       toast({
@@ -176,7 +206,9 @@ const Brands = () => {
           ) : (
             <div className="col-span-3 text-center py-10">
               <p className="text-muted-foreground">
-                Chưa có thương hiệu nào được tạo. Hãy tạo thương hiệu đầu tiên của bạn!
+                {currentLanguage.code === 'vi' 
+                  ? 'Chưa có thương hiệu nào được tạo. Hãy tạo thương hiệu đầu tiên của bạn!'
+                  : 'No brands created yet. Create your first brand!'}
               </p>
             </div>
           )}
