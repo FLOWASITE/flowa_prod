@@ -15,7 +15,7 @@ const translations = {
   },
   suggestions: {
     en: 'Suggested Themes',
-    vi: 'Chủ đề gợi ý',
+    vi: 'Thêm gợi ý Loại chủ đề',
     fr: 'Thèmes suggérés',
     es: 'Temas sugeridos',
     th: 'ธีมที่แนะนำ',
