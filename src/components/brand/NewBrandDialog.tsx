@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/popover"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ToneSelector } from './ToneSelector';
+import { ThemeSelector } from './ThemeSelector';
 
 const translations = {
   newBrand: {
@@ -170,10 +171,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     secondaryColor: '#0d9488',
   });
 
-  const [selectedThemes, setSelectedThemes] = useState<string[]>(
-    defaultThemeCategories.map(theme => theme.name)
-  );
-
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedTones, setSelectedTones] = useState<string[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -225,7 +223,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       primaryColor: '#2563eb',
       secondaryColor: '#0d9488',
     });
-    setSelectedThemes(defaultThemeCategories.map(theme => theme.name));
+    setSelectedThemes([]);
     setSelectedTones([]);
     setOpen(false);
   };
@@ -320,45 +318,10 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               onTonesChange={setSelectedTones}
             />
             
-            <div className="grid gap-2">
-              <Label>{t('themeTypes')}</Label>
-              <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="justify-start">
-                    {selectedThemes.length > 0
-                      ? `${selectedThemes.length} selected`
-                      : t('selectThemeTypes')}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] p-0" align="start">
-                  <Command>
-                    <CommandList>
-                      <CommandEmpty>{t('noThemeTypesFound')}</CommandEmpty>
-                      <CommandGroup>
-                        {defaultThemeCategories.map((theme) => (
-                          <CommandItem
-                            key={theme.name}
-                            value={theme.name}
-                            onSelect={() => {
-                              toggleTheme(theme.name);
-                            }}
-                          >
-                            <div className="flex items-center gap-2">
-                              {selectedThemes.includes(theme.name) && (
-                                <Check className="h-4 w-4" />
-                              )}
-                              <span className={selectedThemes.includes(theme.name) ? "font-medium" : ""}>
-                                {theme.name}
-                              </span>
-                            </div>
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
+            <ThemeSelector
+              selectedThemes={selectedThemes}
+              onThemesChange={setSelectedThemes}
+            />
           </div>
           
           <DialogFooter>
