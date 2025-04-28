@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -13,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Plus } from 'lucide-react';
+import { Globe, Image, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
@@ -112,40 +111,82 @@ const translations = {
     es: '¡Marca creada con éxito!',
     th: 'สร้างแบรนด์สำเร็จ!',
   },
+  logo: {
+    en: 'Logo URL',
+    vi: 'URL Logo',
+    fr: 'URL du logo',
+    es: 'URL del logotipo',
+    th: 'URL โลโก้',
+  },
+  website: {
+    en: 'Website URL',
+    vi: 'URL Website',
+    fr: 'URL du site web',
+    es: 'URL del sitio web',
+    th: 'URL เว็บไซต์',
+  },
   toneOfVoice: {
-    en: 'Tone of Voice',
-    vi: 'Tông giọng',
+    en: 'Voice Tone',
+    vi: 'Giọng điệu',
     fr: 'Ton de voix',
     es: 'Tono de voz',
     th: 'น้ำเสียง',
   },
+  suggestedTones: {
+    en: 'Suggested Tones',
+    vi: 'Giọng điệu gợi ý',
+    fr: 'Tons suggérés',
+    es: 'Tonos sugeridos',
+    th: 'โทนเสียงที่แนะนำ',
+  },
+  friendly: {
+    en: 'Friendly',
+    vi: 'Thân thiện',
+    fr: 'Amical',
+    es: 'Amigable',
+    th: 'เป็นมิตร',
+  },
+  professional: {
+    en: 'Professional',
+    vi: 'Chuyên nghiệp',
+    fr: 'Professionnel',
+    es: 'Profesional',
+    th: 'มืออาชีพ',
+  },
   casual: {
     en: 'Casual',
-    vi: 'Thân thiện',
+    vi: 'Thoải mái',
     fr: 'Décontracté',
     es: 'Casual',
     th: 'เป็นกันเอง',
   },
-  neutral: {
-    en: 'Neutral',
-    vi: 'Trung lập',
-    fr: 'Neutre',
-    es: 'Neutral',
-    th: 'เป็นกลาง',
+  enthusiastic: {
+    en: 'Enthusiastic',
+    vi: 'Nhiệt tình',
+    fr: 'Enthousiaste',
+    es: 'Entusiasta',
+    th: 'กระตือรือร้น',
   },
-  formal: {
-    en: 'Formal',
-    vi: 'Trang trọng',
-    fr: 'Formel',
-    es: 'Formal',
-    th: 'เป็นทางการ',
+  themeTypes: {
+    en: 'Theme Types',
+    vi: 'Loại chủ đề',
+    fr: 'Types de thèmes',
+    es: 'Tipos de temas',
+    th: 'ประเภทธีม',
   },
-  suggestedThemes: {
-    en: 'Suggested Theme Types',
-    vi: 'Loại chủ đề gợi ý',
-    fr: 'Types de thèmes suggérés',
-    es: 'Tipos de temas sugeridos',
-    th: 'ประเภทธีมที่แนะนำ',
+  selectThemeTypes: {
+    en: 'Select theme types...',
+    vi: 'Chọn loại chủ đề...',
+    fr: 'Sélectionnez les types de thèmes...',
+    es: 'Seleccione tipos de temas...',
+    th: 'เลือกประเภทธีม...',
+  },
+  noThemeTypesFound: {
+    en: 'No theme types found.',
+    vi: 'Không tìm thấy loại chủ đề.',
+    fr: 'Aucun type de thème trouvé.',
+    es: 'No se encontraron tipos de temas.',
+    th: 'ไม่พบประเภทธีม',
   },
 };
 
@@ -160,12 +201,14 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    logo: '',
+    website: '',
     primaryColor: '#2563eb',
     secondaryColor: '#0d9488',
   });
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [selectedTone, setSelectedTone] = useState<string>('neutral'); // Default tone
+  const [selectedTone, setSelectedTone] = useState<string>('professional');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -199,11 +242,13 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       id: uuidv4(),
       name: formData.name,
       description: formData.description,
+      logo: formData.logo || undefined,
+      website: formData.website || undefined,
       colors: {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
-      tone: selectedTone, // Add the tone property
+      tone: selectedTone,
       themes: selectedThemes,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -217,17 +262,21 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     setFormData({
       name: '',
       description: '',
+      logo: '',
+      website: '',
       primaryColor: '#2563eb',
       secondaryColor: '#0d9488',
     });
     setSelectedThemes([]);
-    setSelectedTone('neutral'); // Reset tone
+    setSelectedTone('professional');
     setOpen(false);
   };
 
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
+
+  const suggestedTones = ['professional', 'friendly', 'casual', 'enthusiastic'];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -286,6 +335,38 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="logo" className="flex items-center gap-2">
+                  <Image className="h-4 w-4" />
+                  {t('logo')}
+                </Label>
+                <Input
+                  id="logo"
+                  name="logo"
+                  value={formData.logo}
+                  onChange={handleChange}
+                  placeholder="https://"
+                  className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="website" className="flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  {t('website')}
+                </Label>
+                <Input
+                  id="website"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="https://"
+                  className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="description">{t('description')}</Label>
               <Textarea
@@ -297,31 +378,19 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               />
             </div>
 
-            {/* Tone of Voice Selection */}
             <div className="space-y-3">
               <Label>{t('toneOfVoice')}</Label>
-              <div className="flex gap-2">
-                <Badge
-                  variant={selectedTone === 'casual' ? "default" : "outline"}
-                  className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
-                  onClick={() => handleToneChange('casual')}
-                >
-                  {t('casual')}
-                </Badge>
-                <Badge
-                  variant={selectedTone === 'neutral' ? "default" : "outline"}
-                  className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
-                  onClick={() => handleToneChange('neutral')}
-                >
-                  {t('neutral')}
-                </Badge>
-                <Badge
-                  variant={selectedTone === 'formal' ? "default" : "outline"}
-                  className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
-                  onClick={() => handleToneChange('formal')}
-                >
-                  {t('formal')}
-                </Badge>
+              <div className="flex flex-wrap gap-2">
+                {suggestedTones.map((tone) => (
+                  <Badge
+                    key={tone}
+                    variant={selectedTone === tone ? "default" : "outline"}
+                    className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
+                    onClick={() => handleToneChange(tone)}
+                  >
+                    {t(tone as keyof typeof translations)}
+                  </Badge>
+                ))}
               </div>
             </div>
 
