@@ -10,17 +10,17 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Globe, Image, Plus, Package, Upload } from 'lucide-react';
+import { Globe, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
-import { v4 as uuidv4 } from 'uuid';
-import { Brand, ProductType } from '@/types';
+import { Brand } from '@/types';
+import { ProductSelector } from './ProductSelector';
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
-import { ProductSelector } from './ProductSelector';
-import { SocialConnectionsSelector } from './SocialConnectionsSelector';
 import { BrandKnowledgeSection } from './BrandKnowledgeSection';
+import { SocialConnectionsSelector } from './SocialConnectionsSelector';
+import { LogoUpload } from './LogoUpload';
+import { useBrandForm } from '@/hooks/useBrandForm';
 
 const translations = {
   newBrand: {
@@ -182,131 +182,28 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    logo: '',
-    website: '',
-    primaryColor: '#2563eb',
-    secondaryColor: '#0d9488',
-  });
-
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
-  const [products, setProducts] = useState<Array<{ name: string; description: string; features: string[] }>>([]);
-  const [brandKnowledge, setBrandKnowledge] = useState({
-    history: '',
-    values: '',
-    targetAudience: '',
-    guidelines: '',
-    qaPairs: [],
-    productPricing: '',
-    productBenefits: ''
-  });
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      description: '',
-      logo: '',
-      website: '',
-      primaryColor: '#2563eb',
-      secondaryColor: '#0d9488',
-    });
-    setSelectedThemes([]);
-    setSelectedTones(['Professional']);
-    setProducts([]);
-    setBrandKnowledge({
-      history: '',
-      values: '',
-      targetAudience: '',
-      guidelines: '',
-      qaPairs: [],
-      productPricing: '',
-      productBenefits: ''
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.name.trim()) {
-      toast({
-        title: t('brandNameRequired'),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const newProducts: ProductType[] = products.map(p => ({
-      id: uuidv4(),
-      brandId: uuidv4(),
-      name: p.name,
-      description: p.description,
-      features: p.features,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }));
-
-    const newBrand: Brand = {
-      id: uuidv4(),
-      name: formData.name,
-      description: formData.description,
-      logo: formData.logo || undefined,
-      website: formData.website || undefined,
-      colors: {
-        primary: formData.primaryColor,
-        secondary: formData.secondaryColor,
-      },
-      tone: selectedTones.join(', '),
-      themes: selectedThemes,
-      products: newProducts,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      knowledge: brandKnowledge
-    };
-
-    onBrandCreated(newBrand);
+  
+  const {
+    formData,
+    selectedThemes,
+    selectedTones,
+    products,
+    brandKnowledge,
+    handleChange,
+    setSelectedThemes,
+    setSelectedTones,
+    setProducts,
+    setBrandKnowledge,
+    handleSubmit,
+    resetForm
+  } = useBrandForm((brand) => {
+    onBrandCreated(brand);
     toast({
       title: t('brandCreated'),
     });
-    
     resetForm();
     setOpen(false);
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewUrl(imageUrl);
-      setFormData(prev => ({ ...prev, logo: imageUrl }));
-    }
-  };
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setSelectedFile(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewUrl(imageUrl);
-      setFormData(prev => ({ ...prev, logo: imageUrl }));
-    }
-  };
-
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+  });
 
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
@@ -338,53 +235,13 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           
           <div className="px-6 space-y-6 max-h-[70vh] overflow-y-auto">
             <div className="grid grid-cols-1 gap-6">
-              <div 
-                className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onClick={() => document.getElementById('logo-upload')?.click()}
-              >
-                {previewUrl ? (
-                  <div className="relative w-24 h-24 mx-auto">
-                    <img 
-                      src={previewUrl} 
-                      alt="Logo preview" 
-                      className="w-full h-full object-contain rounded-lg"
-                    />
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="icon"
-                      className="absolute -top-2 -right-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPreviewUrl('');
-                        setSelectedFile(null);
-                        setFormData(prev => ({ ...prev, logo: '' }));
-                      }}
-                    >
-                      <Upload className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 mx-auto flex items-center justify-center">
-                      <Image className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      <p className="font-medium">{t('uploadLogo')}</p>
-                      <p>{t('dragAndDrop')}</p>
-                    </div>
-                  </div>
-                )}
-                <input
-                  id="logo-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-              </div>
+              <LogoUpload
+                onLogoChange={(logo) => handleChange({ target: { name: 'logo', value: logo } } as any)}
+                translations={{
+                  uploadLogo: t('uploadLogo'),
+                  dragAndDrop: t('dragAndDrop')
+                }}
+              />
 
               <div className="space-y-2">
                 <Label htmlFor="name">{t('brandName')}</Label>
@@ -431,21 +288,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="logo" className="flex items-center gap-2">
-                  <Image className="h-4 w-4" />
-                  {t('logo')}
-                </Label>
-                <Input
-                  id="logo"
-                  name="logo"
-                  value={formData.logo}
-                  onChange={handleChange}
-                  placeholder="https://"
-                  className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="website" className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
                   {t('website')}
                 </Label>
@@ -460,23 +302,8 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">{t('description')}</Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className="min-h-[80px] transition-all duration-200 hover:border-primary/50 focus:border-primary"
-              />
-            </div>
-
             <div className="space-y-6">
               <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
-                <div className="flex items-center gap-2 mb-4">
-                  <Package className="h-5 w-5 text-primary" />
-                  <h3 className="text-lg font-semibold">{t('products')}</h3>
-                </div>
                 <ProductSelector 
                   products={products}
                   onProductsChange={setProducts}
@@ -511,7 +338,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               onClick={() => {
                 resetForm();
                 setOpen(false);
-              }} 
+              }}
               className="transition-all duration-200"
             >
               {t('cancel')}
