@@ -26,7 +26,7 @@ export function LanguageSelector() {
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            className="cursor-pointer"
+            className={`cursor-pointer ${currentLanguage.code === language.code ? 'bg-gray-100' : ''}`}
             onSelect={() => setLanguage(language)}
           >
             <span className="font-medium">{language.nativeName}</span>

@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, languages } from '@/types/language';
 
 type LanguageContextType = {
@@ -10,11 +10,21 @@ type LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(languages[0]); // Default to Vietnamese
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(() => {
+    // Try to get language from localStorage on initial load
+    const savedLanguage = localStorage.getItem('preferredLanguage');
+    if (savedLanguage) {
+      const parsed = JSON.parse(savedLanguage);
+      const foundLanguage = languages.find(lang => lang.code === parsed.code);
+      return foundLanguage || languages[0];
+    }
+    return languages[0]; // Default to Vietnamese
+  });
 
   const setLanguage = (language: Language) => {
     setCurrentLanguage(language);
-    // Here you could also save the preference to localStorage
+    // Save the preference to localStorage
+    localStorage.setItem('preferredLanguage', JSON.stringify(language));
   };
 
   return (
