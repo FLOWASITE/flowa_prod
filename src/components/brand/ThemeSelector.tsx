@@ -8,13 +8,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const translations = {
   themes: {
     en: 'Theme Types',
-    vi: 'Chủ đề gợi ý',
+    vi: 'Loại chủ đề',
     fr: 'Types de thèmes',
     es: 'Tipos de temas',
     th: 'ประเภทธีม',
   },
   suggestions: {
-    en: 'Suggested Themes',
+    en: 'Suggested Theme Types',
     vi: 'Thêm gợi ý Loại chủ đề',
     fr: 'Thèmes suggérés',
     es: 'Temas sugeridos',
@@ -35,8 +35,8 @@ const translations = {
     th: 'กด Enter เพื่อเพิ่มประเภทธีมใหม่',
   },
   addCustomTheme: {
-    en: 'Add custom theme',
-    vi: 'Thêm chủ đề tùy chỉnh',
+    en: 'Add custom theme type',
+    vi: 'Thêm loại chủ đề tùy chỉnh',
     fr: 'Ajouter un thème personnalisé',
     es: 'Agregar tema personalizado',
     th: 'เพิ่มธีมที่กำหนดเอง',
