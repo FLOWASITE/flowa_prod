@@ -70,7 +70,7 @@ export function Sidebar() {
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-16 object-contain" // Increased from h-10 to h-16
+              className="h-16 object-contain"
             />
           </Link>
         ) : (
@@ -78,7 +78,7 @@ export function Sidebar() {
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-12 w-12 object-contain" // Increased from h-8 w-8 to h-12 w-12
+              className="h-12 w-12 object-contain"
             />
           </Link>
         )}
