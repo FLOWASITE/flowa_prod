@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -12,13 +11,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { Globe, Image, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { Brand } from '@/types';
-import { defaultThemeCategories } from '@/data/defaultThemeTypes';
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
 
@@ -141,41 +138,15 @@ const translations = {
     fr: 'Tons suggérés',
     es: 'Tonos sugeridos',
     th: 'โทนเสียงที่แนะนำ',
-  },
-  friendly: {
-    en: 'Friendly',
-    vi: 'Thân thiện',
-    fr: 'Amical',
-    es: 'Amigable',
-    th: 'เป็นมิตร',
-  },
-  professional: {
-    en: 'Professional',
-    vi: 'Chuyên nghiệp',
-    fr: 'Professionnel',
-    es: 'Profesional',
-    th: 'มืออาชีพ',
-  },
-  casual: {
-    en: 'Casual',
-    vi: 'Thoải mái',
-    fr: 'Décontracté',
-    es: 'Casual',
-    th: 'เป็นกันเอง',
-  },
-  enthusiastic: {
-    en: 'Enthusiastic',
-    vi: 'Nhiệt tình',
-    fr: 'Enthousiaste',
-    es: 'Entusiasta',
-    th: 'กระตือรือร้น',
+    id: 'Nada yang Disarankan'
   },
   suggestedThemes: {
-    en: 'Suggested Themes',
-    vi: 'Chủ đề gợi ý',
-    fr: 'Thèmes suggérés',
-    es: 'Temas sugeridos',
-    th: 'ธีมที่แนะนำ',
+    en: 'Suggested Theme Types',
+    vi: 'Loại chủ đề gợi ý',
+    fr: 'Types de thèmes suggérés',
+    es: 'Tipos de temas sugeridos',
+    th: 'ประเภทธีมที่แนะนำ',
+    id: 'Jenis Tema yang Disarankan'
   }
 };
 
@@ -202,18 +173,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleThemeToggle = (themeName: string) => {
-    setSelectedThemes(prev => 
-      prev.includes(themeName)
-        ? prev.filter(t => t !== themeName)
-        : [...prev, themeName]
-    );
-  };
-
-  const handleToneChange = (tone: string) => {
-    setSelectedTone(tone);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -264,8 +223,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
-
-  const suggestedTones = ['professional', 'friendly', 'casual', 'enthusiastic'];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -367,36 +324,16 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               />
             </div>
 
-            <div className="space-y-3">
-              <Label>{t('toneOfVoice')}</Label>
-              <div className="flex flex-wrap gap-2">
-                {suggestedTones.map((tone) => (
-                  <Badge
-                    key={tone}
-                    variant={selectedTone === tone ? "default" : "outline"}
-                    className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
-                    onClick={() => handleToneChange(tone)}
-                  >
-                    {t(tone as keyof typeof translations)}
-                  </Badge>
-                ))}
-              </div>
-            </div>
+            <div className="space-y-6">
+              <ToneSelector
+                selectedTones={[selectedTone]}
+                onTonesChange={(tones) => setSelectedTone(tones[0] || 'professional')}
+              />
 
-            <div className="space-y-3">
-              <Label>{t('suggestedThemes')}</Label>
-              <div className="flex flex-wrap gap-2">
-                {defaultThemeCategories.map((theme) => (
-                  <Badge
-                    key={theme.name}
-                    variant={selectedThemes.includes(theme.name) ? "default" : "outline"}
-                    className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
-                    onClick={() => handleThemeToggle(theme.name)}
-                  >
-                    {theme.name}
-                  </Badge>
-                ))}
-              </div>
+              <ThemeSelector
+                selectedThemes={selectedThemes}
+                onThemesChange={setSelectedThemes}
+              />
             </div>
           </div>
           
