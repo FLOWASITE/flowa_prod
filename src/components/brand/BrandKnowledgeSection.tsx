@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { BookText, FileText } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { QADialog } from './QADialog';
+import { ImportDialog } from './ImportDialog';
 
 const translations = {
   brandKnowledge: {
@@ -101,7 +101,6 @@ interface BrandKnowledgeSectionProps {
 export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionProps) {
   const { currentLanguage } = useLanguage();
   
-  // Ensure qaPairs, productPricing, and productBenefits have default values if not provided
   const normalizedData = {
     ...data,
     qaPairs: data.qaPairs || [],
@@ -126,6 +125,17 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
     onUpdate({
       ...normalizedData,
       qaPairs: newQAPairs,
+    });
+  };
+
+  const handleImportPricing = (importedData: Array<{ product: string; price: string }>) => {
+    const formattedPricing = importedData
+      .map(item => `${item.product}: ${item.price}`)
+      .join('\n');
+    
+    onUpdate({
+      ...normalizedData,
+      productPricing: formattedPricing,
     });
   };
 
@@ -185,7 +195,10 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
         </div>
 
         <div className="space-y-4 border-t pt-4">
-          <Label className="text-md font-medium">{t('productPricing')}</Label>
+          <div className="flex justify-between items-center">
+            <Label className="text-md font-medium">{t('productPricing')}</Label>
+            <ImportDialog type="pricing" onImport={handleImportPricing} />
+          </div>
           <Textarea
             id="productPricing"
             value={normalizedData.productPricing}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { 
@@ -16,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Plus, FileText, Trash } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { ImportDialog } from './ImportDialog';
 
 const translations = {
   manageQA: {
@@ -175,6 +175,10 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
     setLocalQAPairs(updatedQAPairs);
   };
 
+  const handleImportQA = (importedData: Array<{ question: string; answer: string }>) => {
+    setLocalQAPairs([...localQAPairs, ...importedData]);
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -195,6 +199,11 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
         </DialogHeader>
         
         <div className="grid grid-cols-1 gap-4 mt-4">
+          <div className="flex justify-between items-center">
+            <h3 className="font-medium">{t('addQA')}</h3>
+            <ImportDialog type="qa" onImport={handleImportQA} />
+          </div>
+
           <div className="space-y-4 border p-4 rounded-md">
             <h3 className="font-medium">{t('addQA')}</h3>
             <div className="space-y-2">
