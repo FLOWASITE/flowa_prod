@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -164,6 +165,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   });
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedTone, setSelectedTone] = useState<string>('neutral'); // Default tone
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -176,6 +178,10 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         ? prev.filter(t => t !== themeName)
         : [...prev, themeName]
     );
+  };
+
+  const handleToneChange = (tone: string) => {
+    setSelectedTone(tone);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -197,6 +203,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
+      tone: selectedTone, // Add the tone property
       themes: selectedThemes,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -214,6 +221,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       secondaryColor: '#0d9488',
     });
     setSelectedThemes([]);
+    setSelectedTone('neutral'); // Reset tone
     setOpen(false);
   };
 
@@ -287,6 +295,34 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 onChange={handleChange}
                 className="min-h-[80px] transition-all duration-200 hover:border-primary/50 focus:border-primary"
               />
+            </div>
+
+            {/* Tone of Voice Selection */}
+            <div className="space-y-3">
+              <Label>{t('toneOfVoice')}</Label>
+              <div className="flex gap-2">
+                <Badge
+                  variant={selectedTone === 'casual' ? "default" : "outline"}
+                  className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
+                  onClick={() => handleToneChange('casual')}
+                >
+                  {t('casual')}
+                </Badge>
+                <Badge
+                  variant={selectedTone === 'neutral' ? "default" : "outline"}
+                  className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
+                  onClick={() => handleToneChange('neutral')}
+                >
+                  {t('neutral')}
+                </Badge>
+                <Badge
+                  variant={selectedTone === 'formal' ? "default" : "outline"}
+                  className="cursor-pointer transition-all duration-200 hover:bg-primary/20"
+                  onClick={() => handleToneChange('formal')}
+                >
+                  {t('formal')}
+                </Badge>
+              </div>
             </div>
 
             <div className="space-y-3">
