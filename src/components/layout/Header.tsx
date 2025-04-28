@@ -51,7 +51,7 @@ export function Header() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80" align="end">
+            <DropdownMenuContent className="w-80 bg-white/90 backdrop-blur-sm dark:bg-gray-950/90" align="end">
               <div className="flex items-center p-3 space-x-3">
                 <Avatar>
                   <AvatarImage src="/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png" />
@@ -62,7 +62,7 @@ export function Header() {
                   <p className="text-xs text-gray-500">flowasite@gmail.com</p>
                 </div>
               </div>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-gray-200/50 dark:bg-gray-700/50" />
               <DropdownMenuGroup>
                 <DropdownMenuItem className="py-2">
                   <DollarSign className="mr-3 h-5 w-5" />
@@ -81,7 +81,7 @@ export function Header() {
                   <span>{currentLanguage.code === 'vi' ? "Trung tâm tr�� giúp" : "Help Center"}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-gray-200/50 dark:bg-gray-700/50" />
               <DropdownMenuItem className="text-red-600 py-2">
                 <LogOut className="mr-3 h-5 w-5" />
                 <span>{currentLanguage.code === 'vi' ? "Đăng xuất" : "Logout"}</span>
