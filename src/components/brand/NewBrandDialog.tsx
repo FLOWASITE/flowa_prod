@@ -168,7 +168,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   });
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [selectedTone, setSelectedTone] = useState<string>('professional');
+  const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -196,7 +196,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
         primary: formData.primaryColor,
         secondary: formData.secondaryColor,
       },
-      tone: selectedTone,
+      tone: selectedTones.join(', '),
       themes: selectedThemes,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -216,7 +216,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
       secondaryColor: '#0d9488',
     });
     setSelectedThemes([]);
-    setSelectedTone('professional');
+    setSelectedTones(['Professional']);
     setOpen(false);
   };
 
@@ -326,8 +326,8 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
 
             <div className="space-y-6">
               <ToneSelector
-                selectedTones={[selectedTone]}
-                onTonesChange={(tones) => setSelectedTone(tones[0] || 'professional')}
+                selectedTones={selectedTones}
+                onTonesChange={setSelectedTones}
               />
 
               <ThemeSelector
