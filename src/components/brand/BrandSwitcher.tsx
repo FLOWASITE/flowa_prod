@@ -13,8 +13,8 @@ import { mockBrands } from '@/data/mockData';
 
 const translations = {
   switchBrand: {
-    en: 'Switch Brand',
     vi: 'Chuyển đổi thương hiệu',
+    en: 'Switch Brand',
     fr: 'Changer de marque',
     es: 'Cambiar marca',
     th: 'เปลี่ยนแบรนด์',

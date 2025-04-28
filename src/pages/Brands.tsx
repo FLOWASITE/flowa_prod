@@ -10,8 +10,8 @@ const Brands = () => {
     <Layout>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Brands</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage your brand identities and settings</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Thương hiệu</h1>
+          <p className="text-gray-500 dark:text-gray-400">Quản lý danh tính và cài đặt thương hiệu của bạn</p>
         </div>
         
         <NewBrandDialog />
