@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -21,32 +22,32 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    label: 'Dashboard',
+    label: 'Bảng điều khiển',
     icon: LayoutDashboard,
     href: '/dashboard',
   },
   {
-    label: 'Brands',
+    label: 'Thương hiệu',
     icon: BriefcaseBusiness,
     href: '/brands',
   },
   {
-    label: 'Topics',
+    label: 'Chủ đề',
     icon: FileText,
     href: '/topics',
   },
   {
-    label: 'Content',
+    label: 'Nội dung',
     icon: Image,
     href: '/content',
   },
   {
-    label: 'Chat',
+    label: 'Trò chuyện',
     icon: MessageCircle,
     href: '/chat',
   },
   {
-    label: 'Schedule',
+    label: 'Lịch trình',
     icon: Calendar,
     href: '/schedule',
   },
