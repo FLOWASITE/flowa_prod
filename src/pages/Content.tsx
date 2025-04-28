@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { ContentCard } from '@/components/content/ContentCard';
 import { mockContents } from '@/data/mockData';
 import { 
   Table,
@@ -21,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Filter, Plus } from 'lucide-react';
+import { Filter, Plus, Edit, Check, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Content = () => {
@@ -44,15 +42,14 @@ const Content = () => {
 
   const statusBadge = (status: string) => {
     const statusClasses = {
-      draft: "bg-gray-200 text-gray-800",
-      scheduled: "bg-yellow-100 text-yellow-800",
-      published: "bg-green-100 text-green-800",
-      failed: "bg-red-100 text-red-800"
+      "đã duyệt": "bg-green-100 text-green-800",
+      "chờ duyệt": "bg-yellow-100 text-yellow-800",
+      "từ chối": "bg-red-100 text-red-800"
     };
     
     return (
       <Badge variant="outline" className={statusClasses[status] || ""}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+        {status}
       </Badge>
     );
   };
@@ -76,15 +73,10 @@ const Content = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Lọc theo</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Trạng thái
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Nền tảng
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Ngày tạo
-              </DropdownMenuItem>
+              <DropdownMenuItem>Trạng thái</DropdownMenuItem>
+              <DropdownMenuItem>Nền tảng</DropdownMenuItem>
+              <DropdownMenuItem>Chủ đề gốc</DropdownMenuItem>
+              <DropdownMenuItem>Ngày tạo</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           
@@ -99,40 +91,61 @@ const Content = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nội dung</TableHead>
+              <TableHead className="w-[50px]">#</TableHead>
+              <TableHead>Chủ đề gốc</TableHead>
               <TableHead>Nền tảng</TableHead>
+              <TableHead>Nội dung (Preview)</TableHead>
+              <TableHead>Hình ảnh</TableHead>
               <TableHead>Ngày tạo</TableHead>
+              <TableHead>Người duyệt</TableHead>
+              <TableHead>Ngày duyệt</TableHead>
               <TableHead>Trạng thái</TableHead>
-              <TableHead></TableHead>
+              <TableHead className="text-right">Hành động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockContents.map((content) => (
+            {mockContents.map((content, index) => (
               <TableRow key={content.id}>
-                <TableCell className="max-w-xs">
-                  <div className="flex items-center gap-4">
-                    {content.imageUrl && (
-                      <img 
-                        src={content.imageUrl} 
-                        alt="" 
-                        className="h-12 w-12 rounded-lg object-cover"
-                      />
-                    )}
-                    <p className="line-clamp-2">{content.text}</p>
-                  </div>
-                </TableCell>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{content.topicId}</TableCell>
                 <TableCell>{platformBadge(content.platform)}</TableCell>
+                <TableCell className="max-w-[300px]">
+                  <p className="line-clamp-2">{content.text}</p>
+                </TableCell>
+                <TableCell>
+                  {content.imageUrl && (
+                    <img 
+                      src={content.imageUrl} 
+                      alt="" 
+                      className="h-12 w-12 rounded-lg object-cover"
+                    />
+                  )}
+                </TableCell>
                 <TableCell>{format(new Date(content.createdAt), 'dd/MM/yyyy')}</TableCell>
+                <TableCell>AI Assistant</TableCell>
+                <TableCell>
+                  {content.publishedAt ? format(new Date(content.publishedAt), 'dd/MM/yyyy') : '-'}
+                </TableCell>
                 <TableCell>{statusBadge(content.status)}</TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="sm">Chỉnh sửa</Button>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="icon">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-green-600">
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-red-600">
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
             
             {mockContents.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
+                <TableCell colSpan={10} className="text-center py-8">
                   <p className="text-muted-foreground">Chưa có nội dung nào. Hãy tạo nội dung đầu tiên của bạn!</p>
                 </TableCell>
               </TableRow>
