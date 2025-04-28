@@ -34,6 +34,13 @@ const translations = {
     fr: 'Appuyez sur Entrée pour ajouter un nouveau type de thème',
     es: 'Presione Enter para agregar nuevo tipo de tema',
     th: 'กด Enter เพื่อเพิ่มประเภทธีมใหม่',
+  },
+  addCustomTheme: {
+    en: 'Add custom theme',
+    vi: 'Thêm chủ đề tùy chỉnh',
+    fr: 'Ajouter un thème personnalisé',
+    es: 'Agregar tema personalizado',
+    th: 'เพิ่มธีมที่กำหนดเอง',
   }
 };
 
@@ -50,6 +57,9 @@ interface ThemeSelectorProps {
 export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorProps) {
   const { currentLanguage } = useLanguage();
   const [inputValue, setInputValue] = useState('');
+  const [customThemes, setCustomThemes] = useState<string[]>([]);
+  
+  const allSuggestionsSelected = suggestedThemes.every(theme => selectedThemes.includes(theme));
 
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
@@ -65,6 +75,10 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
 
   const addTheme = (theme: string) => {
     if (!selectedThemes.includes(theme)) {
+      // If this is a custom theme not in the suggestions, add it to customThemes
+      if (!suggestedThemes.includes(theme) && !customThemes.includes(theme)) {
+        setCustomThemes([...customThemes, theme]);
+      }
       onThemesChange([...selectedThemes, theme]);
     }
   };
@@ -116,6 +130,16 @@ export function ThemeSelector({ selectedThemes, onThemesChange }: ThemeSelectorP
                 {theme}
               </Badge>
             ))}
+          
+          {allSuggestionsSelected && (
+            <Badge
+              variant="outline"
+              className="cursor-pointer hover:bg-accent bg-primary/10"
+              onClick={() => inputValue.trim() && addTheme(inputValue.trim())}
+            >
+              {t('addCustomTheme')}
+            </Badge>
+          )}
         </div>
       </div>
     </div>
