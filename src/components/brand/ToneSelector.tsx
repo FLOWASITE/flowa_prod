@@ -15,7 +15,7 @@ const translations = {
   },
   suggestions: {
     en: 'Suggested Tone Types',
-    vi: 'Thêm gợi ý giọng điệu',
+    vi: 'Giọng điệu gợi ý',
     fr: 'Tons suggérés',
     es: 'Tonos sugeridos',
     th: 'โทนที่แนะนำ',
