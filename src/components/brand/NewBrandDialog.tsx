@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -373,16 +374,6 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             </div>
 
             <div className="space-y-6">
-              <ToneSelector
-                selectedTones={selectedTones}
-                onTonesChange={setSelectedTones}
-              />
-
-              <ThemeSelector
-                selectedThemes={selectedThemes}
-                onThemesChange={setSelectedThemes}
-              />
-
               <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
                 <div className="flex items-center gap-2 mb-4">
                   <Package className="h-5 w-5 text-primary" />
@@ -394,14 +385,24 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 />
               </div>
 
+              <ToneSelector
+                selectedTones={selectedTones}
+                onTonesChange={setSelectedTones}
+              />
+
+              <ThemeSelector
+                selectedThemes={selectedThemes}
+                onThemesChange={setSelectedThemes}
+              />
+
               <BrandKnowledgeSection
                 data={brandKnowledge}
                 onUpdate={setBrandKnowledge}
               />
-            </div>
 
-            <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
-              <SocialConnectionsSelector />
+              <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
+                <SocialConnectionsSelector />
+              </div>
             </div>
           </div>
           
