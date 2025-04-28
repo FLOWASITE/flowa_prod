@@ -145,15 +145,15 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center px-3 py-2 rounded-md transition-colors relative",
                   location.pathname.startsWith(item.href)
-                    ? "bg-yellow-400/20 text-yellow-700"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-yellow-400/10 hover:text-yellow-600",
+                    ? "bg-primary/20 text-primary"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary",
                   collapsed && "justify-center"
                 )}
               >
                 <item.icon className={cn(
                   "h-5 w-5 flex-shrink-0",
                   location.pathname.startsWith(item.href) 
-                    ? "text-yellow-600" 
+                    ? "text-primary" 
                     : "text-gray-500"
                 )} />
                 {!collapsed && <span className="ml-3">{item.label}</span>}
@@ -167,7 +167,7 @@ export function Sidebar() {
         <Button
           variant="ghost"
           size="sm"
-          className="w-full flex justify-center hover:bg-yellow-400/10 hover:text-yellow-600"
+          className="w-full flex justify-center hover:bg-primary/10 hover:text-primary"
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? (
