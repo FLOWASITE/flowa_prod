@@ -69,7 +69,7 @@ export function Sidebar() {
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-16 object-contain" 
+              className="h-[100px] object-contain" 
             />
           </Link>
         ) : (
@@ -77,7 +77,7 @@ export function Sidebar() {
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
-              className="h-12 w-12 object-contain"
+              className="h-[80px] w-[80px] object-contain"
             />
           </Link>
         )}
