@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
@@ -52,8 +51,8 @@ export function Header() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64" align="end">
-              <div className="flex items-center p-2 space-x-2">
+            <DropdownMenuContent className="w-80" align="end">
+              <div className="flex items-center p-3 space-x-3">
                 <Avatar>
                   <AvatarImage src="/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png" />
                   <AvatarFallback>U</AvatarFallback>
@@ -65,26 +64,26 @@ export function Header() {
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <DollarSign className="mr-2" />
+                <DropdownMenuItem className="py-2">
+                  <DollarSign className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Định giá" : "Pricing"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2" />
+                <DropdownMenuItem className="py-2">
+                  <Settings className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Thiết lập không gian làm việc" : "Workspace Settings"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Users className="mr-2" />
+                <DropdownMenuItem className="py-2">
+                  <Users className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Người dùng không gian làm việc" : "Workspace Users"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <HelpCircle className="mr-2" />
-                  <span>{currentLanguage.code === 'vi' ? "Trung tâm trợ giúp" : "Help Center"}</span>
+                <DropdownMenuItem className="py-2">
+                  <HelpCircle className="mr-3 h-5 w-5" />
+                  <span>{currentLanguage.code === 'vi' ? "Trung tâm tr�� giúp" : "Help Center"}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">
-                <LogOut className="mr-2" />
+              <DropdownMenuItem className="text-red-600 py-2">
+                <LogOut className="mr-3 h-5 w-5" />
                 <span>{currentLanguage.code === 'vi' ? "Đăng xuất" : "Logout"}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
