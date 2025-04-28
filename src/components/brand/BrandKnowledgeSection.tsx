@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BookText } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
