@@ -3,33 +3,95 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
+// Supabase project configuration
 const SUPABASE_URL = "https://cbcxaikcqaznmztilqca.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiY3hhaWtjcWF6bm16dGlscWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NTYxOTUsImV4cCI6MjA2MTQzMjE5NX0.YdGESCNbkkMY2Y40BdSVZtNzXE6gWrrJoB2uuI_KKwM";
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
-
+// Create Supabase client with type information
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-  }
+    storage: localStorage, // Store auth session in local storage
+  },
+  global: {
+    headers: {
+      'x-app-version': '1.0.0', // Add custom headers for API tracking
+    },
+  },
+  // Better error handling with debug logs in development
+  debug: import.meta.env.MODE === 'development',
 });
 
 // Helper function to check if Supabase is connected
 export const isSupabaseConnected = async () => {
   try {
+    console.log("Testing Supabase connection...");
+    
     // Try a simple query to check if Supabase is connected
     const { data, error } = await supabase.from('brands').select('id').limit(1);
     
     if (error) {
-      console.error("Supabase connection error:", error);
+      console.error("Supabase connection error:", error.message, error.details);
       return false;
     }
     
+    console.log("Supabase is connected successfully.");
     return true;
   } catch (error) {
     console.error("Supabase connection exception:", error);
     return false;
+  }
+};
+
+// Export a typed API client that can be used to interact with the Supabase backend
+export const api = {
+  // Brand management
+  brands: {
+    getAll: async () => await supabase
+      .from('brands')
+      .select('*')
+      .order('created_at', { ascending: false }),
+      
+    getById: async (id: string) => await supabase
+      .from('brands')
+      .select(`
+        *,
+        brand_knowledge (*),
+        products (*),
+        qa_pairs (*)
+      `)
+      .eq('id', id)
+      .single(),
+      
+    create: async (brandData: any) => await supabase
+      .from('brands')
+      .insert(brandData)
+      .select()
+  },
+  
+  // Product management
+  products: {
+    getByBrandId: async (brandId: string) => await supabase
+      .from('products')
+      .select('*')
+      .eq('brand_id', brandId)
+  },
+  
+  // Knowledge management
+  knowledge: {
+    getByBrandId: async (brandId: string) => await supabase
+      .from('brand_knowledge')
+      .select('*')
+      .eq('brand_id', brandId)
+      .single()
+  },
+  
+  // QA pairs management
+  qaPairs: {
+    getByBrandId: async (brandId: string) => await supabase
+      .from('qa_pairs')
+      .select('*')
+      .eq('brand_id', brandId)
   }
 };
