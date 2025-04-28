@@ -1,23 +1,12 @@
 
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
-import { Button } from '@/components/ui/button';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand } from '@/types';
-import { useToast } from '@/hooks/use-toast';
-import { Save, Edit } from 'lucide-react';
 
 const translations = {
-  edit: {
-    en: 'Edit',
-    vi: 'Chỉnh sửa',
-  },
-  save: {
-    en: 'Save',
-    vi: 'Lưu',
-  },
   brandDetails: {
     en: 'Brand Details',
     vi: 'Chi tiết thương hiệu',
@@ -26,11 +15,8 @@ const translations = {
 
 const BrandDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { currentLanguage } = useLanguage();
-  const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
-  const [brand, setBrand] = useState<Brand | null>(() => {
+  const [brand] = useState<Brand | null>(() => {
     return mockBrands.find(b => b.id === id) || null;
   });
 
@@ -48,35 +34,11 @@ const BrandDetails = () => {
     );
   }
 
-  const handleSave = () => {
-    setIsEditing(false);
-    toast({
-      title: 'Changes saved successfully',
-    });
-  };
-
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-8">
           <h1 className="text-2xl font-semibold">{t('brandDetails')}</h1>
-          <Button
-            onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-            variant="default"
-            className="flex items-center gap-2"
-          >
-            {isEditing ? (
-              <>
-                <Save className="h-4 w-4" />
-                {t('save')}
-              </>
-            ) : (
-              <>
-                <Edit className="h-4 w-4" />
-                {t('edit')}
-              </>
-            )}
-          </Button>
         </div>
 
         <div className="space-y-8">
