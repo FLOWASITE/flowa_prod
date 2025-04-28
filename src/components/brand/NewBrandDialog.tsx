@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Globe, Image, Plus, Package } from 'lucide-react';
+import { Globe, Image, Plus, Package, Upload } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
@@ -157,6 +157,20 @@ const translations = {
     fr: 'Produits & Services',
     es: 'Productos y servicios',
     th: 'สินค้าและบริการ',
+  },
+  uploadLogo: {
+    en: 'Upload Logo',
+    vi: 'Tải lên Logo',
+    fr: 'Télécharger le logo',
+    es: 'Subir logo',
+    th: 'อัปโหลดโลโก้',
+  },
+  dragAndDrop: {
+    en: 'Drag and drop or click to upload',
+    vi: 'Kéo thả hoặc nhấp để tải lên',
+    fr: 'Glisser-déposer ou cliquer pour télécharger',
+    es: 'Arrastrar y soltar o hacer clic para subir',
+    th: 'ลากและวางหรือคลิกเพื่ออัปโหลด',
   }
 };
 
@@ -189,6 +203,9 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     productPricing: '',
     productBenefits: ''
   });
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -266,6 +283,31 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     setOpen(false);
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewUrl(imageUrl);
+      setFormData(prev => ({ ...prev, logo: imageUrl }));
+    }
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setSelectedFile(file);
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewUrl(imageUrl);
+      setFormData(prev => ({ ...prev, logo: imageUrl }));
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
   };
@@ -296,6 +338,54 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           
           <div className="px-6 space-y-6 max-h-[70vh] overflow-y-auto">
             <div className="grid grid-cols-1 gap-6">
+              <div 
+                className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onClick={() => document.getElementById('logo-upload')?.click()}
+              >
+                {previewUrl ? (
+                  <div className="relative w-24 h-24 mx-auto">
+                    <img 
+                      src={previewUrl} 
+                      alt="Logo preview" 
+                      className="w-full h-full object-contain rounded-lg"
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="icon"
+                      className="absolute -top-2 -right-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreviewUrl('');
+                        setSelectedFile(null);
+                        setFormData(prev => ({ ...prev, logo: '' }));
+                      }}
+                    >
+                      <Upload className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 mx-auto flex items-center justify-center">
+                      <Image className="w-6 h-6 text-gray-400" />
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      <p className="font-medium">{t('uploadLogo')}</p>
+                      <p>{t('dragAndDrop')}</p>
+                    </div>
+                  </div>
+                )}
+                <input
+                  id="logo-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="name">{t('brandName')}</Label>
                 <Input
