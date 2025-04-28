@@ -16,8 +16,149 @@ import { Plus, Trash2 } from 'lucide-react';
 import { defaultThemeCategories } from '@/data/defaultThemeTypes';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
+import { v4 as uuidv4 } from 'uuid';
+
+const translations = {
+  newBrand: {
+    en: 'New Brand',
+    vi: 'Thương hiệu mới',
+    fr: 'Nouvelle marque',
+    es: 'Nueva marca',
+    th: 'แบรนด์ใหม่',
+  },
+  createNewBrand: {
+    en: 'Create New Brand',
+    vi: 'Tạo thương hiệu mới',
+    fr: 'Créer une nouvelle marque',
+    es: 'Crear nueva marca',
+    th: 'สร้างแบรนด์ใหม่',
+  },
+  brandInformation: {
+    en: 'Brand Information',
+    vi: 'Thông tin thương hiệu',
+    fr: 'Information sur la marque',
+    es: 'Información de marca',
+    th: 'ข้อมูลแบรนด์',
+  },
+  themeTypes: {
+    en: 'Theme Types',
+    vi: 'Loại chủ đề',
+    fr: 'Types de thèmes',
+    es: 'Tipos de temas',
+    th: 'ประเภทธีม',
+  },
+  brandName: {
+    en: 'Brand Name',
+    vi: 'Tên thương hiệu',
+    fr: 'Nom de la marque',
+    es: 'Nombre de la marca',
+    th: 'ชื่อแบรนด์',
+  },
+  description: {
+    en: 'Description',
+    vi: 'Mô tả',
+    fr: 'Description',
+    es: 'Descripción',
+    th: 'คำอธิบาย',
+  },
+  primaryColor: {
+    en: 'Primary Color',
+    vi: 'Màu chính',
+    fr: 'Couleur primaire',
+    es: 'Color primario',
+    th: 'สีหลัก',
+  },
+  secondaryColor: {
+    en: 'Secondary Color',
+    vi: 'Màu phụ',
+    fr: 'Couleur secondaire',
+    es: 'Color secundario',
+    th: 'สีรอง',
+  },
+  cancel: {
+    en: 'Cancel',
+    vi: 'Hủy bỏ',
+    fr: 'Annuler',
+    es: 'Cancelar',
+    th: 'ยกเลิก',
+  },
+  create: {
+    en: 'Create Brand',
+    vi: 'Tạo thương hiệu',
+    fr: 'Créer la marque',
+    es: 'Crear marca',
+    th: 'สร้างแบรนด์',
+  },
+  enterBrandName: {
+    en: 'Enter brand name',
+    vi: 'Nhập tên thương hiệu',
+    fr: 'Entrez le nom de la marque',
+    es: 'Ingrese el nombre de la marca',
+    th: 'ป้อนชื่อแบรนด์',
+  },
+  enterBrandDescription: {
+    en: 'Enter brand description',
+    vi: 'Nhập mô tả thương hiệu',
+    fr: 'Entrez la description de la marque',
+    es: 'Ingrese la descripción de la marca',
+    th: 'ป้อนคำอธิบายแบรนด์',
+  },
+  themeName: {
+    en: 'Theme Name',
+    vi: 'Tên chủ đề',
+    fr: 'Nom du thème',
+    es: 'Nombre del tema',
+    th: 'ชื่อธีม',
+  },
+  themeDescription: {
+    en: 'Description',
+    vi: 'Mô tả',
+    fr: 'Description',
+    es: 'Descripción',
+    th: 'คำอธิบาย',
+  },
+  keywords: {
+    en: 'Keywords (comma-separated)',
+    vi: 'Từ khóa (phân tách bằng dấu phẩy)',
+    fr: 'Mots-clés (séparés par des virgules)',
+    es: 'Palabras clave (separadas por comas)',
+    th: 'คำสำคัญ (คั่นด้วยเครื่องหมายจุลภาค)',
+  },
+  newThemeName: {
+    en: 'New Theme Name',
+    vi: 'Tên chủ đề mới',
+    fr: 'Nouveau nom de thème',
+    es: 'Nuevo nombre de tema',
+    th: 'ชื่อธีมใหม่',
+  },
+  addThemeType: {
+    en: 'Add Theme Type',
+    vi: 'Thêm loại chủ đề',
+    fr: 'Ajouter un type de thème',
+    es: 'Añadir tipo de tema',
+    th: 'เพิ่มประเภทธีม',
+  },
+  brandCreated: {
+    en: 'Brand created successfully!',
+    vi: 'Tạo thương hiệu thành công!',
+    fr: 'Marque créée avec succès!',
+    es: '¡Marca creada con éxito!',
+    th: 'สร้างแบรนด์สำเร็จ!',
+  },
+  brandNameRequired: {
+    en: 'Brand name is required',
+    vi: 'Tên thương hiệu là bắt buộc',
+    fr: 'Le nom de la marque est requis',
+    es: 'El nombre de la marca es obligatorio',
+    th: 'จำเป็นต้องมีชื่อแบรนด์',
+  }
+};
 
 export function NewBrandDialog() {
+  const { currentLanguage } = useLanguage();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('brand');
   const [formData, setFormData] = useState({
@@ -63,14 +204,41 @@ export function NewBrandDialog() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Creating brand:', {
-      ...formData,
+
+    if (!formData.name.trim()) {
+      toast({
+        title: translations.brandNameRequired[currentLanguage.code] || translations.brandNameRequired.en,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Tạo dữ liệu thương hiệu mới
+    const newBrand = {
+      id: uuidv4(),
+      name: formData.name,
+      description: formData.description,
+      colors: {
+        primary: formData.primaryColor,
+        secondary: formData.secondaryColor,
+      },
       themeTypes: themeTypes.map(theme => ({
-        ...theme,
+        name: theme.name,
+        description: theme.description,
         keywords: theme.keywords.split(',').map(k => k.trim()),
       })),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    console.log('Creating brand:', newBrand);
+    
+    // Hiển thị thông báo thành công
+    toast({
+      title: translations.brandCreated[currentLanguage.code] || translations.brandCreated.en,
     });
     
+    // Reset form và đóng dialog
     setFormData({
       name: '',
       description: '',
@@ -85,55 +253,59 @@ export function NewBrandDialog() {
     setOpen(false);
   };
 
+  const t = (key: keyof typeof translations) => {
+    return translations[key][currentLanguage.code] || translations[key].en;
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          New Brand
+          {t('newBrand')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[800px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create New Brand</DialogTitle>
+            <DialogTitle>{t('createNewBrand')}</DialogTitle>
           </DialogHeader>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="brand">Brand Information</TabsTrigger>
-              <TabsTrigger value="themes">Theme Types</TabsTrigger>
+              <TabsTrigger value="brand">{t('brandInformation')}</TabsTrigger>
+              <TabsTrigger value="themes">{t('themeTypes')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="brand" className="mt-4">
               <div className="grid gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="name">Brand Name</Label>
+                  <Label htmlFor="name">{t('brandName')}</Label>
                   <Input
                     id="name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Enter brand name"
+                    placeholder={t('enterBrandName')}
                     required
                   />
                 </div>
                 
                 <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('description')}</Label>
                   <Textarea
                     id="description"
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    placeholder="Enter brand description"
+                    placeholder={t('enterBrandDescription')}
                     required
                   />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="primaryColor">Primary Color</Label>
+                    <Label htmlFor="primaryColor">{t('primaryColor')}</Label>
                     <div className="flex items-center">
                       <Input
                         id="primaryColor"
@@ -154,7 +326,7 @@ export function NewBrandDialog() {
                   </div>
                   
                   <div className="grid gap-2">
-                    <Label htmlFor="secondaryColor">Secondary Color</Label>
+                    <Label htmlFor="secondaryColor">{t('secondaryColor')}</Label>
                     <div className="flex items-center">
                       <Input
                         id="secondaryColor"
@@ -193,27 +365,27 @@ export function NewBrandDialog() {
                       </Button>
                       
                       <div className="grid gap-2">
-                        <Label>Theme Name</Label>
+                        <Label>{t('themeName')}</Label>
                         <Input
                           value={theme.name}
                           onChange={(e) => handleThemeTypeChange(index, 'name', e.target.value)}
-                          placeholder="Theme name"
+                          placeholder={t('themeName')}
                           required
                         />
                       </div>
 
                       <div className="grid gap-2">
-                        <Label>Description</Label>
+                        <Label>{t('themeDescription')}</Label>
                         <Input
                           value={theme.description}
                           onChange={(e) => handleThemeTypeChange(index, 'description', e.target.value)}
-                          placeholder="Theme description"
+                          placeholder={t('themeDescription')}
                           required
                         />
                       </div>
 
                       <div className="grid gap-2">
-                        <Label>Keywords (comma-separated)</Label>
+                        <Label>{t('keywords')}</Label>
                         <Input
                           value={theme.keywords}
                           onChange={(e) => handleThemeTypeChange(index, 'keywords', e.target.value)}
@@ -225,25 +397,25 @@ export function NewBrandDialog() {
 
                   <div className="grid gap-4 p-4 border rounded-lg border-dashed">
                     <div className="grid gap-2">
-                      <Label>New Theme Name</Label>
+                      <Label>{t('newThemeName')}</Label>
                       <Input
                         value={newThemeType.name}
                         onChange={(e) => setNewThemeType(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Enter new theme name"
+                        placeholder={t('enterBrandName')}
                       />
                     </div>
 
                     <div className="grid gap-2">
-                      <Label>Description</Label>
+                      <Label>{t('themeDescription')}</Label>
                       <Input
                         value={newThemeType.description}
                         onChange={(e) => setNewThemeType(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Enter theme description"
+                        placeholder={t('enterBrandDescription')}
                       />
                     </div>
 
                     <div className="grid gap-2">
-                      <Label>Keywords (comma-separated)</Label>
+                      <Label>{t('keywords')}</Label>
                       <Input
                         value={newThemeType.keywords}
                         onChange={(e) => setNewThemeType(prev => ({ ...prev, keywords: e.target.value }))}
@@ -258,7 +430,7 @@ export function NewBrandDialog() {
                       onClick={addNewThemeType}
                     >
                       <Plus className="mr-2 h-4 w-4" />
-                      Add Theme Type
+                      {t('addThemeType')}
                     </Button>
                   </div>
                 </div>
@@ -268,9 +440,9 @@ export function NewBrandDialog() {
           
           <DialogFooter className="mt-6">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
-            <Button type="submit">Create Brand</Button>
+            <Button type="submit">{t('create')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
