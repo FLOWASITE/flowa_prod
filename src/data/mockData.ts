@@ -1,43 +1,30 @@
-
 import { Brand, ThemeType, ProductType, ContentTone, Topic, Content, ChatConversation, ChatMessage } from '../types';
 
 export const mockBrands: Brand[] = [
   {
     id: '1',
-    name: 'Naturals Organic',
-    description: 'Organic food products company promoting healthy lifestyle',
+    name: 'Kiểm toán TAF',
+    description: 'Công ty kiểm toán chuyên nghiệp',
     logo: '/placeholder.svg',
     colors: {
-      primary: '#4CAF50',
-      secondary: '#8BC34A',
+      primary: '#2C3E50',
+      secondary: '#34495E',
     },
-    createdAt: new Date('2023-01-15'),
-    updatedAt: new Date('2023-03-20'),
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-03-20'),
   },
   {
     id: '2',
-    name: 'TechVision',
-    description: 'Technology products and innovation company',
+    name: 'Flowa',
+    description: 'Nền tảng tự động tạo content',
     logo: '/placeholder.svg',
     colors: {
-      primary: '#2196F3',
-      secondary: '#03A9F4',
+      primary: '#3498DB',
+      secondary: '#2980B9',
     },
-    createdAt: new Date('2023-02-10'),
-    updatedAt: new Date('2023-04-05'),
-  },
-  {
-    id: '3',
-    name: 'StyleFash',
-    description: 'Fashion and lifestyle brand for young adults',
-    logo: '/placeholder.svg',
-    colors: {
-      primary: '#FF4081',
-      secondary: '#F50057',
-    },
-    createdAt: new Date('2023-03-22'),
-    updatedAt: new Date('2023-05-15'),
-  },
+    createdAt: new Date('2024-02-10'),
+    updatedAt: new Date('2024-04-05'),
+  }
 ];
 
 export const mockThemeTypes: ThemeType[] = [

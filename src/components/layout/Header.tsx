@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bell, Search, User, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
+import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LanguageSelector } from './LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { BrandSwitcher } from '../brand/BrandSwitcher';
 
 export function Header() {
   const { currentLanguage } = useLanguage();
@@ -22,7 +23,8 @@ export function Header() {
   return (
     <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-4 px-6">
       <div className="flex items-center justify-between">
-        <div className="flex-1">
+        <div className="flex items-center space-x-4 flex-1">
+          <BrandSwitcher />
           <div className="relative max-w-md">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
             <Input
