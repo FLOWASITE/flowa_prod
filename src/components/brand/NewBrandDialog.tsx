@@ -295,7 +295,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           </DialogHeader>
           
           <div className="px-6 space-y-6 max-h-[70vh] overflow-y-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="name">{t('brandName')}</Label>
                 <Input
@@ -308,29 +308,32 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="primaryColor">{t('primaryColor')}</Label>
-                  <Input
-                    id="primaryColor"
-                    name="primaryColor"
-                    type="color"
-                    value={formData.primaryColor}
-                    onChange={handleChange}
-                    className="h-10 p-1 rounded-lg transition-all duration-200"
-                  />
+              <div className="flex items-center gap-4">
+                <div className="w-full flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex-shrink-0">
+                    <Input
+                      id="primaryColor"
+                      name="primaryColor"
+                      type="color"
+                      value={formData.primaryColor}
+                      onChange={handleChange}
+                      className="h-8 w-8 p-0.5 rounded cursor-pointer border-0"
+                    />
+                  </div>
+                  <span>{t('primaryColor')}</span>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="secondaryColor">{t('secondaryColor')}</Label>
-                  <Input
-                    id="secondaryColor"
-                    name="secondaryColor"
-                    type="color"
-                    value={formData.secondaryColor}
-                    onChange={handleChange}
-                    className="h-10 p-1 rounded-lg transition-all duration-200"
-                  />
+                <div className="w-full flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="flex-shrink-0">
+                    <Input
+                      id="secondaryColor"
+                      name="secondaryColor"
+                      type="color"
+                      value={formData.secondaryColor}
+                      onChange={handleChange}
+                      className="h-8 w-8 p-0.5 rounded cursor-pointer border-0"
+                    />
+                  </div>
+                  <span>{t('secondaryColor')}</span>
                 </div>
               </div>
             </div>
