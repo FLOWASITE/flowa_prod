@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -66,13 +65,12 @@ export function Sidebar() {
     >
       <div className="p-4 flex items-center justify-center border-b border-gray-200 dark:border-gray-800">
         {!collapsed ? (
-          <Link to="/" className="flex flex-col items-center gap-1">
+          <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/3d095938-a60f-4b3e-ae18-df47874ddf1f.png" 
               alt="Flowa Logo" 
               className="h-10 object-contain"
             />
-            <span className="text-sm font-medium text-brand-red-dark">Auto AI Content</span>
           </Link>
         ) : (
           <Link to="/" className="flex items-center">
