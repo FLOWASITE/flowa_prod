@@ -19,6 +19,7 @@ import { Brand, ProductType } from '@/types';
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
 import { ProductSelector } from './ProductSelector';
+import { SocialConnectionsSelector } from './SocialConnectionsSelector';
 
 const translations = {
   newBrand: {
@@ -378,6 +379,10 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   onProductsChange={setProducts}
                 />
               </div>
+            </div>
+
+            <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
+              <SocialConnectionsSelector />
             </div>
           </div>
           
