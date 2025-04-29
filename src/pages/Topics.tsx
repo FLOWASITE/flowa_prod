@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
-import { mockTopics } from '@/data/mockData';
+import { mockTopics, mockProductTypes } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   Table,
@@ -147,9 +148,19 @@ const Topics = () => {
     );
   };
 
-  // Hàm tạo badge sản phẩm với màu sắc phù hợp
+  // Function to get product name from product ID
+  const getProductNameById = (productId: string | undefined) => {
+    if (!productId) return null;
+    
+    const product = mockProductTypes.find(product => product.id === productId);
+    return product ? product.name : productId;
+  };
+
+  // Updated product badge function to show the product name
   const productBadge = (productTypeId: string | undefined) => {
-    if (!productTypeId) {
+    const productName = getProductNameById(productTypeId);
+    
+    if (!productName) {
       return (
         <Badge variant="outline" className="bg-gray-50 text-gray-500 border-gray-200">
           {getTranslation('noProduct') || 'Không có'}
@@ -159,7 +170,7 @@ const Topics = () => {
     
     return (
       <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100">
-        {productTypeId}
+        {productName}
       </Badge>
     );
   };
