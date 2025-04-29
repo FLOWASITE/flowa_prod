@@ -7,10 +7,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Plus } from 'lucide-react';
 import { Content, Topic } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { api, supabase } from '@/integrations/supabase/client';
 import { ContentApprovalDialog } from '@/components/content/ContentApprovalDialog';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 const ContentPage = () => {
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
@@ -18,15 +19,24 @@ const ContentPage = () => {
   const [isApprovalDialogOpen, setIsApprovalDialogOpen] = useState(false);
 
   // Fetch content from Supabase
-  const { data: content = [], isLoading } = useQuery({
+  const { data: content = [], isLoading: isContentLoading, error: contentError } = useQuery({
     queryKey: ['content'],
     queryFn: async () => {
+      console.log('Fetching content data...');
       const { data, error } = await supabase
         .from('content')
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching content:', error);
+        toast.error('Lỗi khi tải dữ liệu nội dung', {
+          description: error.message
+        });
+        throw error;
+      }
+      
+      console.log('Content data fetched:', data?.length || 0, 'items');
       
       return data.map(item => ({
         id: item.id,
@@ -44,14 +54,23 @@ const ContentPage = () => {
   });
 
   // Fetch topics from Supabase
-  const { data: topics = [] } = useQuery({
+  const { data: topics = [], isLoading: isTopicsLoading, error: topicsError } = useQuery({
     queryKey: ['topics'],
     queryFn: async () => {
+      console.log('Fetching topics data...');
       const { data, error } = await supabase
         .from('content_topics')
         .select('*');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching topics:', error);
+        toast.error('Lỗi khi tải dữ liệu chủ đề', {
+          description: error.message
+        });
+        throw error;
+      }
+      
+      console.log('Topics data fetched:', data?.length || 0, 'items');
       
       return data.map(topic => ({
         id: topic.id,
@@ -68,13 +87,47 @@ const ContentPage = () => {
     }
   });
 
+  // Handle errors
+  React.useEffect(() => {
+    if (contentError || topicsError) {
+      console.error('Error fetching data:', contentError || topicsError);
+    }
+  }, [contentError, topicsError]);
+
   const handleApprove = (content: Content) => {
     const topic = topics.find(t => t.id === content.topicId);
     if (topic) {
       setSelectedContent(content);
       setSelectedTopic(topic);
       setIsApprovalDialogOpen(true);
+    } else {
+      toast.error('Không tìm thấy chủ đề cho nội dung này');
     }
+  };
+
+  const handleDelete = (contentId: string) => {
+    toast.promise(
+      async () => {
+        const { error } = await supabase
+          .from('content')
+          .delete()
+          .eq('id', contentId);
+        
+        if (error) throw error;
+        return true;
+      },
+      {
+        loading: 'Đang xóa nội dung...',
+        success: 'Đã xóa nội dung thành công',
+        error: (err) => `Lỗi: ${err.message || 'Không thể xóa nội dung'}`
+      }
+    );
+  };
+
+  const handleView = (content: Content) => {
+    setSelectedContent(content);
+    // You can expand this functionality later to show a detailed view
+    toast.info(`Xem chi tiết: ${content.text.substring(0, 30)}...`);
   };
 
   // Filter content by status
@@ -83,16 +136,18 @@ const ContentPage = () => {
   const scheduledContent = content.filter(item => item.status === 'scheduled');
   const publishedContent = content.filter(item => item.status === 'published');
 
+  const isLoading = isContentLoading || isTopicsLoading;
+
   const getStatusDisplay = (status: string) => {
     switch (status) {
       case 'draft':
         return <div className="text-sm font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-md">Chờ duyệt</div>;
       case 'approved':
-        return <div className="text-sm font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-md">Chờ duyệt</div>;
+        return <div className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-md">Đã duyệt</div>;
       case 'scheduled':
-        return <div className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-md">Đã duyệt</div>;
+        return <div className="text-sm font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-md">Đã lên lịch</div>;
       case 'published':
-        return <div className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-md">Đã duyệt</div>;
+        return <div className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-md">Đã đăng</div>;
       case 'rejected':
         return <div className="text-sm font-medium text-red-600 bg-red-50 px-2 py-1 rounded-md">Từ chối</div>;
       default:
@@ -203,13 +258,37 @@ const ContentPage = () => {
                                 <path d="m15 5 4 4"/>
                               </svg>
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-green-500">
-                              <span className="sr-only">Phê duyệt</span>
+                            {item.status === 'draft' && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 w-8 p-0 text-green-500"
+                                onClick={() => handleApprove(item)}
+                              >
+                                <span className="sr-only">Phê duyệt</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                                  <path d="M20 6 9 17l-5-5"/>
+                                </svg>
+                              </Button>
+                            )}
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-8 w-8 p-0 text-blue-500"
+                              onClick={() => handleView(item)}
+                            >
+                              <span className="sr-only">Xem</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                                <path d="M20 6 9 17l-5-5"/>
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
                               </svg>
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-8 w-8 p-0 text-red-500"
+                              onClick={() => handleDelete(item.id)}
+                            >
                               <span className="sr-only">Xóa</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                 <path d="M18 6 6 18"/>
@@ -246,7 +325,6 @@ const ContentPage = () => {
         </TabsContent>
         
         <TabsContent value="draft" className="space-y-4">
-          {/* Similar table structure for drafts */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -262,8 +340,11 @@ const ContentPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* Draft content rows */}
-                {draftContent.length === 0 ? (
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-4">Đang tải...</TableCell>
+                  </TableRow>
+                ) : draftContent.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-4">Không có bản nháp nào.</TableCell>
                   </TableRow>
@@ -317,7 +398,12 @@ const ContentPage = () => {
                                 <path d="M20 6 9 17l-5-5"/>
                               </svg>
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-8 w-8 p-0 text-red-500"
+                              onClick={() => handleDelete(item.id)}
+                            >
                               <span className="sr-only">Xóa</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                 <path d="M18 6 6 18"/>
@@ -336,7 +422,6 @@ const ContentPage = () => {
         </TabsContent>
         
         <TabsContent value="approved" className="space-y-4">
-          {/* Similar table structure for approved content */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -354,8 +439,11 @@ const ContentPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* Approved content rows */}
-                {approvedContent.length + scheduledContent.length + publishedContent.length === 0 ? (
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className="text-center py-4">Đang tải...</TableCell>
+                  </TableRow>
+                ) : approvedContent.length + scheduledContent.length + publishedContent.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={10} className="text-center py-4">Không có nội dung đã duyệt nào.</TableCell>
                   </TableRow>
@@ -388,11 +476,7 @@ const ContentPage = () => {
                         <TableCell>
                           {item.publishedAt ? format(item.publishedAt, 'dd/MM/yyyy') : '-'}
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-md">
-                            Đã duyệt
-                          </div>
-                        </TableCell>
+                        <TableCell>{getStatusDisplay(item.status)}</TableCell>
                         <TableCell>
                           <div className="flex space-x-1">
                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -402,14 +486,24 @@ const ContentPage = () => {
                                 <path d="m15 5 4 4"/>
                               </svg>
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-green-500">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-8 w-8 p-0 text-blue-500"
+                              onClick={() => handleView(item)}
+                            >
                               <span className="sr-only">Xem</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                                 <circle cx="12" cy="12" r="3"/>
                               </svg>
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-8 w-8 p-0 text-red-500"
+                              onClick={() => handleDelete(item.id)}
+                            >
                               <span className="sr-only">Xóa</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                 <path d="M18 6 6 18"/>
