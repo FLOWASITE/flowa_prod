@@ -178,6 +178,91 @@ export type Database = {
           },
         ]
       }
+      files: {
+        Row: {
+          content: string | null
+          created_at: string
+          file_path: string | null
+          file_size: number | null
+          file_type: string
+          id: string
+          name: string
+          platform_id: string
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          file_path?: string | null
+          file_size?: number | null
+          file_type: string
+          id?: string
+          name: string
+          platform_id: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string
+          id?: string
+          name?: string
+          platform_id?: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_platform_id_fkey"
+            columns: ["platform_id"]
+            isOneToOne: false
+            referencedRelation: "platforms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platforms: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          platform_type: Database["public"]["Enums"]["platform_type"]
+          topic_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          platform_type: Database["public"]["Enums"]["platform_type"]
+          topic_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          platform_type?: Database["public"]["Enums"]["platform_type"]
+          topic_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platforms_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           brand_id: string
@@ -281,6 +366,30 @@ export type Database = {
           },
         ]
       }
+      topics: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -319,6 +428,12 @@ export type Database = {
       }
     }
     Enums: {
+      platform_type:
+        | "facebook"
+        | "instagram"
+        | "tiktok"
+        | "threads"
+        | "linkedin"
       user_role: "admin" | "manager" | "staff"
     }
     CompositeTypes: {
@@ -435,6 +550,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      platform_type: ["facebook", "instagram", "tiktok", "threads", "linkedin"],
       user_role: ["admin", "manager", "staff"],
     },
   },

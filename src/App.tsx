@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import BrandDetails from "./pages/BrandDetails";
 import Users from "./pages/Users";
 import Crm from "./pages/Crm";
+import FileManager from "./pages/FileManager";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -76,6 +77,7 @@ function App() {
               <Route path="/chat" element={<Chat />} />
               <Route path="/crm" element={<Crm />} />
               <Route path="/schedule" element={<Schedule />} />
+              <Route path="/filemanager" element={<FileManager />} />
               <Route path="/users" element={<Users />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

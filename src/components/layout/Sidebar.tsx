@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Users,
   UserCircle,
+  FolderTree, // Added for Data Management
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -121,6 +122,14 @@ export function Sidebar() {
       es: 'CRM',
       th: 'CRM',
       id: 'CRM'
+    },
+    fileManager: {
+      vi: 'Quản lý dữ liệu',
+      en: 'Data Management',
+      fr: 'Gestion de données',
+      es: 'Gestión de datos',
+      th: 'จัดการข้อมูล',
+      id: 'Manajemen Data'
     }
   };
   
@@ -154,6 +163,11 @@ export function Sidebar() {
       label: getTranslation('schedule'),
       icon: Calendar,
       href: '/schedule',
+    },
+    {
+      label: getTranslation('fileManager'),
+      icon: FolderTree,
+      href: '/filemanager',
     },
     {
       label: getTranslation('chat'),
