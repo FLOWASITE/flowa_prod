@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { File, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import {
+  Dialog,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -127,10 +127,8 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
     if (!file) return;
 
     try {
-      // Parse CSV file
       const text = await file.text();
       const rows = text.split('\n').map(row => {
-        // Handle quoted CSV fields that may contain commas
         const result = [];
         let inQuote = false;
         let current = '';
@@ -148,7 +146,6 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
           }
         }
         
-        // Add the last field
         result.push(current);
         return result;
       });
@@ -182,7 +179,6 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
       });
     }
     
-    // Reset the input so the same file can be selected again
     event.target.value = '';
   };
 

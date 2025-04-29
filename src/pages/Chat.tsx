@@ -6,12 +6,6 @@ import { mockChatConversations } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from '@/components/ui/tabs';
-import { 
   Users, 
   MessagesSquare, 
   Settings, 
@@ -45,6 +39,7 @@ const Chat = () => {
   );
   const [selectedPlatform, setSelectedPlatform] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [integrationDialogOpen, setIntegrationDialogOpen] = useState(false);
 
   const filteredConversations = activeConversations.filter(conversation => {
     const matchesPlatform = selectedPlatform === 'all' || conversation.platform === selectedPlatform;
@@ -66,9 +61,9 @@ const Chat = () => {
             Thống kê
           </Button>
           
-          <Dialog>
+          <Dialog open={integrationDialogOpen} onOpenChange={setIntegrationDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm">
+              <Button size="sm" onClick={() => setIntegrationDialogOpen(true)}>
                 <Zap className="h-4 w-4 mr-2" />
                 Kết nối mới
               </Button>
