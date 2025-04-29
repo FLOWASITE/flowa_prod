@@ -16,6 +16,7 @@ const ContentPage = () => {
   const [isApprovalDialogOpen, setIsApprovalDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
 
   // Fetch content from Supabase
   const { data: content = [], isLoading: isContentLoading, error: contentError } = useQuery({
@@ -143,6 +144,11 @@ const ContentPage = () => {
     setCurrentPage(1); // Reset to first page when changing rows per page
   };
 
+  const handlePlatformChange = (platform: string) => {
+    setSelectedPlatform(platform);
+    setCurrentPage(1); // Reset to first page when changing platform filter
+  };
+
   const isLoading = isContentLoading || isTopicsLoading;
 
   return (
@@ -164,6 +170,8 @@ const ContentPage = () => {
         rowsPerPage={rowsPerPage}
         handlePageChange={handlePageChange}
         handleRowsPerPageChange={handleRowsPerPageChange}
+        selectedPlatform={selectedPlatform}
+        onPlatformChange={handlePlatformChange}
       />
       
       <ContentApprovalDialog 

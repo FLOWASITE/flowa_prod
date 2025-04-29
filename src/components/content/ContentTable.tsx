@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Content } from '@/types';
@@ -14,6 +13,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ContentTableProps {
   items: Content[];
@@ -29,6 +35,8 @@ interface ContentTableProps {
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   showApprovalColumns?: boolean;
   showApproveColumn?: boolean;
+  selectedPlatform: string;
+  onPlatformChange: (platform: string) => void;
 }
 
 export const ContentTable: React.FC<ContentTableProps> = ({
@@ -44,7 +52,9 @@ export const ContentTable: React.FC<ContentTableProps> = ({
   handlePageChange,
   handleRowsPerPageChange,
   showApprovalColumns = true,
-  showApproveColumn = true
+  showApproveColumn = true,
+  selectedPlatform,
+  onPlatformChange
 }) => {
   // Helper functions
   const formatDate = (date: Date | undefined) => {
@@ -71,6 +81,19 @@ export const ContentTable: React.FC<ContentTableProps> = ({
   const getPlatformIcon = (platform: string) => {
     return platformIcons[platform as keyof typeof platformIcons] || null;
   };
+
+  // Get unique platforms for filter
+  const getUniquePlatforms = () => {
+    const platforms = new Set<string>();
+    allItems.forEach(item => {
+      if (item.platform) {
+        platforms.add(item.platform);
+      }
+    });
+    return Array.from(platforms);
+  };
+
+  const uniquePlatforms = getUniquePlatforms();
 
   const renderPagination = (dataLength: number) => {
     const pages = Math.ceil(dataLength / rowsPerPage);
@@ -129,19 +152,41 @@ export const ContentTable: React.FC<ContentTableProps> = ({
 
   return (
     <div className="rounded-md border">
-      <div className="flex items-center p-4">
-        <div className="flex-1">
-          <label className="text-sm font-medium">Số dòng/trang:</label>
-          <select 
-            className="ml-2 p-1 border rounded text-sm"
-            value={rowsPerPage}
-            onChange={handleRowsPerPageChange}
-          >
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
+      <div className="flex items-center p-4 justify-between">
+        <div className="flex items-center space-x-4">
+          <div>
+            <label className="text-sm font-medium">Số dòng/trang:</label>
+            <select 
+              className="ml-2 p-1 border rounded text-sm"
+              value={rowsPerPage}
+              onChange={handleRowsPerPageChange}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <label className="text-sm font-medium">Nền tảng:</label>
+            <Select value={selectedPlatform} onValueChange={onPlatformChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Tất cả nền tảng" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả nền tảng</SelectItem>
+                {uniquePlatforms.map(platform => (
+                  <SelectItem key={platform} value={platform}>
+                    <div className="flex items-center">
+                      <span className="mr-2">{getPlatformIcon(platform)}</span>
+                      <span className="capitalize">{platform}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
       

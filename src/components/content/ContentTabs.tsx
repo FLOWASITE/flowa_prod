@@ -15,6 +15,8 @@ interface ContentTabsProps {
   rowsPerPage: number;
   handlePageChange: (page: number) => void;
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  selectedPlatform: string;
+  onPlatformChange: (platform: string) => void;
 }
 
 export const ContentTabs: React.FC<ContentTabsProps> = ({
@@ -27,13 +29,28 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   currentPage,
   rowsPerPage,
   handlePageChange,
-  handleRowsPerPageChange
+  handleRowsPerPageChange,
+  selectedPlatform,
+  onPlatformChange
 }) => {
   // Filter content by status
   const draftContent = content.filter(item => item.status === 'draft');
   const approvedContent = content.filter(item => item.status === 'approved');
   const scheduledContent = content.filter(item => item.status === 'scheduled');
   const publishedContent = content.filter(item => item.status === 'published');
+
+  // Filter by platform if selected
+  const filterByPlatform = (items: Content[]) => {
+    if (selectedPlatform === 'all') {
+      return items;
+    }
+    return items.filter(item => item.platform === selectedPlatform);
+  };
+
+  // Apply platform filter
+  const filteredContent = filterByPlatform(content);
+  const filteredDraftContent = filterByPlatform(draftContent);
+  const filteredApprovedContent = filterByPlatform([...approvedContent, ...scheduledContent, ...publishedContent]);
 
   // Pagination logic
   const getPaginatedData = (data: Content[]) => {
@@ -45,28 +62,28 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   const totalPages = (dataLength: number) => Math.ceil(dataLength / rowsPerPage);
 
   // Get paginated data for each tab
-  const paginatedAllContent = getPaginatedData(content);
-  const paginatedDraftContent = getPaginatedData(draftContent);
-  const paginatedApprovedContent = getPaginatedData([...approvedContent, ...scheduledContent, ...publishedContent]);
+  const paginatedAllContent = getPaginatedData(filteredContent);
+  const paginatedDraftContent = getPaginatedData(filteredDraftContent);
+  const paginatedApprovedContent = getPaginatedData(filteredApprovedContent);
 
   return (
     <Tabs defaultValue="all" className="space-y-4">
       <TabsList>
         <TabsTrigger value="all">
-          Tất cả ({content.length})
+          Tất cả ({filteredContent.length})
         </TabsTrigger>
         <TabsTrigger value="draft">
-          Bản nháp ({draftContent.length})
+          Bản nháp ({filteredDraftContent.length})
         </TabsTrigger>
         <TabsTrigger value="approved">
-          Đã duyệt ({approvedContent.length + scheduledContent.length + publishedContent.length})
+          Đã duyệt ({filteredApprovedContent.length})
         </TabsTrigger>
       </TabsList>
       
       <TabsContent value="all" className="space-y-4">
         <ContentTable
           items={paginatedAllContent}
-          allItems={content}
+          allItems={filteredContent}
           isLoading={isLoading}
           topics={topics}
           onApprove={onApprove}
@@ -77,13 +94,15 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
           handlePageChange={handlePageChange}
           handleRowsPerPageChange={handleRowsPerPageChange}
           showApproveColumn={true}
+          selectedPlatform={selectedPlatform}
+          onPlatformChange={onPlatformChange}
         />
       </TabsContent>
       
       <TabsContent value="draft" className="space-y-4">
         <ContentTable
           items={paginatedDraftContent}
-          allItems={draftContent}
+          allItems={filteredDraftContent}
           isLoading={isLoading}
           topics={topics}
           onApprove={onApprove}
@@ -95,13 +114,15 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
           handleRowsPerPageChange={handleRowsPerPageChange}
           showApprovalColumns={false}
           showApproveColumn={true}
+          selectedPlatform={selectedPlatform}
+          onPlatformChange={onPlatformChange}
         />
       </TabsContent>
       
       <TabsContent value="approved" className="space-y-4">
         <ContentTable
           items={paginatedApprovedContent}
-          allItems={[...approvedContent, ...scheduledContent, ...publishedContent]}
+          allItems={filteredApprovedContent}
           isLoading={isLoading}
           topics={topics}
           onApprove={onApprove}
@@ -112,6 +133,8 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
           handlePageChange={handlePageChange}
           handleRowsPerPageChange={handleRowsPerPageChange}
           showApproveColumn={false}
+          selectedPlatform={selectedPlatform}
+          onPlatformChange={onPlatformChange}
         />
       </TabsContent>
     </Tabs>
