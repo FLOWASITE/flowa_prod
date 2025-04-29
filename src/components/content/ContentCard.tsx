@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,15 +10,11 @@ import {
   Clock, 
   Edit, 
   Eye, 
-  Facebook, 
-  Instagram, 
-  Linkedin, 
-  MessageCircle, 
   Share2, 
-  Trash2, 
-  Video 
+  Trash2 
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { platformIcons } from '../chat/PlatformIcons';
 
 interface ContentCardProps {
   content: Content;
@@ -41,20 +36,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   compact = false 
 }) => {
   const getPlatformIcon = (platform: string) => {
-    switch (platform) {
-      case 'facebook':
-        return <Facebook className="h-5 w-5 text-blue-600" />;
-      case 'instagram':
-        return <Instagram className="h-5 w-5 text-pink-600" />;
-      case 'tiktok':
-        return <Video className="h-5 w-5 text-black" />;
-      case 'threads':
-        return <MessageCircle className="h-5 w-5 text-black" />;
-      case 'linkedin':
-        return <Linkedin className="h-5 w-5 text-blue-700" />;
-      default:
-        return null;
-    }
+    return platformIcons[platform as keyof typeof platformIcons] || null;
   };
 
   const getStatusBadge = (status: string) => {

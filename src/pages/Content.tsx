@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ContentCard } from '@/components/content/ContentCard';
@@ -21,6 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { platformIcons } from '@/components/chat/PlatformIcons';
 
 const ContentPage = () => {
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
@@ -167,6 +167,11 @@ const ContentPage = () => {
     }
   };
 
+  // Get platform icon for display
+  const getPlatformIcon = (platform: string) => {
+    return platformIcons[platform as keyof typeof platformIcons] || null;
+  };
+
   // Pagination logic
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -298,9 +303,9 @@ const ContentPage = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-10 text-center">#</TableHead>
-                  <TableHead className="w-44">Chủ đề gốc</TableHead>
-                  <TableHead className="w-28">Nền tảng</TableHead>
-                  <TableHead>Nội dung (Preview)</TableHead>
+                  <TableHead className="w-[25%]">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16 text-center">Nền tảng</TableHead>
+                  <TableHead className="max-w-[15%]">Nội dung (Preview)</TableHead>
                   <TableHead className="w-28">Hình ảnh</TableHead>
                   <TableHead className="w-28">Ngày tạo</TableHead>
                   <TableHead className="w-28">Người duyệt</TableHead>
@@ -325,11 +330,15 @@ const ContentPage = () => {
                     return (
                       <TableRow key={item.id}>
                         <TableCell className="font-medium text-center">{displayIndex}</TableCell>
-                        <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
-                        <TableCell className="capitalize">{item.platform}</TableCell>
+                        <TableCell className="font-medium">{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center">
+                            {getPlatformIcon(item.platform)}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <div className="truncate max-w-xs" title={item.text}>
-                            {item.text.substring(0, 60)}...
+                            {item.text.substring(0, 40)}...
                           </div>
                         </TableCell>
                         <TableCell>
@@ -433,13 +442,13 @@ const ContentPage = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-10 text-center">#</TableHead>
-                  <TableHead>Chủ đề gốc</TableHead>
-                  <TableHead>Nền tảng</TableHead>
-                  <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead>Hình ảnh</TableHead>
-                  <TableHead>Ngày tạo</TableHead>
-                  <TableHead>Trạng thái</TableHead>
-                  <TableHead>Hành động</TableHead>
+                  <TableHead className="w-[25%]">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16 text-center">Nền tảng</TableHead>
+                  <TableHead className="max-w-[15%]">Nội dung (Preview)</TableHead>
+                  <TableHead className="w-28">Hình ảnh</TableHead>
+                  <TableHead className="w-28">Ngày tạo</TableHead>
+                  <TableHead className="w-28">Trạng thái</TableHead>
+                  <TableHead className="w-28">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -458,11 +467,15 @@ const ContentPage = () => {
                     return (
                       <TableRow key={item.id}>
                         <TableCell className="font-medium text-center">{displayIndex}</TableCell>
-                        <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
-                        <TableCell className="capitalize">{item.platform}</TableCell>
+                        <TableCell className="font-medium">{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center">
+                            {getPlatformIcon(item.platform)}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <div className="truncate max-w-xs" title={item.text}>
-                            {item.text.substring(0, 60)}...
+                            {item.text.substring(0, 40)}...
                           </div>
                         </TableCell>
                         <TableCell>
@@ -554,15 +567,15 @@ const ContentPage = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-10 text-center">#</TableHead>
-                  <TableHead>Chủ đề gốc</TableHead>
-                  <TableHead>Nền tảng</TableHead>
-                  <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead>Hình ảnh</TableHead>
-                  <TableHead>Ngày tạo</TableHead>
-                  <TableHead>Người duyệt</TableHead>
-                  <TableHead>Ngày duyệt</TableHead>
-                  <TableHead>Trạng thái</TableHead>
-                  <TableHead>Hành động</TableHead>
+                  <TableHead className="w-[25%]">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16 text-center">Nền tảng</TableHead>
+                  <TableHead className="max-w-[15%]">Nội dung (Preview)</TableHead>
+                  <TableHead className="w-28">Hình ảnh</TableHead>
+                  <TableHead className="w-28">Ngày tạo</TableHead>
+                  <TableHead className="w-28">Người duyệt</TableHead>
+                  <TableHead className="w-28">Ngày duyệt</TableHead>
+                  <TableHead className="w-28">Trạng thái</TableHead>
+                  <TableHead className="w-28">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -581,11 +594,15 @@ const ContentPage = () => {
                     return (
                       <TableRow key={item.id}>
                         <TableCell className="font-medium text-center">{displayIndex}</TableCell>
-                        <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
-                        <TableCell className="capitalize">{item.platform}</TableCell>
+                        <TableCell className="font-medium">{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center">
+                            {getPlatformIcon(item.platform)}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <div className="truncate max-w-xs" title={item.text}>
-                            {item.text.substring(0, 60)}...
+                            {item.text.substring(0, 40)}...
                           </div>
                         </TableCell>
                         <TableCell>
