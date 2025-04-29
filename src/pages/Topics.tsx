@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
@@ -94,6 +93,14 @@ const Topics = () => {
       es: 'No se encontraron temas completados',
       th: 'ไม่พบหัวข้อที่เสร็จสมบูรณ์',
       id: 'Tidak ada topik yang selesai ditemukan'
+    },
+    noProduct: {
+      vi: 'Không có sản phẩm',
+      en: 'No product',
+      fr: 'Aucun produit',
+      es: 'No hay producto',
+      th: 'ไม่มีสินค้า',
+      id: 'Tidak ada produk'
     }
   };
 
@@ -136,6 +143,23 @@ const Topics = () => {
     return (
       <Badge variant="outline" className={statusClasses[status]}>
         {status}
+      </Badge>
+    );
+  };
+
+  // Hàm tạo badge sản phẩm với màu sắc phù hợp
+  const productBadge = (productTypeId: string | undefined) => {
+    if (!productTypeId) {
+      return (
+        <Badge variant="outline" className="bg-gray-50 text-gray-500 border-gray-200">
+          {getTranslation('noProduct') || 'Không có'}
+        </Badge>
+      );
+    }
+    
+    return (
+      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100">
+        {productTypeId}
       </Badge>
     );
   };
@@ -197,9 +221,7 @@ const Topics = () => {
                       <div className="font-medium">{topic.title}</div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="bg-blue-50 text-blue-800 hover:bg-blue-100">
-                        {topic.productTypeId || 'Không có'}
-                      </Badge>
+                      {productBadge(topic.productTypeId)}
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary">
