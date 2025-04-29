@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
@@ -232,23 +233,38 @@ const BrandDetails = () => {
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <BrandBasicInfo brand={brand} />
-            <BrandKnowledgeSection 
-              onUpdate={(knowledge) => setKnowledge(knowledge)}
-              data={brand.knowledge || {
-                history: '',
-                values: '',
-                targetAudience: '',
-                guidelines: '',
-                qaPairs: [],
-                productPricing: '',
-                productBenefits: ''
-              }}
-            />
+            
+            {/* Products section moved up */}
+            <div className="md:col-span-2">
+              <BrandProductsSection products={products} />
+            </div>
+            
+            {/* Voice tone section moved up */}
+            <div className="md:col-span-1">
+              <BrandVoiceToneSection tone={brand.tone} />
+            </div>
+            
+            {/* Themes section moved up */}
+            <div className="md:col-span-1">
+              <BrandThemesSection themes={brand.themes || []} />
+            </div>
+            
+            {/* Knowledge section moved down */}
+            <div className="md:col-span-2">
+              <BrandKnowledgeSection 
+                onUpdate={(knowledge) => setKnowledge(knowledge)}
+                data={brand.knowledge || {
+                  history: '',
+                  values: '',
+                  targetAudience: '',
+                  guidelines: '',
+                  qaPairs: [],
+                  productPricing: '',
+                  productBenefits: ''
+                }}
+              />
+            </div>
           </div>
-
-          <BrandProductsSection products={products} />
-          <BrandVoiceToneSection tone={brand.tone} />
-          <BrandThemesSection themes={brand.themes || []} />
         </div>
       </div>
     </Layout>
