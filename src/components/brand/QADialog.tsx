@@ -306,11 +306,13 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
         </DialogContent>
       </Dialog>
       
-      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
-        <DialogContent className="p-0 max-w-3xl overflow-hidden">
-          <ImportDialog type="qa" onImport={handleImportQA} />
-        </DialogContent>
-      </Dialog>
+      {importDialogOpen && (
+        <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+          <DialogContent className="p-0 max-w-3xl overflow-hidden">
+            <ImportDialog type="qa" onImport={handleImportQA} />
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

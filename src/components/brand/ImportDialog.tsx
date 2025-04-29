@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Upload } from 'lucide-react';
 import {
+  Dialog,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -210,91 +212,93 @@ export function ImportDialog({ onImport, type }: ImportDialogProps) {
 
   return (
     <>
-      <div className="p-6">
-        <DialogHeader>
-          <DialogTitle>{t('importData')}</DialogTitle>
-          <DialogDescription>{t('importDescription')}</DialogDescription>
-        </DialogHeader>
-        
-        <div className="space-y-4 mt-4">
-          <div className="flex flex-col md:flex-row items-center gap-2">
-            <input
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="file-upload"
-            />
-            <label htmlFor="file-upload" className="flex-1 w-full">
-              <Button variant="default" className="w-full gap-2" asChild>
-                <span>
-                  <Upload className="h-4 w-4" />
-                  {t('uploadExcel')}
-                </span>
+      <Dialog>
+        <div className="p-6">
+          <DialogHeader>
+            <DialogTitle>{t('importData')}</DialogTitle>
+            <DialogDescription>{t('importDescription')}</DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            <div className="flex flex-col md:flex-row items-center gap-2">
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+                className="hidden"
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="flex-1 w-full">
+                <Button variant="default" className="w-full gap-2" asChild>
+                  <span>
+                    <Upload className="h-4 w-4" />
+                    {t('uploadExcel')}
+                  </span>
+                </Button>
+              </label>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setTemplateDialogOpen(true)}
+                className="w-full md:w-auto"
+              >
+                {t('downloadTemplate')}
               </Button>
-            </label>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setTemplateDialogOpen(true)}
-              className="w-full md:w-auto"
-            >
-              {t('downloadTemplate')}
-            </Button>
-          </div>
+            </div>
 
-          {previewData.length > 0 && (
-            <div className="border rounded-lg">
-              <h3 className="font-medium px-4 py-2 border-b">{t('preview')}</h3>
-              <div className="max-h-[400px] overflow-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {type === 'qa' ? (
-                        <>
-                          <TableHead>Question</TableHead>
-                          <TableHead>Answer</TableHead>
-                        </>
-                      ) : (
-                        <>
-                          <TableHead>Product</TableHead>
-                          <TableHead>Price</TableHead>
-                        </>
-                      )}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {previewData.map((row, index) => (
-                      <TableRow key={index}>
+            {previewData.length > 0 && (
+              <div className="border rounded-lg">
+                <h3 className="font-medium px-4 py-2 border-b">{t('preview')}</h3>
+                <div className="max-h-[400px] overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
                         {type === 'qa' ? (
                           <>
-                            <TableCell className="align-top">{row.question}</TableCell>
-                            <TableCell className="align-top">{row.answer}</TableCell>
+                            <TableHead>Question</TableHead>
+                            <TableHead>Answer</TableHead>
                           </>
                         ) : (
                           <>
-                            <TableCell>{row.product}</TableCell>
-                            <TableCell>{row.price}</TableCell>
+                            <TableHead>Product</TableHead>
+                            <TableHead>Price</TableHead>
                           </>
                         )}
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {previewData.map((row, index) => (
+                        <TableRow key={index}>
+                          {type === 'qa' ? (
+                            <>
+                              <TableCell className="align-top">{row.question}</TableCell>
+                              <TableCell className="align-top">{row.answer}</TableCell>
+                            </>
+                          ) : (
+                            <>
+                              <TableCell>{row.product}</TableCell>
+                              <TableCell>{row.price}</TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <DialogFooter className="mt-6">
-          <Button variant="outline" onClick={() => window.history.back()}>
-            {t('cancel')}
-          </Button>
-          <Button onClick={handleImport} disabled={previewData.length === 0}>
-            {t('import')}
-          </Button>
-        </DialogFooter>
-      </div>
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => window.history.back()}>
+              {t('cancel')}
+            </Button>
+            <Button onClick={handleImport} disabled={previewData.length === 0}>
+              {t('import')}
+            </Button>
+          </DialogFooter>
+        </div>
+      </Dialog>
 
       <AlertDialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
         <AlertDialogContent>
