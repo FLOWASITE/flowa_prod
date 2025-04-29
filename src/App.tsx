@@ -13,6 +13,7 @@ import Chat from "./pages/Chat";
 import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
 import BrandDetails from "./pages/BrandDetails";
+import Users from "./pages/Users";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -73,6 +74,7 @@ const App = () => {
               <Route path="/content" element={<Content />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/schedule" element={<Schedule />} />
+              <Route path="/users" element={<Users />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

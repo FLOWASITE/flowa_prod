@@ -10,15 +10,28 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { api } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const { currentLanguage } = useLanguage();
+  
+  // Check if user is admin
+  const { data: userRole } = useQuery({
+    queryKey: ['userRole'],
+    queryFn: async () => {
+      const { data } = await api.users.getCurrentUserRole();
+      return data;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
   
   const translations = {
     dashboard: {
@@ -68,6 +81,14 @@ export function Sidebar() {
       es: 'Horario',
       th: 'กำหนดการ',
       id: 'Jadwal'
+    },
+    users: {
+      vi: 'Người dùng',
+      en: 'Users',
+      fr: 'Utilisateurs',
+      es: 'Usuarios',
+      th: 'ผู้ใช้',
+      id: 'Pengguna'
     }
   };
   
@@ -108,6 +129,15 @@ export function Sidebar() {
       href: '/schedule',
     },
   ];
+
+  // Add Users route only for admins
+  if (userRole === 'admin') {
+    navItems.push({
+      label: getTranslation('users'),
+      icon: Users,
+      href: '/users',
+    });
+  }
   
   return (
     <aside 
