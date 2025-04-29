@@ -22,9 +22,11 @@ export const useContentData = () => {
     currentPage,
     rowsPerPage,
     selectedPlatform,
+    viewMode,
     handlePageChange,
     handleRowsPerPageChange,
-    handlePlatformChange
+    handlePlatformChange,
+    handleViewModeChange
   } = useContentPagination();
   
   // Get content actions
@@ -60,6 +62,7 @@ export const useContentData = () => {
     currentPage,
     rowsPerPage,
     selectedPlatform,
+    viewMode,
     useLocalData,
     contentData,
     topicsData,
@@ -70,6 +73,7 @@ export const useContentData = () => {
     handleCreateNew,
     handlePageChange,
     handleRowsPerPageChange,
-    handlePlatformChange
+    handlePlatformChange,
+    handleViewModeChange
   };
 };

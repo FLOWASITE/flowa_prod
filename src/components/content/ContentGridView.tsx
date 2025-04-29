@@ -5,7 +5,7 @@ import { ContentCard } from './ContentCard';
 import { TableFilters } from './table/TableFilters';
 import { TablePagination } from './table/TablePagination';
 import { TableEmptyState } from './table/TableEmptyState';
-import { TableLoadingState } from './table/TableLoadingState';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ContentGridViewProps {
   items: Content[];
@@ -23,6 +23,23 @@ interface ContentGridViewProps {
   onPlatformChange: (platform: string) => void;
   showApproveActions?: boolean;
 }
+
+// Create a GridLoadingState component instead of using TableLoadingState
+const GridLoadingState = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {Array.from({ length: 8 }).map((_, i) => (
+      <div key={i} className="border rounded-lg p-4 space-y-3">
+        <Skeleton className="h-40 w-full rounded-lg" />
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+        <div className="flex space-x-2">
+          <Skeleton className="h-8 w-20" />
+          <Skeleton className="h-8 w-20" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 export const ContentGridView: React.FC<ContentGridViewProps> = ({
   items,
@@ -68,7 +85,7 @@ export const ContentGridView: React.FC<ContentGridViewProps> = ({
       <div className="p-4 min-h-[400px]">
         {isLoading ? (
           <div className="flex justify-center items-center h-[400px]">
-            <TableLoadingState colSpan={1} />
+            <GridLoadingState />
           </div>
         ) : items.length === 0 ? (
           <div className="flex justify-center items-center h-[400px]">
