@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Users,
+  UserCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -112,6 +113,14 @@ export function Sidebar() {
       es: 'Usuarios',
       th: 'ผู้ใช้',
       id: 'Pengguna'
+    },
+    crm: {
+      vi: 'Quản lý CRM',
+      en: 'CRM',
+      fr: 'CRM',
+      es: 'CRM',
+      th: 'CRM',
+      id: 'CRM'
     }
   };
   
@@ -145,6 +154,11 @@ export function Sidebar() {
       label: getTranslation('chat'),
       icon: MessageCircle,
       href: '/chat',
+    },
+    {
+      label: getTranslation('crm'),
+      icon: UserCircle,
+      href: '/crm',
     },
     {
       label: getTranslation('schedule'),

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,7 @@ import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
 import BrandDetails from "./pages/BrandDetails";
 import Users from "./pages/Users";
+import Crm from "./pages/Crm";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -72,6 +74,7 @@ const App = () => {
               <Route path="/topics" element={<Topics />} />
               <Route path="/content" element={<Content />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/crm" element={<Crm />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/users" element={<Users />} />
               <Route path="*" element={<NotFound />} />

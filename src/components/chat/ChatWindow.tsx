@@ -12,6 +12,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { api } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export function ChatWindow() {
   const [messages, setMessages] = useState<ChatMessage[]>(mockChatMessages);
@@ -27,7 +29,7 @@ export function ChatWindow() {
     scrollToBottom();
   }, [messages]);
   
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!newMessage.trim()) return;
@@ -43,17 +45,85 @@ export function ChatWindow() {
     setMessages(prev => [...prev, userMessage]);
     setNewMessage('');
     
-    // Simulate assistant reply
-    setTimeout(() => {
-      const assistantMessage: ChatMessage = {
-        id: `msg-${Date.now()}-assistant`,
-        role: 'assistant',
-        content: "Cảm ơn bạn đã liên hệ. Tôi là trợ lý AI hỗ trợ bạn về thông tin sản phẩm và dịch vụ. Tôi có thể giúp gì cho bạn hôm nay?",
-        timestamp: new Date(),
-      };
+    try {
+      // Lưu thông tin khách hàng và tin nhắn vào CRM
+      const customerId = 'user-123'; // Thông thường sẽ lấy từ thông tin đăng nhập của khách
+      const platform = 'messenger'; // Có thể lấy từ nguồn tin nhắn
       
-      setMessages(prev => [...prev, assistantMessage]);
-    }, 1000);
+      // Kiểm tra xem khách hàng đã tồn tại chưa
+      const { data: existingContacts } = await api.supabase
+        .from('crm_contacts')
+        .select('id')
+        .eq('customer_id', customerId)
+        .limit(1);
+        
+      let contactId;
+      
+      if (existingContacts && existingContacts.length > 0) {
+        // Cập nhật thời gian liên hệ nếu khách hàng đã tồn tại
+        contactId = existingContacts[0].id;
+        await api.supabase
+          .from('crm_contacts')
+          .update({ 
+            last_contact: new Date().toISOString(),
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', contactId);
+      } else {
+        // Tạo khách hàng mới nếu chưa tồn tại
+        const { data: newContact, error } = await api.supabase
+          .from('crm_contacts')
+          .insert({
+            customer_id: customerId,
+            platform: platform,
+            first_contact: new Date().toISOString(),
+            last_contact: new Date().toISOString(),
+            status: 'new'
+          })
+          .select();
+          
+        if (error) throw error;
+        
+        contactId = newContact[0].id;
+      }
+      
+      // Lưu tin nhắn vào lịch sử tương tác
+      await api.supabase
+        .from('crm_interactions')
+        .insert({
+          contact_id: contactId,
+          message: newMessage,
+          direction: 'incoming',
+          platform: platform
+        });
+        
+      // Simulate assistant reply
+      setTimeout(async () => {
+        const replyContent = "Cảm ơn bạn đã liên hệ. Tôi là trợ lý AI hỗ trợ bạn về thông tin sản phẩm và dịch vụ. Tôi có thể giúp gì cho bạn hôm nay?";
+        
+        const assistantMessage: ChatMessage = {
+          id: `msg-${Date.now()}-assistant`,
+          role: 'assistant',
+          content: replyContent,
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, assistantMessage]);
+        
+        // Lưu tin nhắn phản hồi vào CRM
+        await api.supabase
+          .from('crm_interactions')
+          .insert({
+            contact_id: contactId,
+            message: replyContent,
+            direction: 'outgoing',
+            platform: platform
+          });
+      }, 1000);
+    } catch (error) {
+      console.error('Error saving to CRM:', error);
+      // Không hiển thị lỗi cho người dùng, chỉ lưu log để debug
+    }
   };
 
   const aiResponseTemplates = [

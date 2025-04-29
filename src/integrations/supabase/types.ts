@@ -98,6 +98,86 @@ export type Database = {
         }
         Relationships: []
       }
+      crm_contacts: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          email: string | null
+          first_contact: string
+          id: string
+          last_contact: string
+          name: string | null
+          notes: string | null
+          phone: string | null
+          platform: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          email?: string | null
+          first_contact?: string
+          id?: string
+          last_contact?: string
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          platform: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          email?: string | null
+          first_contact?: string
+          id?: string
+          last_contact?: string
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          platform?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      crm_interactions: {
+        Row: {
+          contact_id: string
+          created_at: string
+          direction: string
+          id: string
+          message: string
+          platform: string
+        }
+        Insert: {
+          contact_id: string
+          created_at?: string
+          direction: string
+          id?: string
+          message: string
+          platform: string
+        }
+        Update: {
+          contact_id?: string
+          created_at?: string
+          direction?: string
+          id?: string
+          message?: string
+          platform?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_interactions_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           brand_id: string
