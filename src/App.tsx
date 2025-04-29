@@ -17,7 +17,7 @@ import Users from "./pages/Users";
 import Crm from "./pages/Crm";
 import FileManager from "./pages/FileManager";
 import { isSupabaseConnected } from "./integrations/supabase/client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 // Create a React Query client with default settings
@@ -31,15 +31,11 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
-
   // Check backend connection on app startup
   useEffect(() => {
     const checkConnection = async () => {
       try {
         const connected = await isSupabaseConnected();
-        
-        setBackendStatus(connected ? 'connected' : 'disconnected');
         
         // Show connection status notification
         if (connected) {
@@ -52,7 +48,6 @@ function App() {
           });
         }
       } catch (error) {
-        setBackendStatus('disconnected');
         console.error("Error checking backend connection:", error);
       }
     };
@@ -69,7 +64,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard backendStatus={backendStatus} />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/brands" element={<Brands />} />
               <Route path="/brands/:id" element={<BrandDetails />} />
               <Route path="/topics" element={<Topics />} />

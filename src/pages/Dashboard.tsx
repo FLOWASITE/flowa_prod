@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { StatCard } from '@/components/dashboard/StatCard';
@@ -6,7 +5,6 @@ import { RecentTopics } from '@/components/dashboard/RecentTopics';
 import { ContentOverview } from '@/components/dashboard/ContentOverview';
 import { OnboardingSteps } from '@/components/dashboard/OnboardingSteps';
 import { SocialConnections } from '@/components/dashboard/SocialConnections';
-import { BackendStatus } from '@/components/dashboard/BackendStatus'; 
 import { 
   Layers, 
   MessageSquare, 
@@ -123,10 +121,6 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
     <Layout>
       <div className="mb-8">
         <h1 className="text-4xl font-bold">Duy Vo</h1>
-      </div>
-
-      <div className="mb-8">
-        <BackendStatus status={status} onRefresh={checkSupabaseConnection} />
       </div>
 
       <OnboardingSteps />
