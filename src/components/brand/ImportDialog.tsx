@@ -3,7 +3,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Upload } from 'lucide-react';
 import {
-  Dialog,
   DialogHeader,
   DialogTitle,
   DialogDescription,
