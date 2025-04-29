@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Content, Topic } from '@/types';
 import { useQuery } from '@tanstack/react-query';
