@@ -15,6 +15,7 @@ export const ContentPageView: React.FC = () => {
     currentPage,
     rowsPerPage,
     selectedPlatform,
+    viewMode,
     useLocalData,
     contentData,
     topicsData,
@@ -25,7 +26,8 @@ export const ContentPageView: React.FC = () => {
     handleCreateNew,
     handlePageChange,
     handleRowsPerPageChange,
-    handlePlatformChange
+    handlePlatformChange,
+    handleViewModeChange
   } = useContentDataContext();
 
   return (
@@ -52,6 +54,8 @@ export const ContentPageView: React.FC = () => {
           handleRowsPerPageChange={handleRowsPerPageChange}
           selectedPlatform={selectedPlatform}
           onPlatformChange={handlePlatformChange}
+          viewMode={viewMode}
+          handleViewModeChange={handleViewModeChange}
         />
       </div>
       

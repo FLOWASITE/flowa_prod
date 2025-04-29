@@ -3,6 +3,9 @@ import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Content } from '@/types';
 import { ContentTable } from './ContentTable';
+import { ContentGridView } from './ContentGridView';
+import { Button } from '@/components/ui/button';
+import { LayoutGrid, LayoutList } from 'lucide-react';
 
 interface ContentTabsProps {
   content: Content[];
@@ -17,6 +20,8 @@ interface ContentTabsProps {
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   selectedPlatform: string;
   onPlatformChange: (platform: string) => void;
+  viewMode: 'table' | 'grid';
+  handleViewModeChange: (mode: 'table' | 'grid') => void;
 }
 
 export const ContentTabs: React.FC<ContentTabsProps> = ({
@@ -31,7 +36,9 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   handlePageChange,
   handleRowsPerPageChange,
   selectedPlatform,
-  onPlatformChange
+  onPlatformChange,
+  viewMode,
+  handleViewModeChange
 }) => {
   // Filter content by status
   const draftContent = content.filter(item => item.status === 'draft');
@@ -66,24 +73,12 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   const paginatedDraftContent = getPaginatedData(filteredDraftContent);
   const paginatedApprovedContent = getPaginatedData(filteredApprovedContent);
 
-  return (
-    <Tabs defaultValue="all" className="space-y-4">
-      <TabsList>
-        <TabsTrigger value="all">
-          Tất cả ({filteredContent.length})
-        </TabsTrigger>
-        <TabsTrigger value="draft">
-          Bản nháp ({filteredDraftContent.length})
-        </TabsTrigger>
-        <TabsTrigger value="approved">
-          Đã duyệt ({filteredApprovedContent.length})
-        </TabsTrigger>
-      </TabsList>
-      
-      <TabsContent value="all" className="space-y-4">
+  const renderContent = (items: Content[], allItems: Content[], showApproveColumn: boolean, showApprovalColumns: boolean = true) => {
+    if (viewMode === 'table') {
+      return (
         <ContentTable
-          items={paginatedAllContent}
-          allItems={filteredContent}
+          items={items}
+          allItems={allItems}
           isLoading={isLoading}
           topics={topics}
           onApprove={onApprove}
@@ -93,49 +88,79 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
           rowsPerPage={rowsPerPage}
           handlePageChange={handlePageChange}
           handleRowsPerPageChange={handleRowsPerPageChange}
-          showApproveColumn={true}
+          showApproveColumn={showApproveColumn}
+          showApprovalColumns={showApprovalColumns}
           selectedPlatform={selectedPlatform}
           onPlatformChange={onPlatformChange}
         />
+      );
+    } else {
+      return (
+        <ContentGridView
+          items={items}
+          allItems={allItems}
+          isLoading={isLoading}
+          topics={topics}
+          onApprove={onApprove}
+          onDelete={onDelete}
+          onView={onView}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          handlePageChange={handlePageChange}
+          handleRowsPerPageChange={handleRowsPerPageChange}
+          selectedPlatform={selectedPlatform}
+          onPlatformChange={onPlatformChange}
+          showApproveActions={showApproveColumn}
+        />
+      );
+    }
+  };
+
+  return (
+    <Tabs defaultValue="all" className="space-y-4">
+      <div className="flex justify-between items-center px-4 pt-4">
+        <TabsList>
+          <TabsTrigger value="all">
+            Tất cả ({filteredContent.length})
+          </TabsTrigger>
+          <TabsTrigger value="draft">
+            Bản nháp ({filteredDraftContent.length})
+          </TabsTrigger>
+          <TabsTrigger value="approved">
+            Đã duyệt ({filteredApprovedContent.length})
+          </TabsTrigger>
+        </TabsList>
+        
+        <div className="flex border rounded-md">
+          <Button
+            variant={viewMode === 'table' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => handleViewModeChange('table')}
+            className="rounded-r-none"
+          >
+            <LayoutList className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={viewMode === 'grid' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => handleViewModeChange('grid')}
+            className="rounded-l-none"
+          >
+            <LayoutGrid className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      
+      <TabsContent value="all" className="space-y-4">
+        {renderContent(paginatedAllContent, filteredContent, true)}
       </TabsContent>
       
       <TabsContent value="draft" className="space-y-4">
-        <ContentTable
-          items={paginatedDraftContent}
-          allItems={filteredDraftContent}
-          isLoading={isLoading}
-          topics={topics}
-          onApprove={onApprove}
-          onDelete={onDelete}
-          onView={onView}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          handlePageChange={handlePageChange}
-          handleRowsPerPageChange={handleRowsPerPageChange}
-          showApprovalColumns={false}
-          showApproveColumn={true}
-          selectedPlatform={selectedPlatform}
-          onPlatformChange={onPlatformChange}
-        />
+        {renderContent(paginatedDraftContent, filteredDraftContent, true, false)}
       </TabsContent>
       
       <TabsContent value="approved" className="space-y-4">
-        <ContentTable
-          items={paginatedApprovedContent}
-          allItems={filteredApprovedContent}
-          isLoading={isLoading}
-          topics={topics}
-          onApprove={onApprove}
-          onDelete={onDelete}
-          onView={onView}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          handlePageChange={handlePageChange}
-          handleRowsPerPageChange={handleRowsPerPageChange}
-          showApproveColumn={false}
-          selectedPlatform={selectedPlatform}
-          onPlatformChange={onPlatformChange}
-        />
+        {renderContent(paginatedApprovedContent, filteredApprovedContent, false)}
       </TabsContent>
     </Tabs>
   );
