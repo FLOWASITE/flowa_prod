@@ -255,8 +255,8 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
               <div className="text-right pt-2">Voice Tone</div>
               <div className="col-span-3">
                 <ToneSelector
-                  selected={selectedTones}
-                  onSelectionChange={setSelectedTones}
+                  selectedTones={selectedTones}
+                  onTonesChange={setSelectedTones}
                 />
               </div>
             </div>
@@ -265,8 +265,8 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
               <div className="text-right pt-2">Themes</div>
               <div className="col-span-3">
                 <ThemeSelector
-                  selected={selectedThemes}
-                  onSelectionChange={setSelectedThemes}
+                  selectedThemes={selectedThemes}
+                  onThemesChange={setSelectedThemes}
                 />
               </div>
             </div>
