@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => {
+function App() {
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
 
   // Check backend connection on app startup
@@ -84,6 +84,6 @@ const App = () => {
       </TooltipProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
