@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useMemo } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
 import { mockTopics, mockProductTypes } from '@/data/mockData';
@@ -16,10 +17,43 @@ import { format } from 'date-fns';
 import { Check, CheckCheck, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { TablePagination } from '@/components/content/table/TablePagination';
+import { TableFilters } from '@/components/content/table/TableFilters';
 
 const Topics = () => {
   const { currentLanguage } = useLanguage();
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
+  
+  // Pagination
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page
+  };
+
+  // Filter topics by product type
+  const filteredTopics = useMemo(() => {
+    return selectedPlatform === 'all' 
+      ? mockTopics 
+      : mockTopics.filter(topic => topic.productTypeId === selectedPlatform);
+  }, [selectedPlatform]);
+
+  // Get paginated topics
+  const paginatedTopics = useMemo(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    return filteredTopics.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredTopics, currentPage, rowsPerPage]);
+
+  // Get unique product types for filtering
+  const uniqueProductIds = useMemo(() => {
+    return [...new Set(mockTopics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
+  }, []);
   
   const translations = {
     title: {
@@ -119,10 +153,10 @@ const Topics = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedTopics.length === mockTopics.length) {
+    if (selectedTopics.length === paginatedTopics.length) {
       setSelectedTopics([]);
     } else {
-      setSelectedTopics(mockTopics.map(topic => topic.id));
+      setSelectedTopics(paginatedTopics.map(topic => topic.id));
     }
   };
 
@@ -173,6 +207,11 @@ const Topics = () => {
       </Badge>
     );
   };
+
+  // Get product icon (placeholder function, as we don't have actual product icons)
+  const getProductIcon = (productId: string) => {
+    return null; // In a real app, you'd return an icon component here
+  };
   
   return (
     <Layout>
@@ -204,12 +243,22 @@ const Topics = () => {
           </div>
 
           <div className="rounded-lg border bg-card">
+            {/* Table Filters */}
+            <TableFilters
+              rowsPerPage={rowsPerPage}
+              selectedPlatform={selectedPlatform}
+              handleRowsPerPageChange={handleRowsPerPageChange}
+              onPlatformChange={setSelectedPlatform}
+              uniquePlatforms={uniqueProductIds}
+              getPlatformIcon={getProductIcon}
+            />
+            
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[50px]">
                     <Checkbox 
-                      checked={selectedTopics.length === mockTopics.length}
+                      checked={selectedTopics.length === paginatedTopics.length && paginatedTopics.length > 0}
                       onCheckedChange={handleSelectAll}
                     />
                   </TableHead>
@@ -223,45 +272,58 @@ const Topics = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockTopics.map((topic, index) => (
-                  <TableRow key={topic.id}>
-                    <TableCell>
-                      <Checkbox 
-                        checked={selectedTopics.includes(topic.id)}
-                        onCheckedChange={() => handleSelectTopic(topic.id)}
-                      />
-                    </TableCell>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>
-                      <div className="font-medium">{topic.title}</div>
-                    </TableCell>
-                    <TableCell>
-                      {productBadge(topic.productTypeId)}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">
-                        {topic.themeTypeId || 'General'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
-                    <TableCell>{statusBadge(topic.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex justify-end">
-                        {topic.status === 'draft' && (
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            onClick={() => console.log('Approve topic:', topic.id)}
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {paginatedTopics.map((topic, index) => {
+                  const rowIndex = (currentPage - 1) * rowsPerPage + index + 1;
+                  return (
+                    <TableRow key={topic.id}>
+                      <TableCell>
+                        <Checkbox 
+                          checked={selectedTopics.includes(topic.id)}
+                          onCheckedChange={() => handleSelectTopic(topic.id)}
+                        />
+                      </TableCell>
+                      <TableCell>{rowIndex}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">{topic.title}</div>
+                      </TableCell>
+                      <TableCell>
+                        {productBadge(topic.productTypeId)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">
+                          {topic.themeTypeId || 'General'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
+                      <TableCell>{statusBadge(topic.status)}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-end">
+                          {topic.status === 'draft' && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => console.log('Approve topic:', topic.id)}
+                            >
+                              <Check className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
+            
+            {/* Pagination */}
+            <div className="p-4 border-t">
+              <TablePagination 
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                totalItems={filteredTopics.length}
+                handlePageChange={handlePageChange}
+              />
+            </div>
           </div>
         </div>
       </div>
