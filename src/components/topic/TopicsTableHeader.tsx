@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { CheckCheck, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TopicsTableHeaderProps {
   title: string;
@@ -19,22 +20,24 @@ export function TopicsTableHeader({
   onBulkApprove,
   onCreateNew
 }: TopicsTableHeaderProps) {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-4">
       <div>
-        <h1 className="text-3xl font-bold">{title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>
         <p className="text-muted-foreground">{subtitle}</p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2 w-full md:w-auto">
         {selectedTopics.length > 0 && (
-          <Button onClick={onBulkApprove} variant="default">
+          <Button onClick={onBulkApprove} variant="default" className="w-full md:w-auto">
             <CheckCheck className="mr-2 h-4 w-4" />
-            Approve Selected ({selectedTopics.length})
+            {isMobile ? `Approve (${selectedTopics.length})` : `Approve Selected (${selectedTopics.length})`}
           </Button>
         )}
-        <Button onClick={onCreateNew}>
+        <Button onClick={onCreateNew} className="w-full md:w-auto">
           <Plus className="mr-2 h-4 w-4" />
-          Tạo chủ đề mới
+          {isMobile ? "Tạo mới" : "Tạo chủ đề mới"}
         </Button>
       </div>
     </div>

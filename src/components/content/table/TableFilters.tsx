@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TableFiltersProps {
   rowsPerPage: number;
@@ -25,13 +26,15 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
   uniquePlatforms,
   getPlatformIcon,
 }) => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="flex items-center p-5 justify-between bg-gradient-to-r from-gray-50 to-white border-b backdrop-blur-sm">
-      <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-6 w-full">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center p-3 sm:p-5 justify-between bg-gradient-to-r from-gray-50 to-white border-b backdrop-blur-sm gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 w-full">
         <div className="flex items-center space-x-2">
-          <label className="text-sm font-medium">Số dòng/trang:</label>
+          <label className="text-sm font-medium whitespace-nowrap">{isMobile ? 'Dòng:' : 'Số dòng/trang:'}</label>
           <select 
-            className="px-3 py-1 border rounded-full text-sm bg-white shadow-sm hover:border-primary transition-colors"
+            className="px-2 sm:px-3 py-1 border rounded-full text-sm bg-white shadow-sm hover:border-primary transition-colors"
             value={rowsPerPage}
             onChange={handleRowsPerPageChange}
           >
@@ -42,10 +45,10 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
           </select>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <label className="text-sm font-medium">Nền tảng:</label>
+        <div className="flex items-center space-x-2 w-full sm:w-auto">
+          <label className="text-sm font-medium whitespace-nowrap">{isMobile ? 'Nền tảng:' : 'Nền tảng:'}</label>
           <Select value={selectedPlatform} onValueChange={onPlatformChange}>
-            <SelectTrigger className="w-[180px] rounded-full border shadow-sm hover:border-primary transition-colors">
+            <SelectTrigger className="w-full sm:w-[180px] rounded-full border shadow-sm hover:border-primary transition-colors">
               <SelectValue placeholder="Tất cả nền tảng" />
             </SelectTrigger>
             <SelectContent>

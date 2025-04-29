@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ExampleRequestButtons } from './ExampleRequestButtons';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TopicRequestFormContentProps {
   promptText: string;
@@ -25,6 +26,7 @@ export function TopicRequestFormContent({
   translations
 }: TopicRequestFormContentProps) {
   const { currentLanguage } = useLanguage();
+  const isMobile = useIsMobile();
 
   const getTranslation = (key: string) => {
     const lang = currentLanguage.code;
@@ -32,8 +34,8 @@ export function TopicRequestFormContent({
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="grid gap-6">
+    <form onSubmit={onSubmit} className="w-full">
+      <div className="grid gap-4 md:gap-6">
         <div className="grid gap-2">
           <Label htmlFor="prompt">{getTranslation('yourRequest')}</Label>
           <Textarea
@@ -41,7 +43,7 @@ export function TopicRequestFormContent({
             value={promptText}
             onChange={(e) => onPromptChange(e.target.value)}
             placeholder={getTranslation('promptPlaceholder')}
-            className="min-h-[120px]"
+            className="min-h-[100px] md:min-h-[120px]"
             required
           />
         </div>
@@ -56,7 +58,7 @@ export function TopicRequestFormContent({
         </div>
       </div>
       
-      <div className="flex items-center pt-6">
+      <div className="flex items-center pt-4 md:pt-6">
         <Button type="submit" className="w-full" disabled={!promptText || isSending}>
           {isSending ? (
             <span className="animate-pulse">{getTranslation('generatingTopics')}</span>
