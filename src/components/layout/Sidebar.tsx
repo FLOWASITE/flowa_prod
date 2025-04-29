@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -16,21 +17,43 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { api } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const { currentLanguage } = useLanguage();
   
-  // Check if user is admin
-  const { data: userRole } = useQuery({
+  // Force admin role temporarily for flowasite@gmail.com
+  const { data: userRole, isLoading: isRoleLoading } = useQuery({
     queryKey: ['userRole'],
     queryFn: async () => {
-      const { data } = await api.users.getCurrentUserRole();
-      return data;
+      try {
+        const { data } = await api.users.getCurrentUserRole();
+        console.log("Current user role:", data);
+        
+        // Get current user email
+        const session = await api.supabase.auth.getSession();
+        const userEmail = session?.data?.session?.user?.email;
+        console.log("Current user email:", userEmail);
+        
+        // Force admin role for specific user
+        if (userEmail === 'flowasite@gmail.com') {
+          console.log("Admin role forced for flowasite@gmail.com");
+          return 'admin';
+        }
+        
+        return data || 'staff';
+      } catch (error) {
+        console.error("Error getting user role:", error);
+        return 'staff';
+      }
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
+  
+  useEffect(() => {
+    console.log("Current user role in sidebar:", userRole);
+  }, [userRole]);
   
   const translations = {
     dashboard: {
@@ -129,13 +152,19 @@ export function Sidebar() {
     },
   ];
 
-  // Add Users route only for admins
+  // Add Users route for admins
   if (userRole === 'admin') {
-    navItems.push({
-      label: getTranslation('users'),
-      icon: Users,
-      href: '/users',
-    });
+    // Check if Users menu item already exists
+    const usersExists = navItems.some(item => item.href === '/users');
+    
+    if (!usersExists) {
+      console.log("Adding Users nav item for admin");
+      navItems.push({
+        label: getTranslation('users'),
+        icon: Users,
+        href: '/users',
+      });
+    }
   }
   
   return (
