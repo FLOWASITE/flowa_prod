@@ -4,6 +4,7 @@ import { ContentApprovalDialog } from '@/components/content/ContentApprovalDialo
 import { ContentHeader } from '@/components/content/ContentHeader';
 import { ContentTabs } from '@/components/content/ContentTabs';
 import { LocalDataWarning } from '@/components/content/LocalDataWarning';
+import { BatchApprovalDialog } from '@/components/content/BatchApprovalDialog';
 import { useContentDataContext } from './ContentPageProvider';
 
 export const ContentPageView: React.FC = () => {
@@ -12,6 +13,8 @@ export const ContentPageView: React.FC = () => {
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
+    isBatchApprovalDialogOpen,
+    setIsBatchApprovalDialogOpen,
     currentPage,
     rowsPerPage,
     selectedPlatform,
@@ -27,8 +30,17 @@ export const ContentPageView: React.FC = () => {
     handlePageChange,
     handleRowsPerPageChange,
     handlePlatformChange,
-    handleViewModeChange
+    handleViewModeChange,
+    // Batch selection
+    selectedItems,
+    toggleItemSelection,
+    selectAll,
+    clearSelection,
+    handleBatchApprove
   } = useContentDataContext();
+
+  // Get the selected content items
+  const selectedContentItems = contentData.filter(item => selectedItems.includes(item.id));
 
   return (
     <div className="animate-fade-in">
@@ -56,6 +68,11 @@ export const ContentPageView: React.FC = () => {
           onPlatformChange={handlePlatformChange}
           viewMode={viewMode}
           handleViewModeChange={handleViewModeChange}
+          selectedItems={selectedItems}
+          toggleItemSelection={toggleItemSelection}
+          selectAll={selectAll}
+          clearSelection={clearSelection}
+          handleBatchApprove={handleBatchApprove}
         />
       </div>
       
@@ -64,6 +81,14 @@ export const ContentPageView: React.FC = () => {
         onOpenChange={setIsApprovalDialogOpen}
         content={selectedContent}
         topic={selectedTopic}
+      />
+
+      <BatchApprovalDialog
+        open={isBatchApprovalDialogOpen}
+        onOpenChange={setIsBatchApprovalDialogOpen}
+        selectedContents={selectedContentItems}
+        topics={topicsData}
+        onSuccess={clearSelection}
       />
     </div>
   );

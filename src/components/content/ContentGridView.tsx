@@ -6,6 +6,7 @@ import { TableFilters } from './table/TableFilters';
 import { TablePagination } from './table/TablePagination';
 import { TableEmptyState } from './table/TableEmptyState';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface ContentGridViewProps {
   items: Content[];
@@ -22,6 +23,11 @@ interface ContentGridViewProps {
   selectedPlatform: string;
   onPlatformChange: (platform: string) => void;
   showApproveActions?: boolean;
+  // Batch selection props
+  selectedItems?: string[];
+  onToggleSelection?: (contentId: string) => void;
+  onSelectAll?: (contentIds: string[]) => void;
+  showBatchSelection?: boolean;
 }
 
 // Create a GridLoadingState component instead of using TableLoadingState
@@ -55,7 +61,12 @@ export const ContentGridView: React.FC<ContentGridViewProps> = ({
   handleRowsPerPageChange,
   selectedPlatform,
   onPlatformChange,
-  showApproveActions = true
+  showApproveActions = true,
+  // Batch selection props
+  selectedItems = [],
+  onToggleSelection,
+  onSelectAll,
+  showBatchSelection = false
 }) => {
   const getUniquePlatforms = () => {
     const platforms = new Set<string>();
@@ -69,17 +80,42 @@ export const ContentGridView: React.FC<ContentGridViewProps> = ({
 
   const uniquePlatforms = getUniquePlatforms();
 
+  // Handle select all checkbox
+  const handleSelectAllChange = (checked: boolean) => {
+    if (checked && onSelectAll) {
+      onSelectAll(items.map(item => item.id));
+    } else if (!checked && onSelectAll) {
+      onSelectAll([]);
+    }
+  };
+
   return (
     <div className="rounded-xl shadow-lg overflow-hidden border border-border bg-white">
       <div className="border-b p-4">
-        <TableFilters
-          rowsPerPage={rowsPerPage}
-          selectedPlatform={selectedPlatform}
-          handleRowsPerPageChange={handleRowsPerPageChange}
-          onPlatformChange={onPlatformChange}
-          uniquePlatforms={uniquePlatforms}
-          getPlatformIcon={(platform) => null} // We'll handle icons in the card
-        />
+        <div className="flex justify-between items-center mb-2">
+          <TableFilters
+            rowsPerPage={rowsPerPage}
+            selectedPlatform={selectedPlatform}
+            handleRowsPerPageChange={handleRowsPerPageChange}
+            onPlatformChange={onPlatformChange}
+            uniquePlatforms={uniquePlatforms}
+            getPlatformIcon={(platform) => null} // We'll handle icons in the card
+          />
+          
+          {showBatchSelection && items.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="select-all"
+                className="border-gray-400"
+                onCheckedChange={handleSelectAllChange}
+                checked={items.length > 0 && selectedItems.length === items.length}
+              />
+              <label htmlFor="select-all" className="text-sm text-gray-700 cursor-pointer">
+                Chọn tất cả
+              </label>
+            </div>
+          )}
+        </div>
       </div>
       
       <div className="p-4 min-h-[400px]">
@@ -96,14 +132,25 @@ export const ContentGridView: React.FC<ContentGridViewProps> = ({
             {items.map((item) => {
               const topic = topics.find(t => t.id === item.topicId);
               return (
-                <ContentCard
-                  key={item.id}
-                  content={item}
-                  topic={topic}
-                  onApprove={showApproveActions && item.status === 'draft' ? () => onApprove(item) : undefined}
-                  onDelete={() => onDelete(item.id)}
-                  onView={() => onView(item)}
-                />
+                <div key={item.id} className="relative">
+                  {showBatchSelection && (
+                    <div className="absolute top-2 left-2 z-10">
+                      <Checkbox 
+                        checked={selectedItems.includes(item.id)}
+                        onCheckedChange={() => onToggleSelection && onToggleSelection(item.id)}
+                        disabled={item.status !== 'draft'}
+                        className="bg-white border-gray-300 rounded-full"
+                      />
+                    </div>
+                  )}
+                  <ContentCard
+                    content={item}
+                    topic={topic}
+                    onApprove={showApproveActions && item.status === 'draft' ? () => onApprove(item) : undefined}
+                    onDelete={() => onDelete(item.id)}
+                    onView={() => onView(item)}
+                  />
+                </div>
               );
             })}
           </div>

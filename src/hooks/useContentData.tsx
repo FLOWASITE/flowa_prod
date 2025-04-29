@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSupabaseConnection } from './useSupabaseConnection';
 import { useContentFetch } from './useContentFetch';
 import { useTopicsFetch } from './useTopicsFetch';
@@ -41,6 +41,33 @@ export const useContentData = () => {
     handleCreateNew
   } = useContentActions(useLocalData, topics);
 
+  // Batch selection state
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isBatchApprovalDialogOpen, setIsBatchApprovalDialogOpen] = useState(false);
+
+  // Handle batch selection
+  const toggleItemSelection = (contentId: string) => {
+    setSelectedItems(prev => 
+      prev.includes(contentId) 
+        ? prev.filter(id => id !== contentId) 
+        : [...prev, contentId]
+    );
+  };
+
+  const selectAll = (contentIds: string[]) => {
+    setSelectedItems(contentIds);
+  };
+
+  const clearSelection = () => {
+    setSelectedItems([]);
+  };
+
+  const handleBatchApprove = () => {
+    if (selectedItems.length > 0) {
+      setIsBatchApprovalDialogOpen(true);
+    }
+  };
+
   // Handle errors
   useEffect(() => {
     if (contentError || topicsError) {
@@ -48,6 +75,11 @@ export const useContentData = () => {
       setUseLocalData(true);
     }
   }, [contentError, topicsError, setUseLocalData]);
+
+  // Clean up selection when filter changes
+  useEffect(() => {
+    clearSelection();
+  }, [selectedPlatform, currentPage, rowsPerPage]);
 
   // Combine it all
   const isLoading = isContentLoading || isTopicsLoading;
@@ -74,6 +106,14 @@ export const useContentData = () => {
     handlePageChange,
     handleRowsPerPageChange,
     handlePlatformChange,
-    handleViewModeChange
+    handleViewModeChange,
+    // Batch selection
+    selectedItems,
+    toggleItemSelection,
+    selectAll,
+    clearSelection,
+    handleBatchApprove,
+    isBatchApprovalDialogOpen,
+    setIsBatchApprovalDialogOpen
   };
 };

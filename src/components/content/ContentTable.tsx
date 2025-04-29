@@ -4,6 +4,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Content } from '@/types';
 import { format } from 'date-fns';
 import { platformIcons } from '../chat/PlatformIcons';
+import { Checkbox } from '@/components/ui/checkbox';
 
 // Import our new components
 import { StatusBadge } from './table/StatusBadge';
@@ -30,6 +31,11 @@ interface ContentTableProps {
   showApproveColumn?: boolean;
   selectedPlatform: string;
   onPlatformChange: (platform: string) => void;
+  // Batch selection props
+  selectedItems?: string[];
+  onToggleSelection?: (contentId: string) => void;
+  onSelectAll?: (contentIds: string[]) => void;
+  showBatchSelection?: boolean;
 }
 
 export const ContentTable: React.FC<ContentTableProps> = ({
@@ -47,7 +53,12 @@ export const ContentTable: React.FC<ContentTableProps> = ({
   showApprovalColumns = true,
   showApproveColumn = true,
   selectedPlatform,
-  onPlatformChange
+  onPlatformChange,
+  // Batch selection props
+  selectedItems = [],
+  onToggleSelection,
+  onSelectAll,
+  showBatchSelection = false
 }) => {
   // Helper functions
   const formatDate = (date: Date | undefined) => {
@@ -69,8 +80,17 @@ export const ContentTable: React.FC<ContentTableProps> = ({
     return Array.from(platforms);
   };
 
+  // Handle select all checkbox
+  const handleSelectAllChange = (checked: boolean) => {
+    if (checked && onSelectAll) {
+      onSelectAll(items.map(item => item.id));
+    } else if (!checked && onSelectAll) {
+      onSelectAll([]);
+    }
+  };
+
   const uniquePlatforms = getUniquePlatforms();
-  const columnsCount = showApprovalColumns ? 10 : 8;
+  const columnsCount = showApprovalColumns ? (showBatchSelection ? 11 : 10) : (showBatchSelection ? 9 : 8);
 
   return (
     <div className="rounded-xl shadow-lg overflow-hidden border border-border bg-white">
@@ -89,6 +109,15 @@ export const ContentTable: React.FC<ContentTableProps> = ({
             <Table>
               <TableHeader className="sticky top-0 z-10">
                 <TableRow className="bg-gradient-to-r from-primary to-accent border-none">
+                  {showBatchSelection && (
+                    <TableHead className="w-10 text-center text-white font-bold py-4">
+                      <Checkbox 
+                        className="bg-white/20 border-white/50"
+                        onCheckedChange={handleSelectAllChange}
+                        checked={items.length > 0 && selectedItems.length === items.length}
+                      />
+                    </TableHead>
+                  )}
                   <TableHead className="w-10 text-center text-white font-bold py-4">#</TableHead>
                   <TableHead className="w-[120%] text-white font-bold py-4">Chủ đề gốc</TableHead>
                   <TableHead className="w-16 text-center text-white font-bold py-4">Nền tảng</TableHead>
@@ -116,6 +145,15 @@ export const ContentTable: React.FC<ContentTableProps> = ({
                     const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id} className="hover:bg-gray-50 transition-colors border-b border-gray-100">
+                        {showBatchSelection && (
+                          <TableCell>
+                            <Checkbox 
+                              checked={selectedItems.includes(item.id)}
+                              onCheckedChange={() => onToggleSelection && onToggleSelection(item.id)}
+                              disabled={item.status !== 'draft'}
+                            />
+                          </TableCell>
+                        )}
                         <TableCell className="font-medium text-center">{displayIndex}</TableCell>
                         <TableCell className="font-medium">{topic?.title || 'Không có chủ đề'}</TableCell>
                         <TableCell className="text-center">
