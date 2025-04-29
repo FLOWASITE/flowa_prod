@@ -116,3 +116,43 @@
 .shadow-soft {
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+
+/* Custom scrollbar for horizontal scrolling */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--scrollbar-track, #f1f1f1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb, #ea384c);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover, #d02137);
+}
+
+/* Define scrollbar color variables */
+:root {
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #ea384c;
+  --scrollbar-thumb-hover: #d02137;
+}
+
+.dark {
+  --scrollbar-track: #333333;
+  --scrollbar-thumb: #ea384c;
+  --scrollbar-thumb-hover: #ff5a6e;
+}
+

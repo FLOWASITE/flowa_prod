@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Content } from '@/types';
@@ -193,7 +192,8 @@ export const ContentTable: React.FC<ContentTableProps> = ({
       </div>
       
       <div className="relative">
-        <ScrollArea className="w-full overflow-auto">
+        {/* Replace ScrollArea with div that has custom scrollbar styling */}
+        <div className="w-full overflow-auto custom-scrollbar">
           <div className="min-w-[1200px]">
             <Table>
               <TableHeader className="sticky top-0 z-10">
@@ -332,7 +332,7 @@ export const ContentTable: React.FC<ContentTableProps> = ({
               </TableBody>
             </Table>
           </div>
-        </ScrollArea>
+        </div>
       </div>
       
       <div className="flex items-center justify-between p-5 border-t bg-gradient-to-r from-gray-50 to-white">
