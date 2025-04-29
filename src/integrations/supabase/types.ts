@@ -98,6 +98,92 @@ export type Database = {
         }
         Relationships: []
       }
+      content: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          platform: string
+          published_at: string | null
+          scheduled_at: string | null
+          status: string
+          text: string
+          topic_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          platform: string
+          published_at?: string | null
+          scheduled_at?: string | null
+          status: string
+          text: string
+          topic_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          platform?: string
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+          text?: string
+          topic_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "content_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_topics: {
+        Row: {
+          brand_id: string
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          product_type_id: string | null
+          status: string
+          theme_type_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          product_type_id?: string | null
+          status: string
+          theme_type_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          product_type_id?: string | null
+          status?: string
+          theme_type_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       crm_contacts: {
         Row: {
           created_at: string

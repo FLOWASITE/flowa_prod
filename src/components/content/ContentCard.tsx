@@ -5,15 +5,41 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Content, Topic } from '@/types';
 import { format } from 'date-fns';
-import { Calendar, CheckCircle2, Clock, Edit, Facebook, Instagram, Linkedin, MessageCircle, Video } from 'lucide-react';
+import { 
+  Calendar, 
+  CheckCircle2, 
+  Clock, 
+  Edit, 
+  Eye, 
+  Facebook, 
+  Instagram, 
+  Linkedin, 
+  MessageCircle, 
+  Share2, 
+  Trash2, 
+  Video 
+} from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ContentCardProps {
   content: Content;
   topic?: Topic;
   onApprove?: () => void;
+  onDelete?: () => void;
+  onView?: () => void;
+  onEdit?: () => void;
+  compact?: boolean;
 }
 
-export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onApprove }) => {
+export const ContentCard: React.FC<ContentCardProps> = ({ 
+  content, 
+  topic, 
+  onApprove, 
+  onDelete, 
+  onView,
+  onEdit,
+  compact = false 
+}) => {
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
       case 'facebook':
@@ -46,8 +72,13 @@ export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onAppr
     }
   };
 
+  const getFormattedDate = (date: Date | undefined) => {
+    if (!date) return null;
+    return format(date, 'dd/MM/yyyy HH:mm');
+  };
+
   return (
-    <Card className="h-full flex flex-col">
+    <Card className={`h-full flex flex-col ${compact ? 'shadow-sm' : 'shadow'}`}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -65,10 +96,10 @@ export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onAppr
           </p>
         </div>
         
-        <p className="text-sm line-clamp-3 mb-2">{content.text}</p>
+        <p className={`text-sm ${compact ? 'line-clamp-2' : 'line-clamp-3'} mb-2`}>{content.text}</p>
         
         {content.imageUrl && (
-          <div className="mb-2 aspect-video relative overflow-hidden rounded-md">
+          <div className={`mb-2 aspect-video relative overflow-hidden rounded-md ${compact ? 'h-20' : ''}`}>
             <img 
               src={content.imageUrl} 
               alt="Content" 
@@ -80,29 +111,88 @@ export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onAppr
         <div className="text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
-            <span>Tạo: {format(content.createdAt, 'dd/MM/yyyy HH:mm')}</span>
+            <span>Tạo: {getFormattedDate(content.createdAt)}</span>
           </div>
           
           {content.scheduledAt && (
             <div className="flex items-center gap-1 mt-1">
               <Calendar className="h-3 w-3" />
-              <span>Dự kiến: {format(content.scheduledAt, 'dd/MM/yyyy HH:mm')}</span>
+              <span>Dự kiến: {getFormattedDate(content.scheduledAt)}</span>
             </div>
           )}
           
           {content.publishedAt && (
             <div className="flex items-center gap-1 mt-1">
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Đăng: {format(content.publishedAt, 'dd/MM/yyyy HH:mm')}</span>
+              <CheckCircle2 className="h-3 w-3 text-green-600" />
+              <span>Đăng: {getFormattedDate(content.publishedAt)}</span>
             </div>
           )}
         </div>
       </CardContent>
       
       <CardFooter className="pt-2 border-t flex justify-between">
-        <Button variant="ghost" size="sm">
-          <Edit className="h-4 w-4 mr-1" /> Sửa
-        </Button>
+        <div className="flex gap-1">
+          {onEdit && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" onClick={onEdit}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Chỉnh sửa</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          
+          {onView && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" onClick={onView}>
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Xem chi tiết</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          
+          {content.status === 'approved' || content.status === 'scheduled' ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Chia sẻ</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
+          
+          {onDelete && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-red-500" onClick={onDelete}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Xóa</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+        
         {content.status === 'draft' && onApprove && (
           <Button variant="default" size="sm" onClick={onApprove}>
             <CheckCircle2 className="h-4 w-4 mr-1" /> Duyệt
