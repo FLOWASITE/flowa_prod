@@ -99,12 +99,12 @@ export function Sidebar() {
       id: 'Chatbot AI'
     },
     schedule: {
-      vi: 'Lịch trình',
-      en: 'Schedule',
-      fr: 'Calendrier',
-      es: 'Horario',
-      th: 'กำหนดการ',
-      id: 'Jadwal'
+      vi: 'Lịch post',
+      en: 'Post Schedule',
+      fr: 'Calendrier de publication',
+      es: 'Calendario de publicación',
+      th: 'ตารางโพสต์',
+      id: 'Jadwal Posting'
     },
     users: {
       vi: 'Người dùng',
@@ -151,6 +151,11 @@ export function Sidebar() {
       href: '/content',
     },
     {
+      label: getTranslation('schedule'),
+      icon: Calendar,
+      href: '/schedule',
+    },
+    {
       label: getTranslation('chat'),
       icon: MessageCircle,
       href: '/chat',
@@ -159,11 +164,6 @@ export function Sidebar() {
       label: getTranslation('crm'),
       icon: UserCircle,
       href: '/crm',
-    },
-    {
-      label: getTranslation('schedule'),
-      icon: Calendar,
-      href: '/schedule',
     },
   ];
 

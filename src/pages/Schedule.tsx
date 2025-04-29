@@ -44,8 +44,8 @@ const Schedule = () => {
     <Layout>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Content Schedule</h1>
-          <p className="text-muted-foreground">Plan and schedule your content across platforms</p>
+          <h1 className="text-3xl font-bold">Lịch post</h1>
+          <p className="text-muted-foreground">Lên lịch và quản lý nội dung của bạn trên các nền tảng</p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -70,7 +70,7 @@ const Schedule = () => {
           
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Schedule Content
+            Thêm lịch post
           </Button>
         </div>
       </div>
@@ -80,10 +80,10 @@ const Schedule = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Content</TableHead>
-                <TableHead>Platform</TableHead>
-                <TableHead>Schedule Date</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Nội dung</TableHead>
+                <TableHead>Nền tảng</TableHead>
+                <TableHead>Ngày đăng</TableHead>
+                <TableHead>Trạng thái</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -100,17 +100,17 @@ const Schedule = () => {
                       {content.scheduledAt ? (
                         format(content.scheduledAt, 'MMM dd, yyyy HH:mm')
                       ) : (
-                        'Not scheduled'
+                        'Chưa lên lịch'
                       )}
                     </div>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">
-                      Scheduled
+                      Đã lên lịch
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">Edit</Button>
+                    <Button variant="ghost" size="sm">Sửa</Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -118,7 +118,7 @@ const Schedule = () => {
               {scheduledContent.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8">
-                    No scheduled content found
+                    Không có nội dung nào được lên lịch
                   </TableCell>
                 </TableRow>
               )}
@@ -134,8 +134,8 @@ const Schedule = () => {
           {scheduledContent.length === 0 && (
             <div className="col-span-full text-center py-12 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <CalendarIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">No scheduled content found</p>
-              <Button className="mt-4">Schedule Content Now</Button>
+              <p className="text-muted-foreground">Không có nội dung nào được lên lịch</p>
+              <Button className="mt-4">Lên lịch ngay</Button>
             </div>
           )}
         </div>
