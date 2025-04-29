@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
+import { Topic } from '@/types';
 
 interface TopicDialogProps {
   open: boolean;
@@ -24,6 +25,7 @@ interface TopicDialogProps {
     name: string;
     description: string;
   };
+  existingTopics?: Topic[];
 }
 
 export const TopicDialog: React.FC<TopicDialogProps> = ({
@@ -32,6 +34,7 @@ export const TopicDialog: React.FC<TopicDialogProps> = ({
   onSubmit,
   isEditing,
   defaultValues = { name: '', description: '' },
+  existingTopics = [],
 }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues,
