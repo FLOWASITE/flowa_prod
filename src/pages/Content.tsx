@@ -374,15 +374,15 @@ const ContentPage = () => {
                       aria-label="Chọn tất cả"
                     />
                   </TableHead>
-                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
-                  <TableHead className="w-20">Nền tảng</TableHead>
-                  <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead className="w-28">Hình ảnh</TableHead>
-                  <TableHead className="w-28">Ngày tạo</TableHead>
-                  <TableHead className="w-28">Người duyệt</TableHead>
-                  <TableHead className="w-28">Ngày duyệt</TableHead>
-                  <TableHead className="w-28">Trạng thái</TableHead>
-                  <TableHead className="w-28">Hành động</TableHead>
+                  <TableHead className="w-[75%]">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16">Nền tảng</TableHead>
+                  <TableHead className="w-32">Nội dung (Preview)</TableHead>
+                  <TableHead className="w-24">Hình ảnh</TableHead>
+                  <TableHead className="w-24">Ngày tạo</TableHead>
+                  <TableHead className="w-24">Người duyệt</TableHead>
+                  <TableHead className="w-24">Ngày duyệt</TableHead>
+                  <TableHead className="w-24">Trạng thái</TableHead>
+                  <TableHead className="w-20">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -552,13 +552,13 @@ const ContentPage = () => {
                       aria-label="Chọn tất cả"
                     />
                   </TableHead>
-                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
-                  <TableHead className="w-20">Nền tảng</TableHead>
-                  <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead className="w-28">Hình ảnh</TableHead>
-                  <TableHead className="w-28">Ngày tạo</TableHead>
-                  <TableHead className="w-28">Trạng thái</TableHead>
-                  <TableHead className="w-28">Hành động</TableHead>
+                  <TableHead className="w-[75%]">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16">Nền tảng</TableHead>
+                  <TableHead className="w-32">Nội dung (Preview)</TableHead>
+                  <TableHead className="w-24">Hình ảnh</TableHead>
+                  <TableHead className="w-24">Ngày tạo</TableHead>
+                  <TableHead className="w-24">Trạng thái</TableHead>
+                  <TableHead className="w-20">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -700,15 +700,15 @@ const ContentPage = () => {
                       aria-label="Chọn tất cả"
                     />
                   </TableHead>
-                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
-                  <TableHead className="w-20">Nền tảng</TableHead>
-                  <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead className="w-28">Hình ảnh</TableHead>
-                  <TableHead className="w-28">Ngày tạo</TableHead>
-                  <TableHead className="w-28">Người duyệt</TableHead>
-                  <TableHead className="w-28">Ngày duyệt</TableHead>
-                  <TableHead className="w-28">Trạng thái</TableHead>
-                  <TableHead className="w-28">Hành động</TableHead>
+                  <TableHead className="w-[75%]">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16">Nền tảng</TableHead>
+                  <TableHead className="w-32">Nội dung (Preview)</TableHead>
+                  <TableHead className="w-24">Hình ảnh</TableHead>
+                  <TableHead className="w-24">Ngày tạo</TableHead>
+                  <TableHead className="w-24">Người duyệt</TableHead>
+                  <TableHead className="w-24">Ngày duyệt</TableHead>
+                  <TableHead className="w-24">Trạng thái</TableHead>
+                  <TableHead className="w-20">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
