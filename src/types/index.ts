@@ -1,3 +1,4 @@
+
 export interface Brand {
   id: string;
   name: string;
@@ -82,6 +83,7 @@ export interface Content {
   status: 'draft' | 'approved' | 'rejected' | 'scheduled' | 'published';
   scheduledAt?: Date;
   publishedAt?: Date;
+  approvedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }

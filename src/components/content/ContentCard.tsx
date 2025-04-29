@@ -114,6 +114,13 @@ export const ContentCard: React.FC<ContentCardProps> = ({
             <span>Tạo: {getFormattedDate(content.createdAt)}</span>
           </div>
           
+          {content.approvedAt && (
+            <div className="flex items-center gap-1 mt-1">
+              <CheckCircle2 className="h-3 w-3 text-blue-600" />
+              <span>Duyệt: {getFormattedDate(content.approvedAt)}</span>
+            </div>
+          )}
+          
           {content.scheduledAt && (
             <div className="flex items-center gap-1 mt-1">
               <Calendar className="h-3 w-3" />

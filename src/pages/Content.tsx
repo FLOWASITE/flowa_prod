@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ContentCard } from '@/components/content/ContentCard';
@@ -57,6 +58,7 @@ const ContentPage = () => {
         status: item.status,
         scheduledAt: item.scheduled_at ? new Date(item.scheduled_at) : undefined,
         publishedAt: item.published_at ? new Date(item.published_at) : undefined,
+        approvedAt: item.approved_at ? new Date(item.approved_at) : undefined,
         createdAt: new Date(item.created_at),
         updatedAt: new Date(item.updated_at),
       })) as Content[];
@@ -244,6 +246,10 @@ const ContentPage = () => {
   const paginatedDraftContent = getPaginatedData(draftContent);
   const paginatedApprovedContent = getPaginatedData([...approvedContent, ...scheduledContent, ...publishedContent]);
 
+  const formatDate = (date: Date | undefined) => {
+    return date ? format(date, 'dd/MM/yyyy') : '-';
+  };
+
   return (
     <Layout>
       <div className="flex justify-between items-center mb-8">
@@ -337,11 +343,9 @@ const ContentPage = () => {
                             </div>
                           )}
                         </TableCell>
-                        <TableCell>{format(item.createdAt, 'dd/MM/yyyy')}</TableCell>
+                        <TableCell>{formatDate(item.createdAt)}</TableCell>
                         <TableCell>AI Assistant</TableCell>
-                        <TableCell>
-                          {item.publishedAt ? format(item.publishedAt, 'dd/MM/yyyy') : '-'}
-                        </TableCell>
+                        <TableCell>{formatDate(item.approvedAt)}</TableCell>
                         <TableCell>{getStatusDisplay(item.status)}</TableCell>
                         <TableCell>
                           <div className="flex space-x-1">
@@ -472,7 +476,7 @@ const ContentPage = () => {
                             </div>
                           )}
                         </TableCell>
-                        <TableCell>{format(item.createdAt, 'dd/MM/yyyy')}</TableCell>
+                        <TableCell>{formatDate(item.createdAt)}</TableCell>
                         <TableCell>
                           <div className="text-sm font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-md">
                             Chờ duyệt
@@ -595,11 +599,9 @@ const ContentPage = () => {
                             </div>
                           )}
                         </TableCell>
-                        <TableCell>{format(item.createdAt, 'dd/MM/yyyy')}</TableCell>
+                        <TableCell>{formatDate(item.createdAt)}</TableCell>
                         <TableCell>AI Assistant</TableCell>
-                        <TableCell>
-                          {item.publishedAt ? format(item.publishedAt, 'dd/MM/yyyy') : '-'}
-                        </TableCell>
+                        <TableCell>{formatDate(item.approvedAt)}</TableCell>
                         <TableCell>{getStatusDisplay(item.status)}</TableCell>
                         <TableCell>
                           <div className="flex space-x-1">

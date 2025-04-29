@@ -18,10 +18,17 @@ export const useContentApproval = () => {
     setIsLoading(true);
 
     try {
-      // 1. Update content status to approved
+      // Create current timestamp for approval date
+      const approvalDate = new Date().toISOString();
+      
+      // 1. Update content status to approved and set approval date
       const { error: contentError } = await supabase
         .from('content')
-        .update({ status: 'approved', updated_at: new Date().toISOString() })
+        .update({ 
+          status: 'approved', 
+          updated_at: approvalDate,
+          approved_at: approvalDate
+        })
         .eq('id', content.id);
 
       if (contentError) throw contentError;
