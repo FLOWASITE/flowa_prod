@@ -1,103 +1,114 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Content } from '@/types';
-import { Calendar, MessageSquare, ThumbsUp, Eye } from 'lucide-react';
+import { Content, Topic } from '@/types';
 import { format } from 'date-fns';
+import { Calendar, CheckCircle2, Clock, Edit, Facebook, Instagram, Linkedin, Threads, Video } from 'lucide-react';
 
 interface ContentCardProps {
   content: Content;
+  topic?: Topic;
+  onApprove?: () => void;
 }
 
-export function ContentCard({ content }: ContentCardProps) {
-  const platformIcons = {
-    facebook: <Badge className="bg-blue-500">Facebook</Badge>,
-    instagram: <Badge className="bg-pink-500">Instagram</Badge>,
-    tiktok: <Badge className="bg-black">TikTok</Badge>,
-    threads: <Badge className="bg-purple-500">Threads</Badge>,
-    linkedin: <Badge className="bg-blue-700">LinkedIn</Badge>,
-  };
-  
-  const statusColors = {
-    draft: "bg-gray-200 text-gray-800",
-    approved: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-    scheduled: "bg-yellow-100 text-yellow-800",
-    published: "bg-blue-100 text-blue-800",
-  };
-  
-  const getStatusInfo = () => {
-    if (content.status === 'scheduled' && content.scheduledAt) {
-      return (
-        <div className="flex items-center text-yellow-600">
-          <Calendar className="mr-1 h-4 w-4" />
-          <span className="text-xs">
-            {format(content.scheduledAt, 'MMM dd, yyyy HH:mm')}
-          </span>
-        </div>
-      );
+export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onApprove }) => {
+  const getPlatformIcon = (platform: string) => {
+    switch (platform) {
+      case 'facebook':
+        return <Facebook className="h-5 w-5 text-blue-600" />;
+      case 'instagram':
+        return <Instagram className="h-5 w-5 text-pink-600" />;
+      case 'tiktok':
+        return <Video className="h-5 w-5 text-black" />;
+      case 'threads':
+        return <Threads className="h-5 w-5 text-black" />;
+      case 'linkedin':
+        return <Linkedin className="h-5 w-5 text-blue-700" />;
+      default:
+        return null;
     }
-    
-    if (content.status === 'published' && content.publishedAt) {
-      return (
-        <div className="flex items-center text-blue-600">
-          <Eye className="mr-1 h-4 w-4" />
-          <span className="text-xs">
-            {format(content.publishedAt, 'MMM dd, yyyy')}
-          </span>
-        </div>
-      );
-    }
-    
-    return null;
   };
-  
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'draft':
+        return <Badge variant="outline">Bản nháp</Badge>;
+      case 'approved':
+        return <Badge variant="secondary">Đã duyệt</Badge>;
+      case 'scheduled':
+        return <Badge variant="default">Đã lên lịch</Badge>;
+      case 'published':
+        return <Badge variant="success">Đã đăng</Badge>;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Card className="overflow-hidden">
-      {content.imageUrl && (
-        <div className="relative h-40 overflow-hidden">
-          <img 
-            src={content.imageUrl} 
-            alt="Content preview" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute top-2 left-2">
-            {platformIcons[content.platform]}
+    <Card className="h-full flex flex-col">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            {getPlatformIcon(content.platform)}
+            <span className="font-medium capitalize">{content.platform}</span>
           </div>
+          {getStatusBadge(content.status)}
         </div>
-      )}
+      </CardHeader>
       
-      <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-3">
-          <Badge variant="outline" className={statusColors[content.status]}>
-            {content.status}
-          </Badge>
-          {getStatusInfo()}
+      <CardContent className="flex-grow pt-0">
+        <div className="mb-2">
+          <p className="text-sm text-muted-foreground">
+            {topic ? topic.title : 'Không có chủ đề'}
+          </p>
         </div>
         
-        <p className="line-clamp-3 text-sm">
-          {content.text}
-        </p>
+        <p className="text-sm line-clamp-3 mb-2">{content.text}</p>
         
-        <div className="flex items-center space-x-4 mt-4 text-sm text-muted-foreground">
-          <div className="flex items-center">
-            <MessageSquare className="h-4 w-4 mr-1" />
-            <span>0</span>
+        {content.imageUrl && (
+          <div className="mb-2 aspect-video relative overflow-hidden rounded-md">
+            <img 
+              src={content.imageUrl} 
+              alt="Content" 
+              className="w-full h-full object-cover"
+            />
           </div>
-          <div className="flex items-center">
-            <ThumbsUp className="h-4 w-4 mr-1" />
-            <span>0</span>
+        )}
+        
+        <div className="text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            <span>Tạo: {format(content.createdAt, 'dd/MM/yyyy HH:mm')}</span>
           </div>
+          
+          {content.scheduledAt && (
+            <div className="flex items-center gap-1 mt-1">
+              <Calendar className="h-3 w-3" />
+              <span>Dự kiến: {format(content.scheduledAt, 'dd/MM/yyyy HH:mm')}</span>
+            </div>
+          )}
+          
+          {content.publishedAt && (
+            <div className="flex items-center gap-1 mt-1">
+              <CheckCircle2 className="h-3 w-3" />
+              <span>Đăng: {format(content.publishedAt, 'dd/MM/yyyy HH:mm')}</span>
+            </div>
+          )}
         </div>
       </CardContent>
       
-      <CardFooter className="bg-gray-50 dark:bg-gray-900 p-4">
-        <Button variant="outline" size="sm" className="w-full">
-          Preview
+      <CardFooter className="pt-2 border-t flex justify-between">
+        <Button variant="ghost" size="sm">
+          <Edit className="h-4 w-4 mr-1" /> Sửa
         </Button>
+        {content.status === 'draft' && onApprove && (
+          <Button variant="default" size="sm" onClick={onApprove}>
+            <CheckCircle2 className="h-4 w-4 mr-1" /> Duyệt
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
-}
+};
