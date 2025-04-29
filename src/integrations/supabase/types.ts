@@ -100,6 +100,7 @@ export type Database = {
       }
       content: {
         Row: {
+          approved_at: string | null
           created_at: string
           id: string
           image_url: string | null
@@ -112,6 +113,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          approved_at?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
@@ -124,6 +126,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          approved_at?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
