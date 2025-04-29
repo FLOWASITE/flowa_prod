@@ -13,11 +13,16 @@ import {
 } from '@/components/ui/card';
 import { Send } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { mockProductTypes } from '@/data/mockData';
+import { Tag } from 'lucide-react';
 
 export function TopicRequestForm() {
   const [promptText, setPromptText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const { currentLanguage } = useLanguage();
+  
+  // Get first 3 product names from mockProductTypes for example buttons
+  const productExamples = mockProductTypes.slice(0, 3);
   
   const translations = {
     cardTitle: {
@@ -60,29 +65,13 @@ export function TopicRequestForm() {
       th: 'ตัวอย่างคำขอ',
       id: 'Contoh Permintaan'
     },
-    seasonalTrends: {
-      vi: 'Xu hướng theo mùa',
-      en: 'Seasonal Trends',
-      fr: 'Tendances saisonnières',
-      es: 'Tendencias estacionales',
-      th: 'เทรนด์ตามฤดูกาล',
-      id: 'Tren Musiman'
-    },
-    educationalContent: {
-      vi: 'Nội dung giáo dục',
-      en: 'Educational Content',
-      fr: 'Contenu éducatif',
-      es: 'Contenido educativo',
-      th: 'เนื้อหาการศึกษา',
-      id: 'Konten Edukasi'
-    },
-    comparisonContent: {
-      vi: 'Nội dung so sánh',
-      en: 'Comparison Content',
-      fr: 'Contenu comparatif',
-      es: 'Contenido comparativo',
-      th: 'เนื้อหาเปรียบเทียบ',
-      id: 'Konten Perbandingan'
+    productRequests: {
+      vi: 'Sản phẩm',
+      en: 'Products',
+      fr: 'Produits',
+      es: 'Productos',
+      th: 'ผลิตภัณฑ์',
+      id: 'Produk'
     },
     seasonalRequest: {
       vi: 'Tạo 5 chủ đề về xu hướng sản phẩm theo mùa',
@@ -131,6 +120,11 @@ export function TopicRequestForm() {
     return translations[key][lang] || translations[key]['en'];
   };
   
+  // Generate example requests for each product type
+  const getProductRequestText = (productName) => {
+    return `Tạo 3 chủ đề về ${productName}`;
+  };
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
@@ -170,30 +164,19 @@ export function TopicRequestForm() {
             <div className="grid gap-2">
               <Label>{getTranslation('exampleRequests')}</Label>
               <div className="flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPromptText(getTranslation('seasonalRequest'))}
-                >
-                  {getTranslation('seasonalTrends')}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPromptText(getTranslation('educationalRequest'))}
-                >
-                  {getTranslation('educationalContent')}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPromptText(getTranslation('comparisonRequest'))}
-                >
-                  {getTranslation('comparisonContent')}
-                </Button>
+                {productExamples.map(product => (
+                  <Button
+                    key={product.id}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPromptText(getProductRequestText(product.name))}
+                    className="flex items-center gap-1"
+                  >
+                    <Tag className="h-3 w-3" />
+                    {product.name}
+                  </Button>
+                ))}
               </div>
             </div>
           </div>
