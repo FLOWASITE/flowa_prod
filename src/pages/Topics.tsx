@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Check, CheckCheck, Plus } from 'lucide-react'; // Added Plus import
+import { Check, CheckCheck, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -38,6 +38,14 @@ const Topics = () => {
       es: 'Crear y gestionar temas de contenido',
       th: 'สร้างและจัดการหัวข้อเนื้อหา',
       id: 'Buat dan kelola topik konten'
+    },
+    product: {
+      vi: 'Sản phẩm',
+      en: 'Product',
+      fr: 'Produit',
+      es: 'Producto',
+      th: 'สินค้า',
+      id: 'Produk'
     },
     drafts: {
       vi: 'Bản nháp',
@@ -168,6 +176,7 @@ const Topics = () => {
                   </TableHead>
                   <TableHead className="w-[50px]">#</TableHead>
                   <TableHead>Chủ đề</TableHead>
+                  <TableHead>{getTranslation('product')}</TableHead>
                   <TableHead>Phân loại</TableHead>
                   <TableHead>Ngày tạo</TableHead>
                   <TableHead>Trạng thái</TableHead>
@@ -186,6 +195,11 @@ const Topics = () => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
                       <div className="font-medium">{topic.title}</div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="bg-blue-50 text-blue-800 hover:bg-blue-100">
+                        {topic.productTypeId || 'Không có'}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary">
