@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Content, Topic } from '@/types';
 import { format } from 'date-fns';
-import { Calendar, CheckCircle2, Clock, Edit, Facebook, Instagram, Linkedin, Threads, Video } from 'lucide-react';
+import { Calendar, CheckCircle2, Clock, Edit, Facebook, Instagram, Linkedin, MessageCircle, Video } from 'lucide-react';
 
 interface ContentCardProps {
   content: Content;
@@ -23,7 +22,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onAppr
       case 'tiktok':
         return <Video className="h-5 w-5 text-black" />;
       case 'threads':
-        return <Threads className="h-5 w-5 text-black" />;
+        return <MessageCircle className="h-5 w-5 text-black" />;
       case 'linkedin':
         return <Linkedin className="h-5 w-5 text-blue-700" />;
       default:
@@ -40,7 +39,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({ content, topic, onAppr
       case 'scheduled':
         return <Badge variant="default">Đã lên lịch</Badge>;
       case 'published':
-        return <Badge variant="success">Đã đăng</Badge>;
+        return <Badge className="bg-green-500 text-white">Đã đăng</Badge>;
       default:
         return null;
     }
