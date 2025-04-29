@@ -22,7 +22,12 @@ const Topics = () => {
     handleCreateNew,
     handlePageChange,
     handleRowsPerPageChange,
-    setSelectedPlatform
+    setSelectedPlatform,
+    // New action handlers
+    handleViewTopic,
+    handleApproveTopic,
+    handleEditTopic,
+    handleRejectTopic
   } = useTopicsPage();
   
   return (
@@ -58,6 +63,11 @@ const Topics = () => {
             handleRowsPerPageChange={handleRowsPerPageChange}
             setSelectedPlatform={setSelectedPlatform}
             getTranslation={getTranslation}
+            // New action handlers
+            handleViewTopic={handleViewTopic}
+            handleApproveTopic={handleApproveTopic}
+            handleEditTopic={handleEditTopic}
+            handleRejectTopic={handleRejectTopic}
           />
         </div>
       </div>

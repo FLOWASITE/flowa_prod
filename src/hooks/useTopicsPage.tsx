@@ -1,7 +1,8 @@
-
 import { useState, useMemo } from 'react';
 import { mockTopics } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Topic } from '@/types';
+import { toast } from 'sonner';
 
 export const useTopicsPage = () => {
   const { currentLanguage } = useLanguage();
@@ -37,6 +38,27 @@ export const useTopicsPage = () => {
   const uniqueProductIds = useMemo(() => {
     return [...new Set(mockTopics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
   }, []);
+  
+  // Add new action handlers for topic actions
+  const handleViewTopic = (topic: Topic) => {
+    toast.info(`Viewing topic: ${topic.title}`);
+    console.log('View topic:', topic);
+  };
+
+  const handleApproveTopic = (topic: Topic) => {
+    toast.success(`Topic approved: ${topic.title}`);
+    console.log('Approve topic:', topic);
+  };
+
+  const handleEditTopic = (topic: Topic) => {
+    toast.info(`Editing topic: ${topic.title}`);
+    console.log('Edit topic:', topic);
+  };
+
+  const handleRejectTopic = (topic: Topic) => {
+    toast.error(`Topic rejected: ${topic.title}`);
+    console.log('Reject topic:', topic);
+  };
   
   const translations = {
     title: {
@@ -145,11 +167,13 @@ export const useTopicsPage = () => {
 
   const handleBulkApprove = () => {
     console.log('Bulk approving topics:', selectedTopics);
+    toast.success(`Approved ${selectedTopics.length} topics`);
     setSelectedTopics([]);
   };
 
   const handleCreateNew = () => {
     console.log('Create new topic');
+    toast.info('Creating new topic');
   };
 
   return {
@@ -167,6 +191,11 @@ export const useTopicsPage = () => {
     handleCreateNew,
     handlePageChange,
     handleRowsPerPageChange,
-    setSelectedPlatform
+    setSelectedPlatform,
+    // New action handlers
+    handleViewTopic,
+    handleApproveTopic,
+    handleEditTopic,
+    handleRejectTopic
   };
 };

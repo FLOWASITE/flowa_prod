@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Check } from 'lucide-react';
+import { Check, Eye, Pencil, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -33,6 +33,11 @@ interface TopicsTableProps {
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   setSelectedPlatform: (platform: string) => void;
   getTranslation: (key: string) => string;
+  // New action handlers
+  handleViewTopic?: (topic: Topic) => void;
+  handleApproveTopic?: (topic: Topic) => void;
+  handleEditTopic?: (topic: Topic) => void;
+  handleRejectTopic?: (topic: Topic) => void;
 }
 
 export function TopicsTable({
@@ -49,7 +54,12 @@ export function TopicsTable({
   handlePageChange,
   handleRowsPerPageChange,
   setSelectedPlatform,
-  getTranslation
+  getTranslation,
+  // New action handlers
+  handleViewTopic,
+  handleApproveTopic,
+  handleEditTopic,
+  handleRejectTopic
 }: TopicsTableProps) {
   // Function to get product name from product ID
   const getProductNameById = (productId: string | undefined) => {
@@ -156,14 +166,56 @@ export function TopicsTable({
                 <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
                 <TableCell>{statusBadge(topic.status)}</TableCell>
                 <TableCell>
-                  <div className="flex justify-end">
-                    {topic.status === 'draft' && (
+                  <div className="flex justify-end gap-1">
+                    {/* View Button */}
+                    {handleViewTopic && (
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        onClick={() => console.log('Approve topic:', topic.id)}
+                        className="h-8 w-8 p-1 text-blue-500 hover:bg-blue-50 hover:text-blue-700 rounded-full"
+                        onClick={() => handleViewTopic(topic)}
+                        title="Xem"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    )}
+                    
+                    {/* Approve Button - only show for draft topics */}
+                    {topic.status === 'draft' && handleApproveTopic && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-8 w-8 p-1 text-green-500 hover:bg-green-50 hover:text-green-700 rounded-full"
+                        onClick={() => handleApproveTopic(topic)}
+                        title="Duyệt"
                       >
                         <Check className="h-4 w-4" />
+                      </Button>
+                    )}
+                    
+                    {/* Edit Button */}
+                    {handleEditTopic && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-8 w-8 p-1 text-amber-500 hover:bg-amber-50 hover:text-amber-700 rounded-full"
+                        onClick={() => handleEditTopic(topic)}
+                        title="Sửa"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    )}
+                    
+                    {/* Reject Button - only show for draft topics */}
+                    {topic.status === 'draft' && handleRejectTopic && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-8 w-8 p-1 text-red-500 hover:bg-red-50 hover:text-red-700 rounded-full"
+                        onClick={() => handleRejectTopic(topic)}
+                        title="Từ chối"
+                      >
+                        <X className="h-4 w-4" />
                       </Button>
                     )}
                   </div>
