@@ -89,7 +89,6 @@ const Brands = () => {
       setLoading(true);
       console.log("Fetching brands from Supabase...");
       
-      // Fetch from Supabase
       const { data, error } = await supabase
         .from('brands')
         .select('*')
@@ -216,6 +215,12 @@ const Brands = () => {
     }
   };
 
+  const handleUpdateBrand = (updatedBrand: Brand) => {
+    setBrands(prev => 
+      prev.map(b => b.id === updatedBrand.id ? updatedBrand : b)
+    );
+  };
+
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto">
@@ -265,7 +270,11 @@ const Brands = () => {
             ))
           ) : brands.length > 0 ? (
             brands.map(brand => (
-              <BrandCard key={brand.id} brand={brand} />
+              <BrandCard 
+                key={brand.id} 
+                brand={brand} 
+                onBrandUpdated={handleUpdateBrand}
+              />
             ))
           ) : (
             <div className="col-span-3 text-center py-10">

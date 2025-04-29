@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Brand, ProductType } from '@/types';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Edit } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,7 @@ import { BrandProductsSection } from '@/components/brand/details/BrandProductsSe
 import { BrandVoiceToneSection } from '@/components/brand/details/BrandVoiceToneSection';
 import { BrandThemesSection } from '@/components/brand/details/BrandThemesSection';
 import { BrandKnowledgeSection } from '@/components/brand/BrandKnowledgeSection';
+import { EditBrandDialog } from '@/components/brand/EditBrandDialog';
 
 const translations = {
   brandDetails: {
@@ -67,6 +67,7 @@ const BrandDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<ProductType[]>([]);
   const [knowledge, setKnowledge] = useState<any>(null);
+  const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
 
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
@@ -193,6 +194,10 @@ const BrandDetails = () => {
     }
   }, [id, toast, navigate]);
 
+  const handleBrandUpdated = (updatedBrand: Brand) => {
+    setBrand(updatedBrand);
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -218,16 +223,27 @@ const BrandDetails = () => {
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto">
-        <div className="mb-8 flex items-center">
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/brands')} 
+              className="mr-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <h1 className="text-2xl font-semibold">{t('brandDetails')}</h1>
+          </div>
+          
           <Button 
-            variant="ghost" 
-            onClick={() => navigate('/brands')} 
-            className="mr-4"
+            onClick={() => setShowEditDialog(true)} 
+            variant="outline"
+            className="flex items-center gap-2"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            <Edit className="h-4 w-4" />
+            {currentLanguage.code === 'vi' ? 'Chỉnh sửa' : 'Edit'}
           </Button>
-          <h1 className="text-2xl font-semibold">{t('brandDetails')}</h1>
         </div>
 
         <div className="space-y-8">
@@ -267,6 +283,15 @@ const BrandDetails = () => {
           </div>
         </div>
       </div>
+      
+      {brand && (
+        <EditBrandDialog
+          brand={brand}
+          open={showEditDialog}
+          onOpenChange={setShowEditDialog}
+          onBrandUpdated={handleBrandUpdated}
+        />
+      )}
     </Layout>
   );
 };
