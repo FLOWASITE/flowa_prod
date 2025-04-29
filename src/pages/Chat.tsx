@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { mockChatConversations } from '@/data/mockData';
@@ -16,126 +16,110 @@ import {
   MessagesSquare, 
   Settings, 
   Search, 
-  MessageCircle 
+  MessageCircle,
+  BarChart3,
+  Zap,
+  RefreshCcw
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { PlatformIntegration } from '@/components/chat/PlatformIntegration';
+import { ChatSidebar } from '@/components/chat/ChatSidebar';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { platformIcons } from '@/components/chat/PlatformIcons';
 
 const Chat = () => {
-  const activeConversations = mockChatConversations.filter(
-    conversation => conversation.status === 'active'
+  const [activeConversations, setActiveConversations] = useState(
+    mockChatConversations.filter(conversation => conversation.status === 'active')
   );
-  
-  const platformIcon = (platform: string) => {
-    switch (platform) {
-      case 'messenger':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Messenger</Badge>;
-      case 'zalo':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Zalo</Badge>;
-      case 'linkedin':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">LinkedIn</Badge>;
-      default:
-        return null;
-    }
-  };
-  
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredConversations = activeConversations.filter(conversation => {
+    const matchesPlatform = selectedPlatform === 'all' || conversation.platform === selectedPlatform;
+    const matchesSearch = conversation.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (conversation.messages[conversation.messages.length - 1]?.content || "").toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesPlatform && matchesSearch;
+  });
+
   return (
     <Layout>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Customer Chat</h1>
-        <p className="text-muted-foreground">Manage conversations across all platforms</p>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">Chatbot AI</h1>
+          <p className="text-muted-foreground">Quản lý trò chuyện trên nhiều nền tảng</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Thống kê
+          </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Zap className="h-4 w-4 mr-2" />
+                Kết nối mới
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Kết nối nền tảng trò chuyện</DialogTitle>
+              </DialogHeader>
+              <PlatformIntegration />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-220px)]">
-        <div className="border rounded-lg overflow-hidden">
-          <div className="p-4 border-b bg-white dark:bg-gray-950 flex items-center justify-between">
-            <h3 className="font-semibold">Conversations</h3>
-            <Button variant="ghost" size="icon">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="p-4 border-b bg-white dark:bg-gray-950">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <Input
-                placeholder="Search conversations..."
-                className="w-full pl-8"
-              />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-220px)]">
+        <div className="lg:col-span-1">
+          <ChatSidebar />
+        </div>
+        
+        <div className="lg:col-span-3 border rounded-lg overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-gray-950 p-4 border-b flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold">Hỗ trợ khách hàng</h3>
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                  {platformIcons['messenger']}
+                  <span className="ml-1">Messenger</span>
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">Nguyễn Văn A - Online 2 phút trước</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon">
+                <RefreshCcw className="h-4 w-4" />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Chỉnh sửa hội thoại</DropdownMenuItem>
+                  <DropdownMenuItem>Gán cho nhân viên</DropdownMenuItem>
+                  <DropdownMenuItem>Đánh dấu đã đọc</DropdownMenuItem>
+                  <DropdownMenuItem className="text-red-600">Kết thúc hội thoại</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           
-          <Tabs defaultValue="active" className="h-[calc(100%-117px)]">
-            <TabsList className="w-full">
-              <TabsTrigger value="active" className="flex-1">
-                <MessagesSquare className="mr-2 h-4 w-4" />
-                Active
-              </TabsTrigger>
-              <TabsTrigger value="all" className="flex-1">
-                <Users className="mr-2 h-4 w-4" />
-                All
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="active" className="h-[calc(100%-41px)] overflow-y-auto">
-              <div className="divide-y">
-                {activeConversations.map(conversation => (
-                  <div 
-                    key={conversation.id} 
-                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="font-medium">{conversation.customerName}</div>
-                      <div className="text-xs text-muted-foreground">2m ago</div>
-                    </div>
-                    <div className="text-sm text-muted-foreground mb-2 line-clamp-1">
-                      {conversation.messages[conversation.messages.length - 1]?.content || "No messages"}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      {platformIcon(conversation.platform)}
-                      {conversation.status === 'active' && (
-                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                
-                {activeConversations.length === 0 && (
-                  <div className="p-8 text-center">
-                    <MessageCircle className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-muted-foreground">No active conversations</p>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="all" className="h-[calc(100%-41px)] overflow-y-auto">
-              <div className="divide-y">
-                {mockChatConversations.map(conversation => (
-                  <div 
-                    key={conversation.id} 
-                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="font-medium">{conversation.customerName}</div>
-                      <div className="text-xs text-muted-foreground">2m ago</div>
-                    </div>
-                    <div className="text-sm text-muted-foreground mb-2 line-clamp-1">
-                      {conversation.messages[conversation.messages.length - 1]?.content || "No messages"}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      {platformIcon(conversation.platform)}
-                      {conversation.status === 'active' && (
-                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-        
-        <div className="lg:col-span-2">
           <ChatWindow />
         </div>
       </div>
