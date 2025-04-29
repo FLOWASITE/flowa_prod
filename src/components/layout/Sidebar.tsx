@@ -24,14 +24,11 @@ export function Sidebar() {
   const location = useLocation();
   const { currentLanguage } = useLanguage();
   
-  // Force admin role temporarily for flowasite@gmail.com
+  // Force admin role for flowasite@gmail.com
   const { data: userRole, isLoading: isRoleLoading } = useQuery({
     queryKey: ['userRole'],
     queryFn: async () => {
       try {
-        const { data } = await api.users.getCurrentUserRole();
-        console.log("Current user role:", data);
-        
         // Get current user email
         const session = await api.supabase.auth.getSession();
         const userEmail = session?.data?.session?.user?.email;
@@ -43,6 +40,9 @@ export function Sidebar() {
           return 'admin';
         }
         
+        // Get role from API
+        const { data } = await api.users.getCurrentUserRole();
+        console.log("Current user role:", data);
         return data || 'staff';
       } catch (error) {
         console.error("Error getting user role:", error);
@@ -51,6 +51,7 @@ export function Sidebar() {
     },
   });
   
+  // Log the role for debugging
   useEffect(() => {
     console.log("Current user role in sidebar:", userRole);
   }, [userRole]);
@@ -152,13 +153,12 @@ export function Sidebar() {
     },
   ];
 
-  // Add Users route for admins
+  // Add Users menu item for admin users
   if (userRole === 'admin') {
-    // Check if Users menu item already exists
-    const usersExists = navItems.some(item => item.href === '/users');
+    const userExists = navItems.some(item => item.href === '/users');
     
-    if (!usersExists) {
-      console.log("Adding Users nav item for admin");
+    if (!userExists) {
+      console.log("Adding Users nav item for admin role");
       navItems.push({
         label: getTranslation('users'),
         icon: Users,
