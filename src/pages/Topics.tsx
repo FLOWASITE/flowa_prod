@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { TopicRequestForm } from '@/components/topic/TopicRequestForm';
@@ -178,7 +177,12 @@ const Topics = () => {
   return (
     <Layout>
       <div className="space-y-8">
-        {/* Topic Management Section */}
+        {/* Topic Request Form Section - Moved to top */}
+        <div>
+          <TopicRequestForm />
+        </div>
+
+        {/* Topic Management Section - Moved below the request form */}
         <div>
           <div className="flex justify-between items-center mb-6">
             <div>
@@ -259,11 +263,6 @@ const Topics = () => {
               </TableBody>
             </Table>
           </div>
-        </div>
-
-        {/* Topic Request Form Section */}
-        <div className="max-w-xl">
-          <TopicRequestForm />
         </div>
       </div>
     </Layout>
