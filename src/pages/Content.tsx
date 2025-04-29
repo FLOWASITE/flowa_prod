@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ContentCard } from '@/components/content/ContentCard';
@@ -12,11 +11,22 @@ import { ContentApprovalDialog } from '@/components/content/ContentApprovalDialo
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const ContentPage = () => {
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [isApprovalDialogOpen, setIsApprovalDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Fetch content from Supabase
   const { data: content = [], isLoading: isContentLoading, error: contentError } = useQuery({
@@ -155,6 +165,85 @@ const ContentPage = () => {
     }
   };
 
+  // Pagination logic
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when changing rows per page
+  };
+
+  const getPaginatedData = (data: Content[]) => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return data.slice(startIndex, endIndex);
+  };
+
+  const totalPages = (dataLength: number) => Math.ceil(dataLength / rowsPerPage);
+
+  const renderPagination = (dataLength: number) => {
+    const pages = totalPages(dataLength);
+    if (pages <= 1) return null;
+
+    return (
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious 
+              onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)} 
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+          
+          {[...Array(pages)].map((_, i) => {
+            const pageNumber = i + 1;
+            // Show first page, current page, last page, and one page before and after current
+            if (
+              pageNumber === 1 || 
+              pageNumber === pages || 
+              (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+            ) {
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationLink 
+                    isActive={currentPage === pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            } else if (
+              (pageNumber === currentPage - 2 && currentPage > 3) || 
+              (pageNumber === currentPage + 2 && currentPage < pages - 2)
+            ) {
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              );
+            }
+            return null;
+          })}
+          
+          <PaginationItem>
+            <PaginationNext 
+              onClick={() => currentPage < pages && handlePageChange(currentPage + 1)} 
+              className={currentPage === pages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    );
+  };
+
+  // Get paginated data for each tab
+  const paginatedAllContent = getPaginatedData(content);
+  const paginatedDraftContent = getPaginatedData(draftContent);
+  const paginatedApprovedContent = getPaginatedData([...approvedContent, ...scheduledContent, ...publishedContent]);
+
   return (
     <Layout>
       <div className="flex justify-between items-center mb-8">
@@ -186,11 +275,15 @@ const ContentPage = () => {
             <div className="flex items-center p-4">
               <div className="flex-1">
                 <label className="text-sm font-medium">Số dòng/trang:</label>
-                <select className="ml-2 p-1 border rounded text-sm">
-                  <option>10</option>
-                  <option>25</option>
-                  <option>50</option>
-                  <option>100</option>
+                <select 
+                  className="ml-2 p-1 border rounded text-sm"
+                  value={rowsPerPage}
+                  onChange={handleRowsPerPageChange}
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
                 </select>
               </div>
             </div>
@@ -215,16 +308,17 @@ const ContentPage = () => {
                   <TableRow>
                     <TableCell colSpan={10} className="text-center py-4">Đang tải...</TableCell>
                   </TableRow>
-                ) : content.length === 0 ? (
+                ) : paginatedAllContent.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={10} className="text-center py-4">Không có nội dung nào.</TableCell>
                   </TableRow>
                 ) : (
-                  content.map((item, index) => {
+                  paginatedAllContent.map((item, index) => {
                     const topic = topics.find(t => t.id === item.topicId);
+                    const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium text-center">{index + 1}</TableCell>
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
                         <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
                         <TableCell className="capitalize">{item.platform}</TableCell>
                         <TableCell>
@@ -306,26 +400,31 @@ const ContentPage = () => {
             
             <div className="flex items-center justify-between p-4">
               <div className="text-sm text-muted-foreground">
-                Trang 1 - Hiển thị {content.length} / {content.length} nội dung
+                Trang {currentPage} - Hiển thị {paginatedAllContent.length} / {content.length} nội dung
               </div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm" disabled>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                    <path d="m15 18-6-6 6-6"/>
-                  </svg>
-                </Button>
-                <Button variant="outline" size="sm" disabled>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                    <path d="m9 18 6-6-6-6"/>
-                  </svg>
-                </Button>
-              </div>
+              {renderPagination(content.length)}
             </div>
           </div>
         </TabsContent>
         
         <TabsContent value="draft" className="space-y-4">
           <div className="rounded-md border">
+            <div className="flex items-center p-4">
+              <div className="flex-1">
+                <label className="text-sm font-medium">Số dòng/trang:</label>
+                <select 
+                  className="ml-2 p-1 border rounded text-sm"
+                  value={rowsPerPage}
+                  onChange={handleRowsPerPageChange}
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </div>
+
             <Table>
               <TableHeader>
                 <TableRow>
@@ -344,16 +443,17 @@ const ContentPage = () => {
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-4">Đang tải...</TableCell>
                   </TableRow>
-                ) : draftContent.length === 0 ? (
+                ) : paginatedDraftContent.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-4">Không có bản nháp nào.</TableCell>
                   </TableRow>
                 ) : (
-                  draftContent.map((item, index) => {
+                  paginatedDraftContent.map((item, index) => {
                     const topic = topics.find(t => t.id === item.topicId);
+                    const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium text-center">{index + 1}</TableCell>
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
                         <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
                         <TableCell className="capitalize">{item.platform}</TableCell>
                         <TableCell>
@@ -418,11 +518,34 @@ const ContentPage = () => {
                 )}
               </TableBody>
             </Table>
+            
+            <div className="flex items-center justify-between p-4">
+              <div className="text-sm text-muted-foreground">
+                Trang {currentPage} - Hiển thị {paginatedDraftContent.length} / {draftContent.length} nội dung
+              </div>
+              {renderPagination(draftContent.length)}
+            </div>
           </div>
         </TabsContent>
         
         <TabsContent value="approved" className="space-y-4">
           <div className="rounded-md border">
+            <div className="flex items-center p-4">
+              <div className="flex-1">
+                <label className="text-sm font-medium">Số dòng/trang:</label>
+                <select 
+                  className="ml-2 p-1 border rounded text-sm"
+                  value={rowsPerPage}
+                  onChange={handleRowsPerPageChange}
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </div>
+
             <Table>
               <TableHeader>
                 <TableRow>
@@ -443,16 +566,17 @@ const ContentPage = () => {
                   <TableRow>
                     <TableCell colSpan={10} className="text-center py-4">Đang tải...</TableCell>
                   </TableRow>
-                ) : approvedContent.length + scheduledContent.length + publishedContent.length === 0 ? (
+                ) : paginatedApprovedContent.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={10} className="text-center py-4">Không có nội dung đã duyệt nào.</TableCell>
                   </TableRow>
                 ) : (
-                  [...approvedContent, ...scheduledContent, ...publishedContent].map((item, index) => {
+                  paginatedApprovedContent.map((item, index) => {
                     const topic = topics.find(t => t.id === item.topicId);
+                    const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium text-center">{index + 1}</TableCell>
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
                         <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
                         <TableCell className="capitalize">{item.platform}</TableCell>
                         <TableCell>
@@ -518,6 +642,13 @@ const ContentPage = () => {
                 )}
               </TableBody>
             </Table>
+            
+            <div className="flex items-center justify-between p-4">
+              <div className="text-sm text-muted-foreground">
+                Trang {currentPage} - Hiển thị {paginatedApprovedContent.length} / {approvedContent.length + scheduledContent.length + publishedContent.length} nội dung
+              </div>
+              {renderPagination(approvedContent.length + scheduledContent.length + publishedContent.length)}
+            </div>
           </div>
         </TabsContent>
       </Tabs>
