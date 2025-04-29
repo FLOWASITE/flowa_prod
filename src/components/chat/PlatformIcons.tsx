@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Facebook, Instagram, Linkedin, MessageCircle, Twitter, MessageSquare, Send, Video } from 'lucide-react';
+import { MessageCircle, MessageSquare, Facebook, Twitter, Linkedin, Send, PenLine, Instagram } from 'lucide-react';
 
 export const platformIcons = {
   messenger: <Facebook className="h-4 w-4 text-blue-600" />,
@@ -9,8 +9,6 @@ export const platformIcons = {
   linkedin: <Linkedin className="h-4 w-4 text-blue-700" />,
   twitter: <Twitter className="h-4 w-4 text-blue-400" />,
   telegram: <Send className="h-4 w-4 text-blue-500" />,
-  tiktok: <Video className="h-4 w-4 text-black" />,
-  instagram: <Instagram className="h-4 w-4 text-pink-600" />,
-  facebook: <Facebook className="h-4 w-4 text-blue-600" />,
-  threads: <MessageCircle className="h-4 w-4 text-black" />
+  tiktok: <PenLine className="h-4 w-4 text-black" />,
+  instagram: <Instagram className="h-4 w-4 text-pink-600" />
 };

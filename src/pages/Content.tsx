@@ -1,19 +1,17 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ContentCard } from '@/components/content/ContentCard';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { CheckCircle2, Loader2, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Content, Topic } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { api, supabase } from '@/integrations/supabase/client';
 import { ContentApprovalDialog } from '@/components/content/ContentApprovalDialog';
-import { BatchApprovalDialog } from '@/components/content/BatchApprovalDialog';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { Checkbox } from '@/components/ui/checkbox';
-import { PlatformIcon } from '@/components/content/PlatformIcon';
 import {
   Pagination,
   PaginationContent,
@@ -28,13 +26,11 @@ const ContentPage = () => {
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [isApprovalDialogOpen, setIsApprovalDialogOpen] = useState(false);
-  const [isBatchApprovalDialogOpen, setIsBatchApprovalDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedContentIds, setSelectedContentIds] = useState<string[]>([]);
 
   // Fetch content from Supabase
-  const { data: content = [], isLoading: isContentLoading, error: contentError, refetch: refetchContent } = useQuery({
+  const { data: content = [], isLoading: isContentLoading, error: contentError } = useQuery({
     queryKey: ['content'],
     queryFn: async () => {
       console.log('Fetching content data...');
@@ -121,24 +117,6 @@ const ContentPage = () => {
     }
   };
 
-  const handleBatchApprove = () => {
-    if (selectedContentIds.length === 0) {
-      toast.error('Vui lòng chọn ít nhất một nội dung để duyệt');
-      return;
-    }
-
-    const contentsToApprove = content.filter(item => 
-      selectedContentIds.includes(item.id) && item.status === 'draft'
-    );
-
-    if (contentsToApprove.length === 0) {
-      toast.error('Không có nội dung nào có thể duyệt trong các mục đã chọn');
-      return;
-    }
-
-    setIsBatchApprovalDialogOpen(true);
-  };
-
   const handleDelete = (contentId: string) => {
     toast.promise(
       async () => {
@@ -148,7 +126,6 @@ const ContentPage = () => {
           .eq('id', contentId);
         
         if (error) throw error;
-        refetchContent();
         return true;
       },
       {
@@ -188,34 +165,6 @@ const ContentPage = () => {
       default:
         return null;
     }
-  };
-
-  // Handle checkbox selection
-  const toggleSelectAll = (checked: boolean, contentList: Content[]) => {
-    if (checked) {
-      const newSelectedIds = [...new Set([
-        ...selectedContentIds,
-        ...contentList.map(item => item.id)
-      ])];
-      setSelectedContentIds(newSelectedIds);
-    } else {
-      const contentIds = contentList.map(item => item.id);
-      const newSelectedIds = selectedContentIds.filter(id => !contentIds.includes(id));
-      setSelectedContentIds(newSelectedIds);
-    }
-  };
-
-  const toggleSelectItem = (checked: boolean, contentId: string) => {
-    if (checked) {
-      setSelectedContentIds(prev => [...prev, contentId]);
-    } else {
-      setSelectedContentIds(prev => prev.filter(id => id !== contentId));
-    }
-  };
-
-  const isAllSelected = (contentList: Content[]) => {
-    return contentList.length > 0 && 
-      contentList.every(item => selectedContentIds.includes(item.id));
   };
 
   // Pagination logic
@@ -301,11 +250,6 @@ const ContentPage = () => {
     return date ? format(date, 'dd/MM/yyyy') : '-';
   };
 
-  // Selected draft contents for batch approval
-  const selectedDraftContents = content.filter(
-    item => selectedContentIds.includes(item.id) && item.status === 'draft'
-  );
-
   return (
     <Layout>
       <div className="flex justify-between items-center mb-8">
@@ -314,21 +258,9 @@ const ContentPage = () => {
           <p className="text-muted-foreground">Tạo, duyệt và quản lý nội dung trên các nền tảng</p>
         </div>
         
-        <div className="flex gap-2">
-          {selectedContentIds.length > 0 && (
-            <Button 
-              variant="outline" 
-              className="gap-2" 
-              onClick={handleBatchApprove}
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Duyệt ({selectedContentIds.length})
-            </Button>
-          )}
-          <Button>
-            <Plus className="h-4 w-4 mr-2" /> Tạo nội dung mới
-          </Button>
-        </div>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" /> Tạo nội dung mới
+        </Button>
       </div>
       
       <Tabs defaultValue="all" className="space-y-4">
@@ -365,17 +297,9 @@ const ContentPage = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-10">
-                    <Checkbox 
-                      checked={isAllSelected(paginatedAllContent)}
-                      onCheckedChange={(checked) => 
-                        toggleSelectAll(checked === true, paginatedAllContent)
-                      }
-                      aria-label="Chọn tất cả"
-                    />
-                  </TableHead>
-                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
-                  <TableHead className="w-20">Nền tảng</TableHead>
+                  <TableHead className="w-10 text-center">#</TableHead>
+                  <TableHead className="w-44">Chủ đề gốc</TableHead>
+                  <TableHead className="w-28">Nền tảng</TableHead>
                   <TableHead>Nội dung (Preview)</TableHead>
                   <TableHead className="w-28">Hình ảnh</TableHead>
                   <TableHead className="w-28">Ngày tạo</TableHead>
@@ -388,12 +312,7 @@ const ContentPage = () => {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-4">
-                      <div className="flex justify-center items-center">
-                        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                        Đang tải...
-                      </div>
-                    </TableCell>
+                    <TableCell colSpan={10} className="text-center py-4">Đang tải...</TableCell>
                   </TableRow>
                 ) : paginatedAllContent.length === 0 ? (
                   <TableRow>
@@ -405,23 +324,9 @@ const ContentPage = () => {
                     const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id}>
-                        <TableCell>
-                          <Checkbox 
-                            checked={selectedContentIds.includes(item.id)}
-                            onCheckedChange={(checked) => 
-                              toggleSelectItem(checked === true, item.id)
-                            }
-                            aria-label={`Chọn nội dung ${displayIndex}`}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          <div className="line-clamp-2">
-                            {topic?.title || 'Không có chủ đề'}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <PlatformIcon platform={item.platform} />
-                        </TableCell>
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
+                        <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="capitalize">{item.platform}</TableCell>
                         <TableCell>
                           <div className="truncate max-w-xs" title={item.text}>
                             {item.text.substring(0, 60)}...
@@ -508,8 +413,8 @@ const ContentPage = () => {
         
         <TabsContent value="draft" className="space-y-4">
           <div className="rounded-md border">
-            <div className="flex items-center p-4 justify-between">
-              <div>
+            <div className="flex items-center p-4">
+              <div className="flex-1">
                 <label className="text-sm font-medium">Số dòng/trang:</label>
                 <select 
                   className="ml-2 p-1 border rounded text-sm"
@@ -522,54 +427,25 @@ const ContentPage = () => {
                   <option value={100}>100</option>
                 </select>
               </div>
-              
-              {selectedContentIds.filter(id => 
-                draftContent.some(item => item.id === id)
-              ).length > 0 && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleBatchApprove}
-                  className="gap-2"
-                >
-                  <CheckCircle2 className="h-4 w-4" />
-                  Duyệt hàng loạt ({selectedContentIds.filter(id => 
-                    draftContent.some(item => item.id === id)
-                  ).length})
-                </Button>
-              )}
             </div>
 
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-10">
-                    <Checkbox 
-                      checked={isAllSelected(paginatedDraftContent)}
-                      onCheckedChange={(checked) => 
-                        toggleSelectAll(checked === true, paginatedDraftContent)
-                      }
-                      aria-label="Chọn tất cả"
-                    />
-                  </TableHead>
-                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
-                  <TableHead className="w-20">Nền tảng</TableHead>
+                  <TableHead className="w-10 text-center">#</TableHead>
+                  <TableHead>Chủ đề gốc</TableHead>
+                  <TableHead>Nền tảng</TableHead>
                   <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead className="w-28">Hình ảnh</TableHead>
-                  <TableHead className="w-28">Ngày tạo</TableHead>
-                  <TableHead className="w-28">Trạng thái</TableHead>
-                  <TableHead className="w-28">Hành động</TableHead>
+                  <TableHead>Hình ảnh</TableHead>
+                  <TableHead>Ngày tạo</TableHead>
+                  <TableHead>Trạng thái</TableHead>
+                  <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-4">
-                      <div className="flex justify-center items-center">
-                        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                        Đang tải...
-                      </div>
-                    </TableCell>
+                    <TableCell colSpan={8} className="text-center py-4">Đang tải...</TableCell>
                   </TableRow>
                 ) : paginatedDraftContent.length === 0 ? (
                   <TableRow>
@@ -581,23 +457,9 @@ const ContentPage = () => {
                     const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id}>
-                        <TableCell>
-                          <Checkbox 
-                            checked={selectedContentIds.includes(item.id)}
-                            onCheckedChange={(checked) => 
-                              toggleSelectItem(checked === true, item.id)
-                            }
-                            aria-label={`Chọn nội dung ${displayIndex}`}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          <div className="line-clamp-2">
-                            {topic?.title || 'Không có chủ đề'}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <PlatformIcon platform={item.platform} />
-                        </TableCell>
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
+                        <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="capitalize">{item.platform}</TableCell>
                         <TableCell>
                           <div className="truncate max-w-xs" title={item.text}>
                             {item.text.substring(0, 60)}...
@@ -691,35 +553,22 @@ const ContentPage = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-10">
-                    <Checkbox 
-                      checked={isAllSelected(paginatedApprovedContent)}
-                      onCheckedChange={(checked) => 
-                        toggleSelectAll(checked === true, paginatedApprovedContent)
-                      }
-                      aria-label="Chọn tất cả"
-                    />
-                  </TableHead>
-                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
-                  <TableHead className="w-20">Nền tảng</TableHead>
+                  <TableHead className="w-10 text-center">#</TableHead>
+                  <TableHead>Chủ đề gốc</TableHead>
+                  <TableHead>Nền tảng</TableHead>
                   <TableHead>Nội dung (Preview)</TableHead>
-                  <TableHead className="w-28">Hình ảnh</TableHead>
-                  <TableHead className="w-28">Ngày tạo</TableHead>
-                  <TableHead className="w-28">Người duyệt</TableHead>
-                  <TableHead className="w-28">Ngày duyệt</TableHead>
-                  <TableHead className="w-28">Trạng thái</TableHead>
-                  <TableHead className="w-28">Hành động</TableHead>
+                  <TableHead>Hình ảnh</TableHead>
+                  <TableHead>Ngày tạo</TableHead>
+                  <TableHead>Người duyệt</TableHead>
+                  <TableHead>Ngày duyệt</TableHead>
+                  <TableHead>Trạng thái</TableHead>
+                  <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-4">
-                      <div className="flex justify-center items-center">
-                        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                        Đang tải...
-                      </div>
-                    </TableCell>
+                    <TableCell colSpan={10} className="text-center py-4">Đang tải...</TableCell>
                   </TableRow>
                 ) : paginatedApprovedContent.length === 0 ? (
                   <TableRow>
@@ -731,23 +580,9 @@ const ContentPage = () => {
                     const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
                       <TableRow key={item.id}>
-                        <TableCell>
-                          <Checkbox 
-                            checked={selectedContentIds.includes(item.id)}
-                            onCheckedChange={(checked) => 
-                              toggleSelectItem(checked === true, item.id)
-                            }
-                            aria-label={`Chọn nội dung ${displayIndex}`}
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          <div className="line-clamp-2">
-                            {topic?.title || 'Không có chủ đề'}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <PlatformIcon platform={item.platform} />
-                        </TableCell>
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
+                        <TableCell>{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="capitalize">{item.platform}</TableCell>
                         <TableCell>
                           <div className="truncate max-w-xs" title={item.text}>
                             {item.text.substring(0, 60)}...
@@ -825,18 +660,6 @@ const ContentPage = () => {
         onOpenChange={setIsApprovalDialogOpen}
         content={selectedContent}
         topic={selectedTopic}
-        onApproved={() => refetchContent()}
-      />
-      
-      <BatchApprovalDialog
-        open={isBatchApprovalDialogOpen}
-        onOpenChange={setIsBatchApprovalDialogOpen}
-        contents={selectedDraftContents}
-        topics={topics}
-        onApproved={() => {
-          refetchContent();
-          setSelectedContentIds([]);
-        }}
       />
     </Layout>
   );
