@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ContentCard } from '@/components/content/ContentCard';
@@ -375,7 +374,7 @@ const ContentPage = () => {
                       aria-label="Chọn tất cả"
                     />
                   </TableHead>
-                  <TableHead className="w-60">Chủ đề gốc</TableHead>
+                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
                   <TableHead className="w-20">Nền tảng</TableHead>
                   <TableHead>Nội dung (Preview)</TableHead>
                   <TableHead className="w-28">Hình ảnh</TableHead>
@@ -553,7 +552,7 @@ const ContentPage = () => {
                       aria-label="Chọn tất cả"
                     />
                   </TableHead>
-                  <TableHead className="w-60">Chủ đề gốc</TableHead>
+                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
                   <TableHead className="w-20">Nền tảng</TableHead>
                   <TableHead>Nội dung (Preview)</TableHead>
                   <TableHead className="w-28">Hình ảnh</TableHead>
@@ -701,7 +700,7 @@ const ContentPage = () => {
                       aria-label="Chọn tất cả"
                     />
                   </TableHead>
-                  <TableHead className="w-60">Chủ đề gốc</TableHead>
+                  <TableHead className="w-[60%]">Chủ đề gốc</TableHead>
                   <TableHead className="w-20">Nền tảng</TableHead>
                   <TableHead>Nội dung (Preview)</TableHead>
                   <TableHead className="w-28">Hình ảnh</TableHead>
