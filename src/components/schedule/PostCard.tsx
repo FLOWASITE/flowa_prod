@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
+import { Edit, Trash2 } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { PlatformIcon } from './PlatformIcon';
@@ -10,13 +11,17 @@ interface PostCardProps {
   index: number;
   topicTitle?: string;
   isInGroup?: boolean; // New prop to indicate if this card is part of a group
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ 
   content, 
   index, 
   topicTitle,
-  isInGroup = false 
+  isInGroup = false,
+  onEdit,
+  onDelete 
 }) => {
   const borderColors = {
     'facebook': 'border-[#1877F2]',
@@ -33,24 +38,55 @@ export const PostCard: React.FC<PostCardProps> = ({
   // Use content's topicTitle if available, fallback to passed topicTitle, then to content.text
   const displayTitle = content.topicTitle || topicTitle || content.text?.substring(0, 20) + '...';
   
-  // Even more compact when part of a group
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) onEdit();
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) onDelete();
+  };
+
+  // Now using the same card style for all posts, whether in a group or not
   return (
     <div 
       key={index} 
-      className={`p-2 mb-1 rounded-md border-l-4 ${borderColor} bg-white hover:shadow-md transition-shadow ${isInGroup ? 'border-l-2 py-1' : ''}`}
+      className={`mb-2 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow 
+        ${isInGroup ? 'border-l-2' : 'border-l-4'} ${borderColor}`}
     >
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 shrink-0">
-            <PlatformIcon platform={content.platform} size="small" />
+      <div className="p-2">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 shrink-0">
+              <PlatformIcon platform={content.platform} size="small" />
+            </div>
+            <div className="text-xs font-medium truncate max-w-[120px]">
+              {isInGroup ? content.platform : displayTitle}
+            </div>
           </div>
-          <div className={`text-xs font-medium truncate ${isInGroup ? 'max-w-[100px]' : 'max-w-[120px]'}`}>
-            {isInGroup ? content.platform : displayTitle}
+          <div className="flex items-center gap-1">
+            <Badge variant="outline" className="text-xs">
+              {format(new Date(content.scheduledAt!), 'HH:mm')}
+            </Badge>
+            {!isInGroup && (
+              <>
+                <button 
+                  onClick={handleEdit}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+                >
+                  <Edit size={14} />
+                </button>
+                <button 
+                  onClick={handleDelete}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </>
+            )}
           </div>
         </div>
-        <Badge variant="outline" className="text-xs">
-          {format(new Date(content.scheduledAt!), 'HH:mm')}
-        </Badge>
       </div>
     </div>
   );

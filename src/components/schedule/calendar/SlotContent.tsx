@@ -56,6 +56,11 @@ export const SlotContent: React.FC<SlotContentProps> = ({
   // Group content by topic ID
   const groupedContent = groupContentByTopic(contentForSlot);
   
+  const handleDelete = (post: Content) => {
+    // For now, just show a console log - you can connect this to real functionality later
+    console.log("Delete post:", post);
+  };
+  
   return (
     <>
       {Object.keys(groupedContent).map((topicId, groupIndex) => {
@@ -63,13 +68,14 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         const firstPost = postsForTopic[0];
         const topicTitle = getTopicTitle(firstPost);
         
-        // If there's only one post for this topic, render it normally
+        // If there's only one post for this topic, render it with the new style
         if (postsForTopic.length === 1) {
           return (
             <ScheduledPost 
               key={`single-${groupIndex}`}
               content={firstPost}
               onEdit={() => handleOpenEditDialog(firstPost)}
+              onDelete={() => handleDelete(firstPost)}
               topicTitle={topicTitle}
             />
           );
@@ -77,7 +83,7 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         
         // If there are multiple posts for the same topic, render them in a group
         return (
-          <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm">
+          <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Topic header */}
             <div className="px-3 pt-2 pb-1 border-b">
               <div className="flex justify-between items-center">
@@ -101,6 +107,8 @@ export const SlotContent: React.FC<SlotContentProps> = ({
                     index={postIndex}
                     topicTitle={topicTitle}
                     isInGroup={true}
+                    onEdit={() => handleOpenEditDialog(post)}
+                    onDelete={() => handleDelete(post)}
                   />
                 </div>
               ))}
