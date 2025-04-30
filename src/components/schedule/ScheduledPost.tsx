@@ -17,36 +17,21 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
   
   return (
     <div 
-      className="mb-2 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+      className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
       onClick={onEdit}
     >
       <div className="p-3 pb-2">
         <div className="flex justify-between items-center mb-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* Platform icon */}
-            <div className="rounded-full w-6 h-6 flex items-center justify-center">
-              <PlatformIcon platform={content.platform} />
-            </div>
+            <PlatformIcon platform={content.platform} />
             
             {/* Time */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center">
-                    <Info className="h-4 w-4 text-blue-500 cursor-help" />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Thời gian đăng bài</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            
             <span className="text-blue-600 font-medium">{time}</span>
           </div>
           
           {/* Actions */}
-          <div className="flex space-x-1">
+          <div className="flex space-x-2">
             <button 
               className="text-gray-500 hover:bg-gray-100 p-1 rounded"
               onClick={(e) => {
@@ -55,7 +40,7 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
               }}
             >
               <span className="sr-only">Sửa</span>
-              <Edit className="h-4 w-4" />
+              <Edit className="h-5 w-5" />
             </button>
             <button 
               className="text-gray-500 hover:bg-gray-100 p-1 rounded"
@@ -64,7 +49,7 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
               }}
             >
               <span className="sr-only">Xóa</span>
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-5 w-5" />
             </button>
           </div>
         </div>

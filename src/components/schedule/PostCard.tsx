@@ -3,6 +3,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
+import { PlatformIcon } from './PlatformIcon';
 
 interface PostCardProps {
   content: Content;
@@ -11,11 +12,13 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({ content, index }) => {
   const borderColors = {
-    'facebook': 'border-blue-500',
-    'instagram': 'border-pink-500',
+    'facebook': 'border-[#1877F2]',
+    'instagram': 'border-[#DD2A7B]',
     'tiktok': 'border-black',
-    'threads': 'border-purple-500',
-    'linkedin': 'border-blue-700',
+    'threads': 'border-black',
+    'linkedin': 'border-[#0A66C2]',
+    'twitter': 'border-[#1DA1F2]',
+    'youtube': 'border-[#FF0000]',
   };
   
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
@@ -25,8 +28,11 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index }) => {
       key={index} 
       className={`p-2 mb-1 rounded-md border-l-4 ${borderColor} bg-white hover:shadow-md transition-shadow`}
     >
-      <div className="flex justify-between items-start">
-        <div className="text-xs font-medium">{content.text?.substring(0, 20)}...</div>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <PlatformIcon platform={content.platform} />
+          <div className="text-xs font-medium">{content.text?.substring(0, 20)}...</div>
+        </div>
         <Badge variant="outline" className="text-xs">
           {format(new Date(content.scheduledAt!), 'HH:mm')}
         </Badge>
