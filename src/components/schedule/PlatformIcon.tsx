@@ -13,7 +13,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
     small: {
       container: "w-5 h-5",
       icon: "w-3 h-3",
-      text: "text-[8px]"
+      text: "text-xs"
     },
     medium: {
       container: "w-8 h-8",

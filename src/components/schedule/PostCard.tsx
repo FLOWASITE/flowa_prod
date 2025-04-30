@@ -24,7 +24,7 @@ export const PostCard: React.FC<PostCardProps> = ({
     'tiktok': 'border-black',
     'threads': 'border-black',
     'linkedin': 'border-[#0A66C2]',
-    'twitter': 'border-[#1DA1F2]',
+    'twitter': 'border-black',
     'youtube': 'border-[#FF0000]',
   };
   
