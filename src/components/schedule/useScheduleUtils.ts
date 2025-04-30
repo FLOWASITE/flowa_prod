@@ -49,14 +49,14 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     // Today's date - for highlighting current day posts
     const isToday = date.getDate() === currentDay && date.getMonth() === currentMonth;
     
-    // Handle the specific posts shown in the example image
-    // These are the topic IDs from mockTopics in the mockData.ts file
-    const validTopicIds = [
-      "topic-1", 
-      "topic-2", 
-      "topic-3", 
-      "topic-4", 
-      "topic-5"
+    // Create sample topic titles that will be displayed directly
+    // instead of relying on topic IDs that need to be looked up
+    const sampleTopics = [
+      "Khuyến mãi mùa hè",
+      "Sản phẩm mới ra mắt",
+      "Mẹo sử dụng sản phẩm",
+      "Thông tin về thương hiệu",
+      "Chiến dịch truyền thông"
     ];
     
     // Thursday posts (Thứ Tư - 30/04)
@@ -64,7 +64,8 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '09:00') {
         return [{
           id: `sample-09-${date}`,
-          topicId: validTopicIds[0], // Using valid topic ID from mockData
+          topicId: "sample-topic-1", // Sample topic ID
+          topicTitle: sampleTopics[0], // Add topic title directly to the content
           platform: 'instagram',
           text: `Bài đăng mẫu cho 09:00 ngày 30/04`,
           status: 'scheduled',
@@ -77,7 +78,8 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '10:00') {
         return [{
           id: `sample-10-${date}`,
-          topicId: validTopicIds[1], // Using valid topic ID from mockData
+          topicId: "sample-topic-2",
+          topicTitle: sampleTopics[1],
           platform: 'facebook',
           text: `Bài đăng mẫu cho 10:00 ngày 30/04`,
           status: 'scheduled',
@@ -90,7 +92,8 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '11:00') {
         return [{
           id: `sample-11-${date}`,
-          topicId: validTopicIds[2], // Using valid topic ID from mockData
+          topicId: "sample-topic-3",
+          topicTitle: sampleTopics[2],
           platform: 'instagram',
           text: `Bài đăng mẫu cho 11:00 ngày 30/04`,
           status: 'scheduled',
@@ -105,7 +108,8 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     if (date.getDate() === 29 && date.getMonth() === 3 && timeSlot === '13:00') {
       return [{
         id: `sample-13-${date}`,
-        topicId: validTopicIds[3], // Using valid topic ID from mockData
+        topicId: "sample-topic-4",
+        topicTitle: sampleTopics[3],
         platform: 'facebook',
         text: `Nội dung facebook lúc 13:00 ngày 29/04`,
         status: 'scheduled',
@@ -119,7 +123,8 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     if (date.getDate() === 1 && date.getMonth() === 4 && timeSlot === '13:00') {
       return [{
         id: `sample-13-${date}`,
-        topicId: validTopicIds[4], // Using valid topic ID from mockData
+        topicId: "sample-topic-5",
+        topicTitle: sampleTopics[4],
         platform: 'linkedin',
         text: `Nội dung linkedin lúc 13:00 ngày 01/05`,
         imageUrl: 'image.jpg',

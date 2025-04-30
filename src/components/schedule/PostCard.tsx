@@ -24,6 +24,9 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }
   
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
   
+  // Use content's topicTitle if available, fallback to passed topicTitle, then to content.text
+  const displayTitle = content.topicTitle || topicTitle || content.text?.substring(0, 20) + '...';
+  
   return (
     <div 
       key={index} 
@@ -32,7 +35,7 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <PlatformIcon platform={content.platform} />
-          <div className="text-xs font-medium">{topicTitle || content.text?.substring(0, 20)}...</div>
+          <div className="text-xs font-medium">{displayTitle}</div>
         </div>
         <Badge variant="outline" className="text-xs">
           {format(new Date(content.scheduledAt!), 'HH:mm')}

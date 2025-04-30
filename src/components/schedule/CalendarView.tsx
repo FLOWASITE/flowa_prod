@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { format, isSameDay } from 'date-fns';
 import { Plus } from 'lucide-react';
@@ -51,17 +50,23 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     setDialogOpen(false);
   };
 
-  // Get topic title by topic ID - improved to include better logging
-  const getTopicTitle = (topicId: string) => {
-    console.log("Looking for topic with ID:", topicId);
+  // Get topic title by topic ID or use the directly attached topic title
+  const getTopicTitle = (content: Content) => {
+    // First check if the content has a topicTitle field directly
+    if (content.topicTitle) {
+      return content.topicTitle;
+    }
+    
+    // Otherwise try to find the topic in the topics list
+    console.log("Looking for topic with ID:", content.topicId);
     console.log("Available topics:", topics);
     
-    const topic = topics.find(t => t.id === topicId);
+    const topic = topics.find(t => t.id === content.topicId);
     if (topic) {
       console.log("Found topic:", topic.title);
       return topic.title;
     } else {
-      console.log("Topic not found for ID:", topicId);
+      console.log("Topic not found for ID:", content.topicId);
       return "Không có chủ đề";
     }
   };
@@ -137,7 +142,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                           key={contentIndex} 
                           content={content} 
                           onEdit={() => handleOpenEditDialog(content)}
-                          topicTitle={getTopicTitle(content.topicId)}
+                          topicTitle={getTopicTitle(content)}
                         />
                       ))
                     ) : (
