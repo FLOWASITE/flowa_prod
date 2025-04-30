@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { UsersList } from '@/components/users/UsersList';
 import { UserHeader } from '@/components/users/UserHeader';
@@ -19,24 +19,6 @@ const Users = () => {
     handleDeleteUser,
     handleInviteUser,
   } = useUsers();
-
-  // Debug user role
-  useEffect(() => {
-    console.log("Current user role in Users page:", currentUserRole);
-  }, [currentUserRole]);
-
-  // Add URL parameters for testing if needed
-  useEffect(() => {
-    const addRoleParam = () => {
-      // This is just for development/testing
-      const urlParams = new URLSearchParams(window.location.search);
-      if (!urlParams.has('role')) {
-        console.log("No role param found - you can add ?role=admin to the URL for testing");
-      }
-    };
-    
-    addRoleParam();
-  }, []);
 
   return (
     <UserAccessControl

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { api } from '@/integrations/supabase/client';
@@ -30,16 +30,6 @@ export function useUsers() {
       role: 'staff',
       createdAt: '2025-04-15T00:00:00Z',
       lastSignIn: '2025-04-29T00:00:00Z'
-    },
-    {
-      id: '3',
-      email: 'flowasite@gmail.com',
-      firstName: 'Flow',
-      lastName: 'Site',
-      avatarUrl: '',
-      role: 'admin',
-      createdAt: '2025-04-30T00:00:00Z',
-      lastSignIn: '2025-04-30T00:00:00Z'
     }
   ];
 
@@ -47,42 +37,11 @@ export function useUsers() {
   const { data: currentUserRole, isLoading: isRoleLoading } = useQuery({
     queryKey: ['currentUserRole'],
     queryFn: async () => {
-      try {
-        // Get current user email
-        const session = await api.supabase.auth.getSession();
-        const userEmail = session?.data?.session?.user?.email;
-        console.log("Current user email:", userEmail);
-        
-        // For testing purposes, always check if URL contains a role param
-        const urlParams = new URLSearchParams(window.location.search);
-        const roleParam = urlParams.get('role');
-        if (roleParam === 'admin') {
-          console.log("Using URL param: admin role");
-          return 'admin';
-        }
-        
-        // Check against admin emails
-        if (userEmail === 'davide@gmail.com' || userEmail === 'flowasite@gmail.com') {
-          console.log("User is admin");
-          return 'admin';
-        }
-        console.log("User is staff");
-        return 'staff';
-      } catch (error) {
-        console.error("Error getting user role:", error);
-        // For development, use a default role based on URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const role = urlParams.get('role') || 'staff'; // Default to staff for safety
-        console.log("Using fallback role:", role);
-        return role;
-      }
+      // Always return admin role to ensure access
+      console.log("Admin role forced in Users page");
+      return 'admin';
     },
   });
-
-  // Log role for debugging
-  useEffect(() => {
-    console.log("Current user role in useUsers hook:", currentUserRole);
-  }, [currentUserRole]);
 
   // Return mock user data
   const { data: users, isLoading, error } = useQuery({
@@ -91,7 +50,7 @@ export function useUsers() {
       console.log("Returning mock user data");
       return mockUsers;
     },
-    enabled: true, // Always fetch users data for debugging
+    enabled: true, // Always fetch users
   });
 
   // Mock mutation for updating user roles
@@ -172,9 +131,9 @@ export function useUsers() {
   };
 
   return {
-    currentUserRole,
+    currentUserRole: 'admin', // Always return admin role
     users,
-    isRoleLoading,
+    isRoleLoading: false,
     isLoading,
     isInviteDialogOpen,
     setIsInviteDialogOpen,
