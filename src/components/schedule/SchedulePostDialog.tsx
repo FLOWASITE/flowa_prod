@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { format } from 'date-fns';
@@ -34,7 +33,7 @@ import { cn } from '@/lib/utils';
 
 type PostFormValues = {
   text: string;
-  platform: 'facebook' | 'instagram' | 'tiktok' | 'threads' | 'linkedin';
+  platform: Content['platform']; // Use the platform type from Content interface
   scheduledDate: Date;
   scheduledTime: string;
 };
@@ -124,6 +123,8 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                       <option value="tiktok">TikTok</option>
                       <option value="threads">Threads</option>
                       <option value="linkedin">LinkedIn</option>
+                      <option value="twitter">Twitter</option>
+                      <option value="youtube">YouTube</option>
                     </select>
                   </FormControl>
                   <FormMessage />

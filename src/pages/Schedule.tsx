@@ -1,7 +1,5 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { mockContents } from '@/data/mockData';
 import { Content } from '@/types/content';
 import { useScheduleUtils } from '@/components/schedule/useScheduleUtils';
 import { ScheduleHeader } from '@/components/schedule/ScheduleHeader';
