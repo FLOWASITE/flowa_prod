@@ -72,8 +72,8 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
           </div>
         </div>
         
-        {/* Header buttons with fixed positioning to ensure they're always visible */}
-        <div className="flex items-center space-x-4 relative z-50">
+        {/* Header buttons fixed to the right side */}
+        <div className="fixed top-4 right-6 flex items-center space-x-4 z-50">
           {/* Language Selector */}
           <div className="relative group">
             <Button 

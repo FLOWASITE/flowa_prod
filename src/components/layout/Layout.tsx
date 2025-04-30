@@ -23,7 +23,7 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Desktop sidebar - always visible on desktop */}
-      <div className="hidden md:block fixed left-0 top-0 h-full z-10">
+      <div className="hidden md:block fixed left-0 top-0 h-full z-20">
         <Sidebar onCollapsedChange={handleCollapsedChange} />
       </div>
       
@@ -42,11 +42,11 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       )}
       
-      {/* Header always at the top with highest z-index */}
+      {/* Header content area */}
       <div 
-        className="fixed top-0 right-0 w-full z-50 transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-30 transition-all duration-300"
         style={{ 
-          left: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // Adjust width based on sidebar state
+          marginLeft: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // Adjust width based on sidebar state
         }}
       >
         <Header sidebarCollapsed={sidebarCollapsed} />
