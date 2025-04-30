@@ -42,7 +42,7 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       )}
       
-      {/* Fixed header that stays visible when scrolling */}
+      {/* Fixed header that stays visible when scrolling, always on top */}
       <div 
         className="fixed top-0 right-0 z-20 w-full transition-all duration-300"
         style={{ 

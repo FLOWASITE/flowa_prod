@@ -72,7 +72,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
           </div>
         </div>
         
-        <div className={`flex items-center space-x-4 transition-all duration-300 ${sidebarCollapsed ? 'mr-0' : 'mr-0 md:mr-4'}`}>
+        <div className="flex items-center space-x-4 z-40">
           {/* Enhanced Language Selector with hover effect */}
           <div className="relative group">
             <Button 
