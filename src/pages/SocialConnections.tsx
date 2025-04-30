@@ -9,7 +9,6 @@ import { Settings } from 'lucide-react';
 
 const SocialConnections = () => {
   const { currentLanguage } = useLanguage();
-  const [days] = useState(8);
   
   const translations = {
     title: {
@@ -19,14 +18,6 @@ const SocialConnections = () => {
     description: {
       vi: 'Quản lý tất cả các tài khoản mạng xã hội cho từng thương hiệu',
       en: 'Manage all social media accounts for each brand',
-    },
-    trialMessage: {
-      vi: `Dùng thử sẽ hết hạn trong ${days} ngày`,
-      en: `Your trial will expire in ${days} days`,
-    },
-    upgrade: {
-      vi: 'Nâng cấp ngay!',
-      en: 'Upgrade Now!',
     },
     socialAccounts: {
       vi: 'Cài đặt mạng xã hội',
@@ -45,17 +36,6 @@ const SocialConnections = () => {
   return (
     <Layout>
       <div className="w-full">
-        {/* Trial notification bar */}
-        <div className="bg-gray-800 text-white py-2 px-6 flex items-center justify-center">
-          <span>{t('trialMessage')}</span>
-          <Button 
-            variant="link" 
-            className="text-yellow-400 hover:text-yellow-300 font-semibold ml-2 p-0"
-          >
-            {t('upgrade')}
-          </Button>
-        </div>
-
         <div className="container max-w-7xl py-8 px-4 md:px-6">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold">{t('title')}</h1>
