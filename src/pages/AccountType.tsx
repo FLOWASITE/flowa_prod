@@ -3,6 +3,8 @@ import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { PricingTable } from '@/components/pricing/PricingTable';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export function AccountType() {
   const { currentLanguage } = useLanguage();
@@ -21,6 +23,14 @@ export function AccountType() {
         </p>
         
         <PricingTable />
+        
+        <div className="flex justify-center mt-8">
+          <Link to="/register">
+            <Button size="lg">
+              {isVietnamese ? 'Đăng ký ngay' : 'Register Now'}
+            </Button>
+          </Link>
+        </div>
       </div>
     </Layout>
   );

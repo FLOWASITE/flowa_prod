@@ -73,6 +73,15 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
           </div>
         </div>
         
+        {/* Register button */}
+        <div className="mr-auto ml-4">
+          <Link to="/register">
+            <Button variant="outline" size="sm">
+              {currentLanguage.code === 'vi' ? 'Đăng ký' : 'Register'}
+            </Button>
+          </Link>
+        </div>
+        
         {/* Header buttons fixed to the right side */}
         <div className="fixed top-4 right-6 flex items-center space-x-4 z-50">
           {/* Language Selector */}
@@ -126,10 +135,12 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
               </div>
               <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                  <Badge className="mr-3 h-5 w-5" />
-                  <span>{currentLanguage.code === 'vi' ? "Loại tài khoản" : "Account Type"}</span>
-                </DropdownMenuItem>
+                <Link to="/account-type">
+                  <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                    <Badge className="mr-3 h-5 w-5" />
+                    <span>{currentLanguage.code === 'vi' ? "Loại tài khoản" : "Account Type"}</span>
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <BriefcaseBusiness className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Quản lý thương hiệu" : "Brand Management"}</span>

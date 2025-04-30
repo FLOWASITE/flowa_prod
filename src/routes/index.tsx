@@ -12,6 +12,7 @@ import Crm from "@/pages/Crm";
 import Users from "@/pages/Users";
 import NotFound from "@/pages/NotFound";
 import AccountType from "@/pages/AccountType";
+import Register from "@/pages/Register";
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
   {
     path: "/account-type",
     element: <AccountType />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "*",
