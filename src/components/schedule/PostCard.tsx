@@ -27,6 +27,7 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }
   // Use content's topicTitle if available, fallback to passed topicTitle, then to content.text
   const displayTitle = content.topicTitle || topicTitle || content.text?.substring(0, 20) + '...';
   
+  // Use a smaller, more compact icon size when displaying in calendar cells
   return (
     <div 
       key={index} 
@@ -34,8 +35,10 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }
     >
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <PlatformIcon platform={content.platform} />
-          <div className="text-xs font-medium">{displayTitle}</div>
+          <div className="w-5 h-5 shrink-0">
+            <PlatformIcon platform={content.platform} size="small" />
+          </div>
+          <div className="text-xs font-medium truncate max-w-[120px]">{displayTitle}</div>
         </div>
         <Badge variant="outline" className="text-xs">
           {format(new Date(content.scheduledAt!), 'HH:mm')}

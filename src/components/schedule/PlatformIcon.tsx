@@ -4,74 +4,96 @@ import { Facebook, Instagram, Linkedin, Twitter, Youtube, MessageCircle, Globe, 
 
 interface PlatformIconProps {
   platform: string;
+  size?: 'small' | 'medium' | 'large';
 }
 
-export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform }) => {
+export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'medium' }) => {
+  // Size configurations
+  const sizeConfig = {
+    small: {
+      container: "w-5 h-5",
+      icon: "w-3 h-3",
+      text: "text-[8px]"
+    },
+    medium: {
+      container: "w-8 h-8",
+      icon: "w-4 h-4",
+      text: "text-xs"
+    },
+    large: {
+      container: "w-10 h-10",
+      icon: "w-5 h-5",
+      text: "text-sm"
+    }
+  };
+  
+  const { container, icon, text } = sizeConfig[size];
+  
   switch (platform.toLowerCase()) {
     case 'facebook':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#1877F2] flex items-center justify-center text-white">
-          <Facebook className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-[#1877F2] flex items-center justify-center text-white`}>
+          <Facebook className={icon} />
         </div>
       );
     case 'instagram':
       return (
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white">
-          <Instagram className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white`}>
+          <Instagram className={icon} />
         </div>
       );
     case 'linkedin':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#0A66C2] flex items-center justify-center text-white">
-          <Linkedin className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-[#0A66C2] flex items-center justify-center text-white`}>
+          <Linkedin className={icon} />
         </div>
       );
     case 'twitter':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#1DA1F2] flex items-center justify-center text-white">
-          <Twitter className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-[#1DA1F2] flex items-center justify-center text-white`}>
+          <Twitter className={icon} />
         </div>
       );
     case 'youtube':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#FF0000] flex items-center justify-center text-white">
-          <Youtube className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-[#FF0000] flex items-center justify-center text-white`}>
+          <Youtube className={icon} />
         </div>
       );
     case 'tiktok':
       return (
-        <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white">
-          <span className="text-xs font-bold">TT</span>
+        <div className={`${container} rounded-full bg-black flex items-center justify-center text-white`}>
+          <span className={text + " font-bold"}>TT</span>
         </div>
       );
     case 'threads':
       return (
-        <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white">
-          <Share2 className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-black flex items-center justify-center text-white`}>
+          <Share2 className={icon} />
         </div>
       );
     case 'messenger':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#0084FF] flex items-center justify-center text-white">
-          <MessageCircle className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-[#0084FF] flex items-center justify-center text-white`}>
+          <MessageCircle className={icon} />
         </div>
       );
     case 'pinterest':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#E60023] flex items-center justify-center text-white">
-          <span className="text-xs font-bold">P</span>
+        <div className={`${container} rounded-full bg-[#E60023] flex items-center justify-center text-white`}>
+          <span className={text + " font-bold"}>P</span>
         </div>
       );
     case 'blog':
       return (
-        <div className="w-8 h-8 rounded-full bg-[#FF5722] flex items-center justify-center text-white">
-          <Rss className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-[#FF5722] flex items-center justify-center text-white`}>
+          <Rss className={icon} />
         </div>
       );
     default:
       return (
-        <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white">
-          <Globe className="w-4 h-4" />
+        <div className={`${container} rounded-full bg-gray-400 flex items-center justify-center text-white`}>
+          <Globe className={icon} />
         </div>
       );
   }
