@@ -13,12 +13,12 @@ const SocialConnections = () => {
   
   const translations = {
     title: {
-      vi: 'Tài khoản mạng xã hội đã kết nối',
-      en: 'Connected social accounts',
+      vi: 'Quản lý Mạng Xã Hội',
+      en: 'Social Media Management',
     },
     description: {
-      vi: 'Xem và quản lý các tài khoản mạng xã hội của bạn',
-      en: 'View and manage your social media accounts in one place.',
+      vi: 'Quản lý tất cả các tài khoản mạng xã hội cho từng thương hiệu',
+      en: 'Manage all social media accounts for each brand',
     },
     trialMessage: {
       vi: `Dùng thử sẽ hết hạn trong ${days} ngày`,
@@ -29,12 +29,12 @@ const SocialConnections = () => {
       en: 'Upgrade Now!',
     },
     socialAccounts: {
-      vi: 'Tài khoản mạng xã hội',
-      en: 'Social Accounts',
+      vi: 'Cài đặt mạng xã hội',
+      en: 'Social Settings',
     },
     allConnected: {
-      vi: 'Tất cả tài khoản đã kết nối',
-      en: 'All connected accounts',
+      vi: 'Quản lý tài khoản',
+      en: 'Account Management',
     }
   };
   
