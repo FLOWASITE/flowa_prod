@@ -12,12 +12,14 @@ interface CalendarViewProps {
   weekDates: Date[];
   timeSlots: string[];
   getScheduledContent: (date: Date, timeSlot: string) => Content[];
+  topics: any[];
 }
 
 export const CalendarView: React.FC<CalendarViewProps> = ({
   weekDates,
   timeSlots,
-  getScheduledContent
+  getScheduledContent,
+  topics
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -47,6 +49,12 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
       description: `${format(post.scheduledAt!, 'HH:mm dd/MM/yyyy')} - ${post.text?.substring(0, 30)}...`,
     });
     setDialogOpen(false);
+  };
+
+  // Get topic title by topic ID
+  const getTopicTitle = (topicId: string) => {
+    const topic = topics.find(t => t.id === topicId);
+    return topic ? topic.title : "Không có chủ đề";
   };
 
   // Get day names in Vietnamese
@@ -120,6 +128,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                           key={contentIndex} 
                           content={content} 
                           onEdit={() => handleOpenEditDialog(content)}
+                          topicTitle={getTopicTitle(content.topicId)}
                         />
                       ))
                     ) : (

@@ -9,9 +9,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 interface ScheduledPostProps {
   content: Content;
   onEdit?: () => void;
+  topicTitle?: string;
 }
 
-export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit }) => {
+export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit, topicTitle }) => {
   const time = content.scheduledAt ? format(new Date(content.scheduledAt), 'HH:mm') : '';
   const date = content.scheduledAt ? format(new Date(content.scheduledAt), 'dd/MM') : '';
   
@@ -54,9 +55,9 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
           </div>
         </div>
         
-        {/* Post content */}
-        <div className="text-sm mb-2 line-clamp-2">
-          {content.text}
+        {/* Topic title instead of post content */}
+        <div className="text-sm mb-2 line-clamp-2 font-medium">
+          {topicTitle || content.text}
         </div>
         
         {/* Image indicator */}

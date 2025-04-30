@@ -8,9 +8,10 @@ import { PlatformIcon } from './PlatformIcon';
 interface PostCardProps {
   content: Content;
   index: number;
+  topicTitle?: string;
 }
 
-export const PostCard: React.FC<PostCardProps> = ({ content, index }) => {
+export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }) => {
   const borderColors = {
     'facebook': 'border-[#1877F2]',
     'instagram': 'border-[#DD2A7B]',
@@ -31,7 +32,7 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index }) => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <PlatformIcon platform={content.platform} />
-          <div className="text-xs font-medium">{content.text?.substring(0, 20)}...</div>
+          <div className="text-xs font-medium">{topicTitle || content.text?.substring(0, 20)}...</div>
         </div>
         <Badge variant="outline" className="text-xs">
           {format(new Date(content.scheduledAt!), 'HH:mm')}

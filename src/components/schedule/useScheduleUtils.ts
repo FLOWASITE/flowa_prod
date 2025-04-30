@@ -68,7 +68,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '10:00') {
         return [{
           id: `sample-10-${date}`,
-          topicId: "topic-1",
+          topicId: "topic-2",
           platform: 'facebook',
           text: `Bài đăng mẫu cho 10:00 ngày 30/04`,
           status: 'scheduled',
@@ -81,7 +81,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '11:00') {
         return [{
           id: `sample-11-${date}`,
-          topicId: "topic-1",
+          topicId: "topic-3",
           platform: 'instagram',
           text: `Bài đăng mẫu cho 11:00 ngày 30/04`,
           status: 'scheduled',
@@ -96,7 +96,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     if (date.getDate() === 29 && date.getMonth() === 3 && timeSlot === '13:00') {
       return [{
         id: `sample-13-${date}`,
-        topicId: "topic-2",
+        topicId: "topic-4",
         platform: 'facebook',
         text: `Nội dung facebook lúc 13:00 ngày 29/04`,
         status: 'scheduled',
@@ -110,7 +110,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     if (date.getDate() === 1 && date.getMonth() === 4 && timeSlot === '13:00') {
       return [{
         id: `sample-13-${date}`,
-        topicId: "topic-3",
+        topicId: "topic-5",
         platform: 'linkedin',
         text: `Nội dung linkedin lúc 13:00 ngày 01/05`,
         imageUrl: 'image.jpg',

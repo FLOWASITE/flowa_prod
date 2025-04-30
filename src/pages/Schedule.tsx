@@ -9,12 +9,14 @@ import { CalendarView } from '@/components/schedule/CalendarView';
 import { ListView } from '@/components/schedule/ListView';
 import { GridView } from '@/components/schedule/GridView';
 import { useContentFetch } from '@/hooks/useContentFetch';
+import { useTopicsFetch } from '@/hooks/useTopicsFetch';
 
 const Schedule = () => {
   const [viewMode, setViewMode] = useState<'calendar' | 'list' | 'grid' | 'overview'>('calendar');
   
-  // Sử dụng dữ liệu thực từ useContentFetch hoặc dữ liệu giả lập
+  // Use real data from useContentFetch and useTopicsFetch
   const { content } = useContentFetch(true);
+  const { topics } = useTopicsFetch(true);
   
   // Filter scheduled content
   const scheduledContent = content.filter(
@@ -52,6 +54,7 @@ const Schedule = () => {
               weekDates={weekDates} 
               timeSlots={timeSlots}
               getScheduledContent={getScheduledContent}
+              topics={topics}
             />
           )}
           {viewMode === 'list' && <ListView scheduledContent={scheduledContent} />}
