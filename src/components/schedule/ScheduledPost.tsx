@@ -8,9 +8,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 interface ScheduledPostProps {
   content: Content;
+  onEdit?: () => void;
 }
 
-export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content }) => {
+export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit }) => {
   const time = content.scheduledAt ? format(new Date(content.scheduledAt), 'HH:mm') : '';
   
   return (
@@ -40,7 +41,10 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content }) => {
             </div>
           </div>
           <div className="flex space-x-1">
-            <button className="text-gray-500 hover:bg-gray-100 p-1 rounded">
+            <button 
+              className="text-gray-500 hover:bg-gray-100 p-1 rounded"
+              onClick={onEdit}
+            >
               <span className="sr-only">Sửa</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15 6L18 9M13 20H21M5 16L14 7L17 10L8 19L4 20L5 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
