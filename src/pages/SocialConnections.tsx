@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SocialConnectionsManager } from '@/components/brand/SocialConnectionsManager';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Settings } from 'lucide-react';
 
 const SocialConnections = () => {
   const { currentLanguage } = useLanguage();
@@ -18,10 +16,6 @@ const SocialConnections = () => {
     description: {
       vi: 'Quản lý tất cả các tài khoản mạng xã hội cho từng thương hiệu',
       en: 'Manage all social media accounts for each brand',
-    },
-    socialAccounts: {
-      vi: 'Cài đặt mạng xã hội',
-      en: 'Social Settings',
     },
     allConnected: {
       vi: 'Quản lý tài khoản',
@@ -42,12 +36,8 @@ const SocialConnections = () => {
             <p className="text-gray-500 mt-1">{t('description')}</p>
           </div>
 
-          <div className="flex justify-between items-center mb-6">
+          <div className="mb-6">
             <h2 className="text-lg font-medium">{t('allConnected')}</h2>
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
-              <Settings className="h-4 w-4" />
-              <span>{t('socialAccounts')}</span>
-            </Button>
           </div>
 
           <ScrollArea className="w-full">
