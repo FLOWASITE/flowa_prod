@@ -30,12 +30,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </div>
         <div>
           <h1 className="text-3xl font-semibold">
-            {currentLanguage.code === 'vi' ? 'Cài đặt' : 'Settings'}
+            {currentLanguage.code === 'vi' ? 'Thông tin tài khoản' : 'Account Information'}
           </h1>
           <p className="text-gray-500 mt-1">
             {currentLanguage.code === 'vi' 
-              ? 'Thay đổi cài đặt ở đây. Nhưng đừng thay đổi con người bạn. Bạn thật tuyệt vời!' 
-              : 'Change your settings here. But don\'t change who you are. You are awesome!'}
+              ? 'Xem và cập nhật thông tin cá nhân của bạn' 
+              : 'View and update your personal information'}
           </p>
         </div>
       </div>
