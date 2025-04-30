@@ -38,6 +38,9 @@ export const PostCard: React.FC<PostCardProps> = ({
   // Use content's topicTitle if available, fallback to passed topicTitle, then to content.text
   const displayTitle = content.topicTitle || topicTitle || content.text?.substring(0, 20) + '...';
   
+  // Display platform name (replace 'twitter' with 'X')
+  const displayPlatform = content.platform === 'twitter' ? 'X' : content.platform;
+  
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onEdit) onEdit();
@@ -62,29 +65,25 @@ export const PostCard: React.FC<PostCardProps> = ({
               <PlatformIcon platform={content.platform} size="small" />
             </div>
             <div className="text-xs font-medium truncate max-w-[120px]">
-              {isInGroup ? content.platform : displayTitle}
+              {isInGroup ? displayPlatform : displayTitle}
             </div>
           </div>
           <div className="flex items-center gap-1">
             <Badge variant="outline" className="text-xs">
               {format(new Date(content.scheduledAt!), 'HH:mm')}
             </Badge>
-            {!isInGroup && (
-              <>
-                <button 
-                  onClick={handleEdit}
-                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
-                >
-                  <Edit size={14} />
-                </button>
-                <button 
-                  onClick={handleDelete}
-                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </>
-            )}
+            <button 
+              onClick={handleEdit}
+              className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+            >
+              <Edit size={14} />
+            </button>
+            <button 
+              onClick={handleDelete}
+              className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+            >
+              <Trash2 size={14} />
+            </button>
           </div>
         </div>
       </div>

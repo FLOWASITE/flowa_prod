@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Content } from '@/types/content';
@@ -85,12 +85,21 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         return (
           <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Topic header */}
-            <div className="px-3 pt-2 pb-1 border-b">
-              <div className="flex justify-between items-center">
-                <div className="text-sm font-medium">{topicTitle}</div>
-                <Badge variant="outline">
-                  {postsForTopic.length} bài
-                </Badge>
+            <div className="px-3 pt-2 pb-1 border-b flex justify-between items-center">
+              <div className="text-sm font-medium">{topicTitle}</div>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => handleOpenEditDialog(firstPost)}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+                >
+                  <Edit size={16} />
+                </button>
+                <button 
+                  onClick={() => handleDelete(firstPost)}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
             </div>
             

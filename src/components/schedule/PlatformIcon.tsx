@@ -23,13 +23,16 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
     large: {
       container: "w-10 h-10",
       icon: "w-5 h-5",
-      text: "text-sm"
+      text: "text-xs" // Changed from text-sm to text-xs for consistency
     }
   };
   
   const { container, icon, text } = sizeConfig[size];
   
-  switch (platform.toLowerCase()) {
+  // Fix the platform name display for Twitter -> X
+  const platformName = platform.toLowerCase() === 'twitter' ? 'x' : platform.toLowerCase();
+  
+  switch (platformName) {
     case 'facebook':
       return (
         <div className={`${container} rounded-full bg-[#1877F2] flex items-center justify-center text-white`}>
@@ -48,7 +51,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
           <Linkedin className={icon} />
         </div>
       );
-    case 'twitter':
+    case 'x':
       return (
         <div className={`${container} rounded-full bg-black flex items-center justify-center text-white`}>
           <X className={icon} />
