@@ -17,6 +17,8 @@ const Schedule = () => {
   const { content } = useContentFetch(true);
   const { topics } = useTopicsFetch(true);
   
+  console.log("Available topics in Schedule:", topics);
+
   // Filter scheduled content
   const scheduledContent = content.filter(
     content => content.status === 'scheduled' && content.scheduledAt

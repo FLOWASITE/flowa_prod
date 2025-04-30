@@ -51,37 +51,36 @@ export const PostCard: React.FC<PostCardProps> = ({
     if (onDelete) onDelete();
   };
 
+  // Now using the same card style for all posts, whether in a group or not
   return (
     <div 
       key={index} 
-      className={`mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow 
-        border-l-4 ${borderColor}`}
+      className={`mb-2 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow 
+        ${isInGroup ? 'border-l-2' : 'border-l-4'} ${borderColor}`}
     >
-      <div className="p-3">
+      <div className="p-2">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 shrink-0">
               <PlatformIcon platform={content.platform} size="small" />
             </div>
-            <div className="text-sm font-medium truncate max-w-[120px]">
+            <div className="text-xs font-medium truncate max-w-[120px]">
               {isInGroup ? displayPlatform : displayTitle}
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <Badge variant="outline" className="text-xs bg-gray-100">
+            <Badge variant="outline" className="text-xs">
               {format(new Date(content.scheduledAt!), 'HH:mm')}
             </Badge>
             <button 
               onClick={handleEdit}
               className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
-              aria-label="Edit"
             >
               <Edit size={14} />
             </button>
             <button 
               onClick={handleDelete}
               className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
-              aria-label="Delete"
             >
               <Trash2 size={14} />
             </button>
