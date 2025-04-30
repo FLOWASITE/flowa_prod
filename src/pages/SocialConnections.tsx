@@ -13,8 +13,8 @@ const SocialConnections = () => {
   
   const translations = {
     title: {
-      vi: 'Quản lý Mạng Xã Hội',
-      en: 'Social Media Management',
+      vi: 'Quản lý kết nối',
+      en: 'Connection Management',
     },
     description: {
       vi: 'Quản lý tất cả các tài khoản mạng xã hội cho từng thương hiệu',
