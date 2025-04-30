@@ -40,42 +40,88 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
   const getScheduledContent = (date: Date, timeSlot: string): Content[] => {
     // Parse the time from the timeSlot string
     const [hours] = timeSlot.split(':').map(Number);
-
-    // Tạo dữ liệu mẫu theo ngày
-    const day = date.getDay();
     
-    // Nếu là ngày hôm nay và giờ hiện tại (để hiển thị một số dữ liệu mẫu)
-    if (isSameDay(date, new Date()) && hours >= 9 && hours <= 11) {
-      // Tạo mẫu dữ liệu cho ngày hiện tại
-      return [{
-        id: `sample-${date}-${timeSlot}-1`,
-        topicId: "topic-1",
-        platform: hours % 2 === 0 ? 'facebook' : 'instagram',
-        text: `Bài đăng mẫu cho ${timeSlot} ngày ${format(date, 'dd/MM')}`,
-        status: 'scheduled',
-        scheduledAt: new Date(date.setHours(hours, 0, 0, 0)),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }];
+    // Current date parts for comparison
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    
+    // Today's date - for highlighting current day posts
+    const isToday = date.getDate() === currentDay && date.getMonth() === currentMonth;
+    
+    // Handle the specific posts shown in the example image
+    // Thursday posts (Thứ Tư - 30/04)
+    if (date.getDate() === 30 && date.getMonth() === 3) {
+      if (timeSlot === '09:00') {
+        return [{
+          id: `sample-09-${date}`,
+          topicId: "topic-1",
+          platform: 'instagram',
+          text: `Bài đăng mẫu cho 09:00 ngày 30/04`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(9, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }];
+      }
+      
+      if (timeSlot === '10:00') {
+        return [{
+          id: `sample-10-${date}`,
+          topicId: "topic-1",
+          platform: 'facebook',
+          text: `Bài đăng mẫu cho 10:00 ngày 30/04`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(10, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }];
+      }
+      
+      if (timeSlot === '11:00') {
+        return [{
+          id: `sample-11-${date}`,
+          topicId: "topic-1",
+          platform: 'instagram',
+          text: `Bài đăng mẫu cho 11:00 ngày 30/04`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(11, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }];
+      }
     }
     
-    // Tạo mẫu dữ liệu cho thứ 3 và thứ 5
-    if ((day === 2 || day === 4) && (hours === 13 || hours === 15)) {
-      const platform = day === 2 ? 'facebook' : 'linkedin';
+    // Tuesday posts (Thứ Ba - 29/04)
+    if (date.getDate() === 29 && date.getMonth() === 3 && timeSlot === '13:00') {
       return [{
-        id: `sample-${date}-${timeSlot}-2`,
+        id: `sample-13-${date}`,
         topicId: "topic-2",
-        platform,
-        text: `Nội dung ${platform} lúc ${timeSlot} ngày ${format(date, 'dd/MM')}`,
-        imageUrl: platform === 'linkedin' ? 'image.jpg' : undefined,
+        platform: 'facebook',
+        text: `Nội dung facebook lúc 13:00 ngày 29/04`,
         status: 'scheduled',
-        scheduledAt: new Date(date.setHours(hours, 0, 0, 0)),
+        scheduledAt: new Date(date.setHours(13, 0, 0, 0)),
         createdAt: new Date(),
         updatedAt: new Date(),
       }];
     }
     
-    // Kết hợp dữ liệu mẫu với dữ liệu thực từ cơ sở dữ liệu
+    // Friday posts (Thứ Năm - 01/05)
+    if (date.getDate() === 1 && date.getMonth() === 4 && timeSlot === '13:00') {
+      return [{
+        id: `sample-13-${date}`,
+        topicId: "topic-3",
+        platform: 'linkedin',
+        text: `Nội dung linkedin lúc 13:00 ngày 01/05`,
+        imageUrl: 'image.jpg',
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(13, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }];
+    }
+    
+    // Check real scheduled content from the database
     const realContent = scheduledContent.filter(content => {
       if (!content.scheduledAt) return false;
       const scheduledDate = new Date(content.scheduledAt);
@@ -85,7 +131,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       );
     });
     
-    return realContent;
+    return realContent.length ? realContent : [];
   };
   
   // Format date range for header (e.g., "thg 4 28 - thg 5 4, 2025")

@@ -46,6 +46,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
       title: editingPost ? "Bài viết đã được cập nhật" : "Bài viết đã được tạo",
       description: `${format(post.scheduledAt!, 'HH:mm dd/MM/yyyy')} - ${post.text?.substring(0, 30)}...`,
     });
+    setDialogOpen(false);
   };
 
   // Get day names in Vietnamese
@@ -62,27 +63,40 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     return dayMap[date.getDay()];
   };
 
+  // Check if a date is today
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return date.getDate() === today.getDate() && 
+           date.getMonth() === today.getMonth() && 
+           date.getFullYear() === today.getFullYear();
+  };
+
   return (
     <>
       <div className="overflow-x-auto">
-        <div className="min-w-[800px]">
+        <div className="min-w-[800px] border border-gray-200 rounded-md">
           {/* Calendar header with days */}
           <div className="grid grid-cols-[60px_repeat(7,1fr)]">
-            <div className="p-2"></div>
-            {weekDates.map((date, index) => (
-              <div 
-                key={index} 
-                className={`p-3 text-center border ${isSameDay(date, new Date()) ? 'bg-rose-50' : 'bg-white'}`}
-              >
-                <div className="text-sm text-gray-500">{getDayName(date)}</div>
-                <div className="font-medium">{format(date, 'd')}</div>
-              </div>
-            ))}
+            <div className="p-2 border-b border-r"></div>
+            {weekDates.map((date, index) => {
+              const isCurrentDay = isToday(date);
+              return (
+                <div 
+                  key={index} 
+                  className={`p-3 text-center border-b ${
+                    isCurrentDay ? 'bg-rose-50' : 'bg-white'
+                  } ${index < 6 ? 'border-r' : ''}`}
+                >
+                  <div className="text-sm text-gray-500">{getDayName(date)}</div>
+                  <div className="font-medium">{format(date, 'd')}</div>
+                </div>
+              );
+            })}
           </div>
           
           {/* Time slots and content */}
           {timeSlots.map((timeSlot, slotIndex) => (
-            <div key={slotIndex} className="grid grid-cols-[60px_repeat(7,1fr)] border-t">
+            <div key={slotIndex} className="grid grid-cols-[60px_repeat(7,1fr)] border-b last:border-b-0">
               {/* Time indicator */}
               <div className="p-2 text-sm text-gray-500 text-right pr-3 pt-3 border-r">
                 {timeSlot}
@@ -91,21 +105,23 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               {/* Days content */}
               {weekDates.map((date, dateIndex) => {
                 const contentForSlot = getScheduledContent(date, timeSlot);
+                const isCurrentDay = isToday(date);
+                
                 return (
                   <div 
                     key={`${slotIndex}-${dateIndex}`} 
-                    className={`p-2 min-h-[100px] border-r relative ${
-                      isSameDay(date, new Date()) ? 'bg-rose-50' : 'bg-white'
-                    } ${dateIndex === 6 ? '' : 'border-r'}`}
+                    className={`p-2 min-h-[100px] relative ${
+                      isCurrentDay ? 'bg-rose-50' : 'bg-white'
+                    } ${dateIndex < 6 ? 'border-r' : ''}`}
                   >
                     {contentForSlot.length > 0 ? (
-                      contentForSlot.map((content, contentIndex) => 
+                      contentForSlot.map((content, contentIndex) => (
                         <ScheduledPost 
                           key={contentIndex} 
                           content={content} 
                           onEdit={() => handleOpenEditDialog(content)}
                         />
-                      )
+                      ))
                     ) : (
                       <Button 
                         variant="ghost" 
