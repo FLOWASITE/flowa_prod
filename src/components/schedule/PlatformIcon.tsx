@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, MessageCircle, Globe, TrendingUp, Rss, Share2 } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Youtube, X, MessageCircle, Globe, TrendingUp, Rss, Share2 } from 'lucide-react';
 
 interface PlatformIconProps {
   platform: string;
@@ -50,8 +50,8 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
       );
     case 'twitter':
       return (
-        <div className={`${container} rounded-full bg-[#1DA1F2] flex items-center justify-center text-white`}>
-          <Twitter className={icon} />
+        <div className={`${container} rounded-full bg-black flex items-center justify-center text-white`}>
+          <X className={icon} />
         </div>
       );
     case 'youtube':
@@ -63,7 +63,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
     case 'tiktok':
       return (
         <div className={`${container} rounded-full bg-black flex items-center justify-center text-white`}>
-          <span className={text + " font-bold"}>TT</span>
+          <span className={text}>TT</span>
         </div>
       );
     case 'threads':
@@ -81,7 +81,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
     case 'pinterest':
       return (
         <div className={`${container} rounded-full bg-[#E60023] flex items-center justify-center text-white`}>
-          <span className={text + " font-bold"}>P</span>
+          <span className={text}>P</span>
         </div>
       );
     case 'blog':
