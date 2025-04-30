@@ -69,23 +69,45 @@ export function Header() {
         </div>
         
         <div className="flex items-center space-x-4">
-          <LanguageSelector />
+          {/* Enhanced Language Selector with hover effect */}
+          <div className="relative group">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 transition-all"
+            >
+              <span className="font-medium mr-1">{currentLanguage.code.toUpperCase()}</span>
+              <LanguageSelector />
+            </Button>
+            <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+          </div>
           
-          <Button variant="ghost" size="icon" className="relative">
+          {/* Enhanced Notification Button */}
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="relative bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 transition-all"
+          >
             <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
           </Button>
           
+          {/* Enhanced Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700 transition-all pl-2 pr-3 py-1"
+              >
+                <Avatar className="h-7 w-7">
                   <AvatarImage src={userAvatar} />
                   <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
                 </Avatar>
+                <span className="font-medium text-sm hidden sm:inline">{userName.split(' ')[0]}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80 bg-white/90 backdrop-blur-sm dark:bg-gray-950/90" align="end">
+            <DropdownMenuContent className="w-80 bg-white dark:bg-gray-950 backdrop-blur-sm shadow-lg border border-gray-200 dark:border-gray-800" align="end">
               <div className="flex items-center p-3 space-x-3">
                 <Avatar>
                   <AvatarImage src={userAvatar} />
@@ -93,30 +115,30 @@ export function Header() {
                 </Avatar>
                 <div className="flex flex-col space-y-0.5">
                   <p className="text-sm font-medium">{userName}</p>
-                  <p className="text-xs text-gray-500">{userEmail}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{userEmail}</p>
                 </div>
               </div>
-              <DropdownMenuSeparator className="bg-gray-200/50 dark:bg-gray-700/50" />
+              <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="py-2">
+                <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <DollarSign className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Định giá" : "Pricing"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-2">
+                <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <Settings className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Thiết lập không gian làm việc" : "Workspace Settings"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-2">
+                <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <Users className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Người dùng không gian làm việc" : "Workspace Users"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-2">
+                <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <HelpCircle className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Trung tâm trợ giúp" : "Help Center"}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator className="bg-gray-200/50 dark:bg-gray-700/50" />
-              <DropdownMenuItem className="text-red-600 py-2">
+              <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
+              <DropdownMenuItem className="text-red-600 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                 <LogOut className="mr-3 h-5 w-5" />
                 <span>{currentLanguage.code === 'vi' ? "Đăng xuất" : "Logout"}</span>
               </DropdownMenuItem>

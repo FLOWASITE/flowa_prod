@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Globe } from 'lucide-react';
 import {
@@ -6,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { languages } from '@/types/language';
 import { useToast } from '@/hooks/use-toast';
@@ -31,16 +31,13 @@ export function LanguageSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Globe className="h-5 w-5" />
-          <span className="sr-only">Select language</span>
-        </Button>
+        <Globe className="h-5 w-5 cursor-pointer text-gray-700 dark:text-gray-300" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[200px] bg-white">
+      <DropdownMenuContent align="end" className="w-[200px] bg-white dark:bg-gray-950 shadow-lg border border-gray-200 dark:border-gray-800">
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            className={`cursor-pointer ${currentLanguage.code === language.code ? 'bg-gray-100' : ''}`}
+            className={`cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${currentLanguage.code === language.code ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
             onSelect={(e) => {
               e.preventDefault();
               handleLanguageSelect(language);
@@ -48,7 +45,7 @@ export function LanguageSelector() {
           >
             <div className="flex flex-col">
               <span className="font-medium">{language.nativeName}</span>
-              <span className="text-sm text-gray-500">({language.name})</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">({language.name})</span>
             </div>
           </DropdownMenuItem>
         ))}
