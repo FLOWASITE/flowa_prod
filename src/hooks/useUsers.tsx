@@ -53,7 +53,15 @@ export function useUsers() {
         const userEmail = session?.data?.session?.user?.email;
         console.log("Current user email:", userEmail);
         
-        // For demonstration purposes, assign roles based on email
+        // For testing purposes, always check if URL contains a role param
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        if (roleParam === 'admin') {
+          console.log("Using URL param: admin role");
+          return 'admin';
+        }
+        
+        // Check against admin emails
         if (userEmail === 'davide@gmail.com' || userEmail === 'flowasite@gmail.com') {
           console.log("User is admin");
           return 'admin';
@@ -62,9 +70,9 @@ export function useUsers() {
         return 'staff';
       } catch (error) {
         console.error("Error getting user role:", error);
-        // For development, use a default role based on URL params or hardcoded value
+        // For development, use a default role based on URL params
         const urlParams = new URLSearchParams(window.location.search);
-        const role = urlParams.get('role') || 'admin'; // Default to admin for debugging
+        const role = urlParams.get('role') || 'staff'; // Default to staff for safety
         console.log("Using fallback role:", role);
         return role;
       }

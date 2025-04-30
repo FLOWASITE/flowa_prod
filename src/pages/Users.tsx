@@ -6,7 +6,6 @@ import { UserHeader } from '@/components/users/UserHeader';
 import { UserAccessControl } from '@/components/users/UserAccessControl';
 import { useUsers } from '@/hooks/useUsers';
 import { User } from '@/types';
-import { toast } from 'sonner';
 
 const Users = () => {
   const {
@@ -25,6 +24,19 @@ const Users = () => {
   useEffect(() => {
     console.log("Current user role in Users page:", currentUserRole);
   }, [currentUserRole]);
+
+  // Add URL parameters for testing if needed
+  useEffect(() => {
+    const addRoleParam = () => {
+      // This is just for development/testing
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.has('role')) {
+        console.log("No role param found - you can add ?role=admin to the URL for testing");
+      }
+    };
+    
+    addRoleParam();
+  }, []);
 
   return (
     <UserAccessControl

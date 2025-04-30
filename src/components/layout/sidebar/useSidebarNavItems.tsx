@@ -20,6 +20,7 @@ export type NavItem = {
   label: string;
   icon: React.ElementType;
   href: string;
+  requiredRole?: 'admin' | 'staff';
 };
 
 export const useSidebarNavItems = (currentLanguage: Language) => {
@@ -33,19 +34,35 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         const userEmail = session?.data?.session?.user?.email;
         console.log("Current user email:", userEmail);
         
-        // Force admin role for current user
-        console.log("Admin role forced for current user");
-        return 'admin';
+        // Check URL params first for testing
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        
+        if (roleParam === 'admin') {
+          console.log("Using URL param: admin role");
+          return 'admin';
+        }
+        
+        // Check against known admin emails
+        if (userEmail === 'davide@gmail.com' || userEmail === 'flowasite@gmail.com') {
+          console.log("User is admin from email check");
+          return 'admin';
+        }
+        
+        console.log("User is staff (default)");
+        return 'staff';
       } catch (error) {
         console.error("Error getting user role:", error);
-        return 'admin'; // Always return admin role
+        return 'staff';
       }
     },
   });
   
+  console.log("Current user role in sidebar:", userRole);
+  
   // Create navigation items based on user role and language
   const navItems = useMemo(() => {
-    const items: NavItem[] = [
+    const allItems: NavItem[] = [
       {
         label: getTranslation('dashboard', currentLanguage),
         icon: LayoutDashboard,
@@ -86,20 +103,27 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         icon: UserCircle,
         href: '/crm',
       },
-      // Always add Users menu item
       {
         label: getTranslation('users', currentLanguage),
         icon: Users,
         href: '/users',
+        requiredRole: 'admin',
       }
     ];
     
-    return items;
-  }, [currentLanguage]);
+    // Filter items based on user role
+    if (userRole === 'admin') {
+      // Admins can see all items
+      return allItems;
+    } else {
+      // Staff can only see items without requiredRole or with requiredRole='staff'
+      return allItems.filter(item => !item.requiredRole || item.requiredRole === 'staff');
+    }
+  }, [currentLanguage, userRole]);
   
   return {
     navItems,
-    userRole: 'admin', // Always return admin role
-    isRoleLoading: false
+    userRole,
+    isRoleLoading
   };
 };
