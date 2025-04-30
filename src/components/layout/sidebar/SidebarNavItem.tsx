@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { NavItem } from './useSidebarNavItems';
+import { Badge } from '@/components/ui/badge';
 
 type SidebarNavItemProps = {
   item: NavItem;
@@ -35,7 +36,35 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
             ? "text-primary" 
             : "text-gray-500"
         )} />
-        {!collapsed && <span className="ml-3">{item.label}</span>}
+        
+        {!collapsed && (
+          <div className="ml-3 flex items-center justify-between w-full">
+            <span>{item.label}</span>
+            {item.badge && (
+              <Badge 
+                variant="outline" 
+                className={cn(
+                  "ml-auto text-xs",
+                  item.badge.variant === "beta" && "bg-yellow-400 text-yellow-800 border-yellow-400"
+                )}
+              >
+                {item.badge.text}
+              </Badge>
+            )}
+          </div>
+        )}
+        
+        {collapsed && item.badge && (
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "absolute -top-1 -right-1 text-xs h-4 w-4 p-0 flex items-center justify-center",
+              item.badge.variant === "beta" && "bg-yellow-400 text-yellow-800 border-yellow-400"
+            )}
+          >
+            {item.badge.variant === "beta" ? "B" : item.badge.text}
+          </Badge>
+        )}
       </Link>
     </li>
   );

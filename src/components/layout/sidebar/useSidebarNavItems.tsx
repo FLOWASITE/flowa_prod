@@ -21,6 +21,10 @@ export type NavItem = {
   label: string;
   icon: React.ElementType;
   href: string;
+  badge?: {
+    text: string;
+    variant: 'beta' | 'new' | 'count';
+  };
 };
 
 export const useSidebarNavItems = (currentLanguage: Language) => {
@@ -71,6 +75,10 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         label: getTranslation('schedule', currentLanguage),
         icon: Calendar,
         href: '/schedule',
+        badge: {
+          text: 'Beta',
+          variant: 'beta',
+        }
       },
       {
         label: getTranslation('fileManager', currentLanguage),
