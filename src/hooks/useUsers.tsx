@@ -37,9 +37,23 @@ export function useUsers() {
   const { data: currentUserRole, isLoading: isRoleLoading } = useQuery({
     queryKey: ['currentUserRole'],
     queryFn: async () => {
-      // Always return admin role to ensure access
-      console.log("Admin role forced in Users page");
-      return 'admin';
+      try {
+        // Get current user email
+        const session = await api.supabase.auth.getSession();
+        const userEmail = session?.data?.session?.user?.email;
+        console.log("Current user email:", userEmail);
+        
+        // For demonstration purposes, assign roles based on email
+        if (userEmail === 'davide@gmail.com') {
+          return 'admin';
+        }
+        return 'staff';
+      } catch (error) {
+        console.error("Error getting user role:", error);
+        // For development, use a default role based on URL params or hardcoded value
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('role') || 'staff';
+      }
     },
   });
 
@@ -50,7 +64,7 @@ export function useUsers() {
       console.log("Returning mock user data");
       return mockUsers;
     },
-    enabled: true, // Always fetch users
+    enabled: currentUserRole === 'admin', // Only fetch users if current user is admin
   });
 
   // Mock mutation for updating user roles
@@ -131,9 +145,9 @@ export function useUsers() {
   };
 
   return {
-    currentUserRole: 'admin', // Always return admin role
+    currentUserRole,
     users,
-    isRoleLoading: false,
+    isRoleLoading,
     isLoading,
     isInviteDialogOpen,
     setIsInviteDialogOpen,
