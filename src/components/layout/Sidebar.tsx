@@ -7,7 +7,11 @@ import { SidebarNavigation } from './sidebar/SidebarNavigation';
 import { SidebarToggle } from './sidebar/SidebarToggle';
 import { useSidebarNavItems } from './sidebar/useSidebarNavItems';
 
-export function Sidebar() {
+interface SidebarProps {
+  onCollapsedChange?: (collapsed: boolean) => void;
+}
+
+export function Sidebar({ onCollapsedChange }: SidebarProps = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const { currentLanguage } = useLanguage();
   const { navItems, userRole } = useSidebarNavItems(currentLanguage);
@@ -17,7 +21,11 @@ export function Sidebar() {
     console.log("Current user role in sidebar:", userRole);
   }, [userRole]);
   
-  const toggleCollapsed = () => setCollapsed(!collapsed);
+  const toggleCollapsed = () => {
+    const newCollapsed = !collapsed;
+    setCollapsed(newCollapsed);
+    onCollapsedChange?.(newCollapsed);
+  };
   
   return (
     <aside 

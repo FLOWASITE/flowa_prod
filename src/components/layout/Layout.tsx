@@ -14,12 +14,17 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const handleCollapsedChange = (collapsed: boolean) => {
+    setSidebarCollapsed(collapsed);
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Desktop sidebar - always visible on desktop, now fixed */}
       <div className="hidden md:block fixed left-0 top-0 h-full z-30">
-        <Sidebar />
+        <Sidebar onCollapsedChange={handleCollapsedChange} />
       </div>
       
       {/* Mobile sidebar - shown in a sheet when triggered */}
@@ -37,8 +42,13 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       )}
       
-      {/* Main content with padding to prevent overlap with fixed sidebar */}
-      <div className="flex-1 w-full md:ml-64">
+      {/* Main content with padding that adjusts based on sidebar state */}
+      <div 
+        className="flex-1 w-full transition-all duration-300"
+        style={{ 
+          marginLeft: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px' // 16px (w-16) or 64px (w-64) in pixels
+        }}
+      >
         <Header />
         <main className="p-3 md:p-6 min-h-[calc(100vh-4rem)]">
           {children}
