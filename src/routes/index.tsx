@@ -15,6 +15,7 @@ import AccountType from "@/pages/AccountType";
 import Register from "@/pages/Register";
 import Pricing from "@/pages/Pricing";
 import Invoices from "@/pages/Invoices";
+import ProfileSettings from "@/pages/ProfileSettings";
 
 export const router = createBrowserRouter([
   {
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
   {
     path: "/invoices",
     element: <Invoices />,
+  },
+  {
+    path: "/profile-settings",
+    element: <ProfileSettings />,
   },
   {
     path: "*",

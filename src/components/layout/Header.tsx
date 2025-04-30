@@ -146,6 +146,12 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
               </div>
               <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
               <DropdownMenuGroup>
+                <Link to="/profile-settings">
+                  <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                    <Settings className="mr-3 h-5 w-5" />
+                    <span>{currentLanguage.code === 'vi' ? "Cài đặt hồ sơ" : "Profile Settings"}</span>
+                  </DropdownMenuItem>
+                </Link>
                 <Link to="/pricing">
                   <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                     <Receipt className="mr-3 h-5 w-5" />
