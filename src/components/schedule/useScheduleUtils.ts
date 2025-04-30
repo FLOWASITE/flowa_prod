@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { format, addDays, startOfWeek } from 'date-fns';
+import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { Content } from '@/types/content';
 
@@ -12,10 +12,18 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStartDate, i));
   
   // Time slots from 9:00 to 18:00
-  const timeSlots = Array.from({ length: 13 }, (_, i) => {
-    const hour = i + 9;
-    return `${hour.toString().padStart(2, '0')}:00`;
-  });
+  const timeSlots = [
+    "09:00", 
+    "10:00", 
+    "11:00", 
+    "12:00", 
+    "13:00", 
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00"
+  ];
   
   // Navigate to previous week
   const goToPreviousWeek = () => {
@@ -44,16 +52,20 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     });
   };
   
-  // Format date range for header
+  // Format date range for header (e.g., "thg 4 28 - thg 5 4, 2025")
   const formatDateRange = () => {
     const endDate = addDays(weekStartDate, 6);
-    const startMonth = format(weekStartDate, 'MMM', { locale: vi });
-    const startDay = format(weekStartDate, 'd', { locale: vi });
-    const endMonth = format(endDate, 'MMM', { locale: vi });
-    const endDay = format(endDate, 'd', { locale: vi });
-    const year = format(endDate, 'yyyy', { locale: vi });
     
-    if (startMonth === endMonth) {
+    // Format in Vietnamese style
+    const startDay = format(weekStartDate, 'd');
+    const startMonth = `thg ${format(weekStartDate, 'M')}`;
+    
+    const endDay = format(endDate, 'd');
+    const endMonth = `thg ${format(endDate, 'M')}`;
+    
+    const year = format(endDate, 'yyyy');
+    
+    if (format(weekStartDate, 'M') === format(endDate, 'M')) {
       return `${startMonth} ${startDay} - ${endDay}, ${year}`;
     } else {
       return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
@@ -70,6 +82,3 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     formatDateRange
   };
 };
-
-// Add missing isSameDay function from date-fns
-import { isSameDay } from 'date-fns';

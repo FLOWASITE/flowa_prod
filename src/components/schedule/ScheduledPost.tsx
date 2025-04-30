@@ -15,8 +15,8 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
   const time = content.scheduledAt ? format(new Date(content.scheduledAt), 'HH:mm') : '';
   
   return (
-    <div className="mb-2 bg-white border rounded-md overflow-hidden shadow-sm">
-      <div className="p-3 pb-0">
+    <div className="mb-2 bg-white border rounded shadow-sm">
+      <div className="p-3 pb-2">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center">
             <div className="mr-2 flex gap-1">
@@ -64,7 +64,7 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
         </div>
         <div className="text-sm mb-2 line-clamp-2">{content.text}</div>
         {content.imageUrl && (
-          <div className="mb-2">
+          <div className="mb-1">
             <div className="flex items-center">
               <Mail className="h-4 w-4 mr-1 text-gray-500" />
               <span className="text-xs text-gray-500">Có hình ảnh</span>

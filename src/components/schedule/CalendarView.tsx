@@ -49,27 +49,41 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     });
   };
 
+  // Get day names in Vietnamese
+  const getDayName = (date: Date) => {
+    const dayMap: Record<number, string> = {
+      0: "Chủ Nhật",
+      1: "Thứ Hai",
+      2: "Thứ Ba", 
+      3: "Thứ Tư",
+      4: "Thứ Năm",
+      5: "Thứ Sáu",
+      6: "Thứ Bảy"
+    };
+    return dayMap[date.getDay()];
+  };
+
   return (
     <>
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           {/* Calendar header with days */}
-          <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b">
+          <div className="grid grid-cols-[60px_repeat(7,1fr)]">
             <div className="p-2"></div>
             {weekDates.map((date, index) => (
               <div 
                 key={index} 
-                className={`p-3 text-center border-l ${isSameDay(date, new Date()) ? 'bg-primary/5' : ''}`}
+                className={`p-3 text-center border ${isSameDay(date, new Date()) ? 'bg-rose-50' : 'bg-white'}`}
               >
-                <div className="text-sm text-gray-500">{format(date, 'EEEE', { locale: vi })}</div>
-                <div className="font-medium">{format(date, 'd', { locale: vi })}</div>
+                <div className="text-sm text-gray-500">{getDayName(date)}</div>
+                <div className="font-medium">{format(date, 'd')}</div>
               </div>
             ))}
           </div>
           
           {/* Time slots and content */}
           {timeSlots.map((timeSlot, slotIndex) => (
-            <div key={slotIndex} className="grid grid-cols-[60px_repeat(7,1fr)] border-b">
+            <div key={slotIndex} className="grid grid-cols-[60px_repeat(7,1fr)] border-t">
               {/* Time indicator */}
               <div className="p-2 text-sm text-gray-500 text-right pr-3 pt-3 border-r">
                 {timeSlot}
@@ -81,9 +95,9 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 return (
                   <div 
                     key={`${slotIndex}-${dateIndex}`} 
-                    className={`p-2 min-h-[100px] border-l relative ${
-                      isSameDay(date, new Date()) ? 'bg-primary/5' : ''
-                    }`}
+                    className={`p-2 min-h-[100px] border-r ${
+                      isSameDay(date, new Date()) ? 'bg-rose-50' : 'bg-white'
+                    } ${dateIndex === 6 ? '' : 'border-r'}`}
                   >
                     {contentForSlot.length > 0 ? (
                       contentForSlot.map((content, contentIndex) => 
