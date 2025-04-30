@@ -2,7 +2,7 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileInvoice, Download, Eye, Calendar, CreditCard } from 'lucide-react';
+import { FileText, Download, Eye, Calendar, CreditCard } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -107,7 +107,7 @@ const Invoices: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg flex items-center">
-                    <FileInvoice className="mr-2 h-5 w-5 text-primary" />
+                    <FileText className="mr-2 h-5 w-5 text-primary" />
                     {currentLanguage.code === 'vi' ? 'Lịch sử hóa đơn' : 'Invoice History'}
                   </CardTitle>
                   <CardDescription>

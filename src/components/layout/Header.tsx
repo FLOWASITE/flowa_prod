@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, Crown, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness, Receipt, FileInvoice } from 'lucide-react';
+import { Bell, Search, Crown, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness, Receipt, FileText } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -154,7 +154,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                 </Link>
                 <Link to="/invoices">
                   <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                    <FileInvoice className="mr-3 h-5 w-5" />
+                    <FileText className="mr-3 h-5 w-5" />
                     <span>{currentLanguage.code === 'vi' ? "Hóa đơn" : "Invoices"}</span>
                   </DropdownMenuItem>
                 </Link>
