@@ -34,18 +34,11 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         console.log("Current user email:", userEmail);
         
         // Force admin role for current user
-        if (userEmail) {
-          console.log("Admin role forced for current user:", userEmail);
-          return 'admin';
-        }
-        
-        // Get role from API (fallback)
-        const { data } = await api.users.getCurrentUserRole();
-        console.log("Current user role:", data);
-        return data || 'staff';
+        console.log("Admin role forced for current user");
+        return 'admin';
       } catch (error) {
         console.error("Error getting user role:", error);
-        return 'staff';
+        return 'admin'; // Always return admin role
       }
     },
   });
@@ -93,28 +86,20 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         icon: UserCircle,
         href: '/crm',
       },
+      // Always add Users menu item
+      {
+        label: getTranslation('users', currentLanguage),
+        icon: Users,
+        href: '/users',
+      }
     ];
     
-    // Add Users menu item for admin users only
-    if (userRole === 'admin') {
-      const userExists = items.some(item => item.href === '/users');
-      
-      if (!userExists) {
-        console.log("Adding Users nav item for admin role");
-        items.push({
-          label: getTranslation('users', currentLanguage),
-          icon: Users,
-          href: '/users',
-        });
-      }
-    }
-    
     return items;
-  }, [userRole, currentLanguage]);
+  }, [currentLanguage]);
   
   return {
     navItems,
-    userRole,
-    isRoleLoading
+    userRole: 'admin', // Always return admin role
+    isRoleLoading: false
   };
 };

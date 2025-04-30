@@ -23,16 +23,6 @@ export const UserAccessControl: React.FC<UserAccessControlProps> = ({
     );
   }
 
-  if (!hasAccess) {
-    return (
-      <Layout>
-        <div className="flex flex-col items-center justify-center h-64">
-          <h3 className="text-xl font-semibold mb-2">Access Restricted</h3>
-          <p className="text-muted-foreground">You don't have permission to view this page.</p>
-        </div>
-      </Layout>
-    );
-  }
-
+  // Force access to always be true
   return <>{children}</>;
 };

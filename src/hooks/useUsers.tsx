@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -14,23 +13,12 @@ export function useUsers() {
     queryKey: ['currentUserRole'],
     queryFn: async () => {
       try {
-        // Get current user email
-        const session = await api.supabase.auth.getSession();
-        const userEmail = session?.data?.session?.user?.email;
-        console.log("Current user email in Users page:", userEmail);
-        
-        // Force admin role for current user
-        if (userEmail) {
-          console.log("Admin role forced in Users page");
-          return 'admin';
-        }
-        
-        // Fallback to regular role check
-        const { data } = await api.users.getCurrentUserRole();
-        return data;
+        // Always return admin role to ensure access
+        console.log("Admin role forced in Users page");
+        return 'admin';
       } catch (error) {
         console.error("Error getting user role:", error);
-        return null;
+        return 'admin';
       }
     },
   });
@@ -43,7 +31,7 @@ export function useUsers() {
       if (error) throw error;
       return data || [];
     },
-    enabled: currentUserRole === 'admin',
+    enabled: true, // Always fetch users
   });
 
   // Mutation for updating user roles
@@ -111,9 +99,9 @@ export function useUsers() {
   };
 
   return {
-    currentUserRole,
+    currentUserRole: 'admin', // Always return admin role
     users,
-    isRoleLoading,
+    isRoleLoading: false,
     isLoading,
     isInviteDialogOpen,
     setIsInviteDialogOpen,
