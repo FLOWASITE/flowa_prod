@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
+import { Bell, Search, Badge, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -127,12 +127,12 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
               <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
               <DropdownMenuGroup>
                 <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                  <DollarSign className="mr-3 h-5 w-5" />
-                  <span>{currentLanguage.code === 'vi' ? "Định giá" : "Pricing"}</span>
+                  <Badge className="mr-3 h-5 w-5" />
+                  <span>{currentLanguage.code === 'vi' ? "Loại tài khoản" : "Account Type"}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                  <Settings className="mr-3 h-5 w-5" />
-                  <span>{currentLanguage.code === 'vi' ? "Thiết lập không gian làm việc" : "Workspace Settings"}</span>
+                  <BriefcaseBusiness className="mr-3 h-5 w-5" />
+                  <span>{currentLanguage.code === 'vi' ? "Quản lý thương hiệu" : "Brand Management"}</span>
                 </DropdownMenuItem>
                 <Link to="/users">
                   <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
