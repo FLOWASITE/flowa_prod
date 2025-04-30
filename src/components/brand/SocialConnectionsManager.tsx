@@ -29,7 +29,7 @@ export function SocialConnectionsManager() {
   
   // Mock brands
   const [brands, setBrands] = useState<Brand[]>([
-    { id: '1', name: 'Flowa' },
+    { id: '1', name: 'Kiểm toán TAF' },
     { id: '2', name: 'Sa Giang Riverside' },
     { id: '3', name: 'Thế giới di động' }
   ]);
@@ -41,7 +41,7 @@ export function SocialConnectionsManager() {
   const [connectedAccounts, setConnectedAccounts] = useState<SocialAccount[]>([
     {
       id: 1,
-      name: 'Flowa - Auto AI Content for Socials',
+      name: 'Kiểm toán TAF',
       type: 'Facebook Page',
       platform: 'facebook',
       running: true,
@@ -59,7 +59,7 @@ export function SocialConnectionsManager() {
     },
     {
       id: 3,
-      name: 'Flowa Official',
+      name: 'Kiểm toán TAF',
       type: 'Instagram Business',
       platform: 'instagram',
       running: false,
