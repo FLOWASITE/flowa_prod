@@ -173,7 +173,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                 <Link to="/social-connections">
                   <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                     <Share2 className="mr-3 h-5 w-5" />
-                    <span>{currentLanguage.code === 'vi' ? "Quản lý mạng xã hội" : "Social Media Management"}</span>
+                    <span>{currentLanguage.code === 'vi' ? "Quản lý kết nối" : "Connection Management"}</span>
                   </DropdownMenuItem>
                 </Link>
                 <Link to="/users">
