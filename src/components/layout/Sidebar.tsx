@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -179,21 +178,12 @@ export function Sidebar() {
       icon: UserCircle,
       href: '/crm',
     },
+    {
+      label: getTranslation('users'),
+      icon: Users,
+      href: '/users',
+    },
   ];
-
-  // Add Users menu item for admin users
-  if (userRole === 'admin') {
-    const userExists = navItems.some(item => item.href === '/users');
-    
-    if (!userExists) {
-      console.log("Adding Users nav item for admin role");
-      navItems.push({
-        label: getTranslation('users'),
-        icon: Users,
-        href: '/users',
-      });
-    }
-  }
   
   return (
     <aside 
