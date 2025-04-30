@@ -43,7 +43,7 @@ export const sidebarTranslations = {
     id: 'Chatbot AI'
   },
   schedule: {
-    vi: 'Lịch post',
+    vi: 'Lịch đăng bài',
     en: 'Post Schedule',
     fr: 'Calendrier de publication',
     es: 'Calendario de publicación',

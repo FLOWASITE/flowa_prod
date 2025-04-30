@@ -145,7 +145,7 @@ const Schedule = () => {
                         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity"
                       >
                         <Plus className="h-4 w-4 mr-1" />
-                        Add post
+                        Thêm bài viết
                       </Button>
                     )}
                   </div>
@@ -262,15 +262,15 @@ const Schedule = () => {
           <div className="flex justify-between items-center">
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold">Scheduler</h1>
+                <h1 className="text-3xl font-bold">Lịch đăng bài</h1>
                 <Badge variant="outline" className="bg-yellow-400 text-yellow-800">Beta</Badge>
               </div>
-              <p className="text-muted-foreground">Manage all your posts from one place.</p>
+              <p className="text-muted-foreground">Quản lý tất cả bài đăng từ một nơi.</p>
             </div>
             
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="bg-gray-100 px-3 py-1">
-                <span className="font-medium">1</span> / 2 Social accounts
+                <span className="font-medium">1</span> / 2 Tài khoản mạng xã hội
               </Badge>
               
               <div className="flex border rounded-full overflow-hidden">
@@ -280,7 +280,7 @@ const Schedule = () => {
                   onClick={() => setViewMode('calendar')}
                   className="rounded-none"
                 >
-                  Calendar
+                  Lịch
                 </Button>
                 <Button 
                   variant={viewMode === 'list' ? 'default' : 'ghost'} 
@@ -288,7 +288,7 @@ const Schedule = () => {
                   onClick={() => setViewMode('list')}
                   className="rounded-none"
                 >
-                  List
+                  Danh sách
                 </Button>
                 <Button 
                   variant={viewMode === 'overview' ? 'default' : 'ghost'} 
@@ -296,7 +296,7 @@ const Schedule = () => {
                   onClick={() => setViewMode('overview')}
                   className="rounded-none"
                 >
-                  Overview
+                  Tổng quan
                 </Button>
               </div>
             </div>
@@ -306,7 +306,7 @@ const Schedule = () => {
           <div className="mt-6 flex justify-between items-center">
             <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              Add time slot
+              Thêm khung giờ
             </Button>
             
             {viewMode === 'calendar' && (
@@ -335,16 +335,16 @@ const Schedule = () => {
                 
                 <div className="flex border rounded-full overflow-hidden">
                   <Button variant="ghost" size="sm" className="rounded-none">
-                    Day
+                    Ngày
                   </Button>
                   <Button variant="ghost" size="sm" className="rounded-none">
-                    4 Days
+                    4 Ngày
                   </Button>
                   <Button variant="default" size="sm" className="rounded-none">
-                    Week
+                    Tuần
                   </Button>
                   <Button variant="ghost" size="sm" className="rounded-none">
-                    Month
+                    Tháng
                   </Button>
                 </div>
               </div>
