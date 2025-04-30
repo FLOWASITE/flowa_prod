@@ -14,7 +14,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Changed to true as default
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Default to collapsed
 
   const handleCollapsedChange = (collapsed: boolean) => {
     setSidebarCollapsed(collapsed);
@@ -46,7 +46,7 @@ export function Layout({ children }: LayoutProps) {
       <div 
         className="fixed top-0 right-0 z-20 w-full transition-all duration-300"
         style={{ 
-          left: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px' // Adjust width based on sidebar state
+          left: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // Adjust width based on sidebar state
         }}
       >
         <Header sidebarCollapsed={sidebarCollapsed} />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
@@ -72,8 +71,9 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
           </div>
         </div>
         
-        <div className="flex items-center space-x-4 z-40">
-          {/* Enhanced Language Selector with hover effect */}
+        {/* Ensure these buttons are always visible regardless of sidebar state */}
+        <div className="flex items-center space-x-4 z-50">
+          {/* Language Selector */}
           <div className="relative group">
             <Button 
               variant="outline" 
@@ -86,7 +86,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
             <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
           </div>
           
-          {/* Enhanced Notification Button */}
+          {/* Notification Button */}
           <Button 
             variant="outline" 
             size="sm" 
@@ -96,7 +96,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
             <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
           </Button>
           
-          {/* Enhanced Profile Dropdown */}
+          {/* Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
