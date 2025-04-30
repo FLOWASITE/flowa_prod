@@ -7,6 +7,9 @@ import { toast } from 'sonner';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import PersonalInfoSection from '@/components/profile/PersonalInfoSection';
 import SettingsSection from '@/components/profile/SettingsSection';
+import { Button } from '@/components/ui/button';
+import { Share2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ProfileSettings = () => {
   const { currentLanguage } = useLanguage();
@@ -113,6 +116,15 @@ const ProfileSettings = () => {
         />
 
         <div className="space-y-8">
+          <div className="flex justify-end mb-2">
+            <Link to="/social-connections">
+              <Button variant="secondary" className="gap-2">
+                <Share2 className="h-4 w-4" />
+                {currentLanguage.code === 'vi' ? 'Quản lý mạng xã hội' : 'Manage Social Media'}
+              </Button>
+            </Link>
+          </div>
+
           <PersonalInfoSection
             firstName={firstName}
             lastName={lastName}
