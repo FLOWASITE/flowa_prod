@@ -39,8 +39,8 @@ export function ChatSidebar() {
   ];
 
   return (
-    <div className="border rounded-lg overflow-hidden h-full flex flex-col">
-      <div className="p-4 border-b bg-white dark:bg-gray-950 flex items-center justify-between">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="p-4 border-b bg-white dark:bg-gray-950 flex items-center justify-between sticky top-0 z-10">
         <h3 className="font-semibold">Hội thoại</h3>
         <div className="flex gap-2">
           <DropdownMenu>
@@ -68,7 +68,7 @@ export function ChatSidebar() {
         </div>
       </div>
       
-      <div className="p-4 border-b bg-white dark:bg-gray-950">
+      <div className="p-4 border-b bg-white dark:bg-gray-950 sticky top-16 z-10">
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
           <Input
@@ -82,16 +82,16 @@ export function ChatSidebar() {
       
       <Tabs 
         defaultValue="active" 
-        className="flex-1 flex flex-col"
+        className="flex-1 flex flex-col min-h-0"
         value={activeTab}
         onValueChange={setActiveTab}
       >
-        <TabsList className="w-full">
-          <TabsTrigger value="active" className="flex-1">
+        <TabsList className="w-full sticky top-[108px] z-10 rounded-none bg-white dark:bg-gray-950 border-b">
+          <TabsTrigger value="active" className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
             <MessagesSquare className="mr-2 h-4 w-4" />
             Đang hoạt động
           </TabsTrigger>
-          <TabsTrigger value="all" className="flex-1">
+          <TabsTrigger value="all" className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
             <Users className="mr-2 h-4 w-4" />
             Tất cả
           </TabsTrigger>
@@ -104,7 +104,7 @@ export function ChatSidebar() {
                 filteredConversations.map(conversation => (
                   <div 
                     key={conversation.id} 
-                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer"
+                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium">{conversation.customerName}</div>
@@ -140,7 +140,7 @@ export function ChatSidebar() {
                 filteredConversations.map(conversation => (
                   <div 
                     key={conversation.id} 
-                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer"
+                    className="p-4 hover:bg-gray-50 dark:hover:bg-gray-900 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-medium">{conversation.customerName}</div>

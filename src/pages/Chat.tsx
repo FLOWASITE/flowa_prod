@@ -108,15 +108,17 @@ const Chat = () => {
       <Card className="rounded-xl border shadow-md3-1 overflow-hidden h-[calc(100vh-220px)]">
         <div className="grid grid-cols-1 h-full">
           <div className="flex h-full overflow-hidden">
-            {/* Collapsible sidebar */}
+            {/* Fixed sidebar with its own scrollable content */}
             {showSidebar && (
-              <div className="w-full md:w-80 border-r bg-gray-50/70 dark:bg-gray-900/70 backdrop-blur-sm transition-all duration-300 ease-in-out">
-                <ChatSidebar />
+              <div className="w-full md:w-80 flex-shrink-0 border-r bg-gray-50/70 dark:bg-gray-900/70 backdrop-blur-sm h-full">
+                <div className="h-full flex flex-col">
+                  <ChatSidebar />
+                </div>
               </div>
             )}
             
-            <div className="flex-1 flex flex-col">
-              <div className="bg-white dark:bg-gray-950 p-4 border-b flex items-center justify-between">
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="bg-white dark:bg-gray-950 p-4 border-b flex items-center justify-between sticky top-0 z-10">
                 <div className="flex items-center gap-2">
                   {/* Toggle sidebar button */}
                   <Button 
@@ -165,7 +167,9 @@ const Chat = () => {
                 </div>
               </div>
               
-              <ChatWindow />
+              <div className="flex-1 overflow-y-auto">
+                <ChatWindow />
+              </div>
             </div>
           </div>
         </div>
