@@ -59,6 +59,68 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       "Chiến dịch truyền thông"
     ];
     
+    // Multiple posts for the same topic at 15:00 on Wednesday (Thứ Tư - 30/04)
+    if (date.getDate() === 30 && date.getMonth() === 3 && timeSlot === '15:00') {
+      const sharedTopicTitle = "Chiến dịch quảng cáo mùa hè";
+      return [
+        {
+          id: `sample-15-fb-${date}`,
+          topicId: "sample-topic-shared",
+          topicTitle: sharedTopicTitle,
+          platform: 'facebook',
+          text: `Bài đăng Facebook cho chiến dịch mùa hè`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(15, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: `sample-15-ig-${date}`,
+          topicId: "sample-topic-shared",
+          topicTitle: sharedTopicTitle,
+          platform: 'instagram',
+          text: `Bài đăng Instagram cho chiến dịch mùa hè`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(15, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: `sample-15-tt-${date}`,
+          topicId: "sample-topic-shared",
+          topicTitle: sharedTopicTitle,
+          platform: 'tiktok',
+          text: `Bài đăng TikTok cho chiến dịch mùa hè`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(15, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: `sample-15-li-${date}`,
+          topicId: "sample-topic-shared",
+          topicTitle: sharedTopicTitle,
+          platform: 'linkedin',
+          text: `Bài đăng LinkedIn cho chiến dịch mùa hè`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(15, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: `sample-15-tw-${date}`,
+          topicId: "sample-topic-shared",
+          topicTitle: sharedTopicTitle,
+          platform: 'twitter', 
+          text: `Bài đăng Twitter cho chiến dịch mùa hè`,
+          status: 'scheduled',
+          scheduledAt: new Date(date.setHours(15, 0, 0, 0)),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
+    }
+    
     // Thursday posts (Thứ Tư - 30/04)
     if (date.getDate() === 30 && date.getMonth() === 3) {
       if (timeSlot === '09:00') {

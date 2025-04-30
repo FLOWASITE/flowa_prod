@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { format, isSameDay } from 'date-fns';
 import { Plus } from 'lucide-react';
@@ -6,6 +7,7 @@ import { Content } from '@/types/content';
 import { ScheduledPost } from './ScheduledPost';
 import { SchedulePostDialog } from './SchedulePostDialog';
 import { useToast } from '@/hooks/use-toast';
+import { PostCard } from './PostCard';
 
 interface CalendarViewProps {
   weekDates: Date[];
@@ -63,12 +65,25 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     
     const topic = topics.find(t => t.id === content.topicId);
     if (topic) {
-      console.log("Found topic:", topic.title);
       return topic.title;
     } else {
-      console.log("Topic not found for ID:", content.topicId);
       return "Không có chủ đề";
     }
+  };
+
+  // Group content by topic
+  const groupContentByTopic = (contentList: Content[]) => {
+    const groupedContent: Record<string, Content[]> = {};
+    
+    contentList.forEach(content => {
+      const topicId = content.topicId || 'no-topic';
+      if (!groupedContent[topicId]) {
+        groupedContent[topicId] = [];
+      }
+      groupedContent[topicId].push(content);
+    });
+    
+    return groupedContent;
   };
 
   // Get day names in Vietnamese
@@ -91,6 +106,77 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     return date.getDate() === today.getDate() && 
            date.getMonth() === today.getMonth() && 
            date.getFullYear() === today.getFullYear();
+  };
+
+  // Render content for a specific slot
+  const renderSlotContent = (contentForSlot: Content[], date: Date, timeSlot: string) => {
+    if (contentForSlot.length === 0) {
+      return (
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity"
+          onClick={() => handleOpenNewPostDialog(date, timeSlot)}
+        >
+          <Plus className="h-4 w-4 mr-1" />
+          Thêm bài viết
+        </Button>
+      );
+    }
+
+    // Group content by topic ID
+    const groupedContent = groupContentByTopic(contentForSlot);
+    
+    return Object.keys(groupedContent).map((topicId, groupIndex) => {
+      const postsForTopic = groupedContent[topicId];
+      const firstPost = postsForTopic[0];
+      const topicTitle = getTopicTitle(firstPost);
+      
+      // If there's only one post for this topic, render it normally
+      if (postsForTopic.length === 1) {
+        return (
+          <ScheduledPost 
+            key={`single-${groupIndex}`}
+            content={firstPost}
+            onEdit={() => handleOpenEditDialog(firstPost)}
+            topicTitle={topicTitle}
+          />
+        );
+      }
+      
+      // If there are multiple posts for the same topic, render them in a group
+      return (
+        <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm">
+          {/* Topic header */}
+          <div className="px-3 pt-2 pb-1 border-b">
+            <div className="flex justify-between items-center">
+              <div className="text-sm font-medium">{topicTitle}</div>
+              <Badge variant="outline">
+                {postsForTopic.length} bài
+              </Badge>
+            </div>
+          </div>
+          
+          {/* Posts in the group */}
+          <div className="p-2">
+            {postsForTopic.map((post, postIndex) => (
+              <div 
+                key={`post-${postIndex}`} 
+                onClick={() => handleOpenEditDialog(post)}
+                className="cursor-pointer"
+              >
+                <PostCard 
+                  content={post}
+                  index={postIndex}
+                  topicTitle={topicTitle}
+                  isInGroup={true}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    });
   };
 
   return (
@@ -136,26 +222,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       isCurrentDay ? 'bg-rose-50' : 'bg-white'
                     } ${dateIndex < 6 ? 'border-r' : ''}`}
                   >
-                    {contentForSlot.length > 0 ? (
-                      contentForSlot.map((content, contentIndex) => (
-                        <ScheduledPost 
-                          key={contentIndex} 
-                          content={content} 
-                          onEdit={() => handleOpenEditDialog(content)}
-                          topicTitle={getTopicTitle(content)}
-                        />
-                      ))
-                    ) : (
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity"
-                        onClick={() => handleOpenNewPostDialog(date, timeSlot)}
-                      >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Thêm bài viết
-                      </Button>
-                    )}
+                    {renderSlotContent(contentForSlot, date, timeSlot)}
                   </div>
                 );
               })}

@@ -9,9 +9,15 @@ interface PostCardProps {
   content: Content;
   index: number;
   topicTitle?: string;
+  isInGroup?: boolean; // New prop to indicate if this card is part of a group
 }
 
-export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }) => {
+export const PostCard: React.FC<PostCardProps> = ({ 
+  content, 
+  index, 
+  topicTitle,
+  isInGroup = false 
+}) => {
   const borderColors = {
     'facebook': 'border-[#1877F2]',
     'instagram': 'border-[#DD2A7B]',
@@ -27,18 +33,20 @@ export const PostCard: React.FC<PostCardProps> = ({ content, index, topicTitle }
   // Use content's topicTitle if available, fallback to passed topicTitle, then to content.text
   const displayTitle = content.topicTitle || topicTitle || content.text?.substring(0, 20) + '...';
   
-  // Use a smaller, more compact icon size when displaying in calendar cells
+  // Even more compact when part of a group
   return (
     <div 
       key={index} 
-      className={`p-2 mb-1 rounded-md border-l-4 ${borderColor} bg-white hover:shadow-md transition-shadow`}
+      className={`p-2 mb-1 rounded-md border-l-4 ${borderColor} bg-white hover:shadow-md transition-shadow ${isInGroup ? 'border-l-2 py-1' : ''}`}
     >
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 shrink-0">
             <PlatformIcon platform={content.platform} size="small" />
           </div>
-          <div className="text-xs font-medium truncate max-w-[120px]">{displayTitle}</div>
+          <div className={`text-xs font-medium truncate ${isInGroup ? 'max-w-[100px]' : 'max-w-[120px]'}`}>
+            {isInGroup ? content.platform : displayTitle}
+          </div>
         </div>
         <Badge variant="outline" className="text-xs">
           {format(new Date(content.scheduledAt!), 'HH:mm')}
