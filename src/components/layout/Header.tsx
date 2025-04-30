@@ -17,6 +17,7 @@ import { LanguageSelector } from './LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { BrandSwitcher } from '../brand/BrandSwitcher';
 import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   sidebarCollapsed?: boolean;
@@ -133,10 +134,12 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                   <Settings className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Thiết lập không gian làm việc" : "Workspace Settings"}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                  <Users className="mr-3 h-5 w-5" />
-                  <span>{currentLanguage.code === 'vi' ? "Người dùng không gian làm việc" : "Workspace Users"}</span>
-                </DropdownMenuItem>
+                <Link to="/users">
+                  <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                    <Users className="mr-3 h-5 w-5" />
+                    <span>{currentLanguage.code === 'vi' ? "Người dùng" : "Users"}</span>
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                   <HelpCircle className="mr-3 h-5 w-5" />
                   <span>{currentLanguage.code === 'vi' ? "Trung tâm trợ giúp" : "Help Center"}</span>
