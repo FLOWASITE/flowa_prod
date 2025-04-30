@@ -32,26 +32,30 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
   useEffect(() => {
     // Get user information if available
     const getUserProfile = async () => {
-      const { data: session } = await supabase.auth.getSession();
-      if (session?.session?.user) {
-        setUserEmail(session.session.user.email || 'flowasite@gmail.com');
-        
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('first_name, last_name, avatar_url')
-          .eq('id', session.session.user.id)
-          .single();
+      try {
+        const { data: session } = await supabase.auth.getSession();
+        if (session?.session?.user) {
+          setUserEmail(session.session.user.email || 'flowasite@gmail.com');
           
-        if (profile) {
-          const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
-          if (fullName) {
-            setUserName(fullName);
-          }
-          
-          if (profile.avatar_url) {
-            setUserAvatar(profile.avatar_url);
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, avatar_url')
+            .eq('id', session.session.user.id)
+            .maybeSingle();
+            
+          if (profile) {
+            const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+            if (fullName) {
+              setUserName(fullName);
+            }
+            
+            if (profile.avatar_url) {
+              setUserAvatar(profile.avatar_url);
+            }
           }
         }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
       }
     };
     

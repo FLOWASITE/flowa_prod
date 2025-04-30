@@ -20,6 +20,10 @@ export const router = createBrowserRouter([
     element: <Dashboard />,
   },
   {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+  {
     path: "/brands",
     element: <Brands />,
   },
@@ -44,7 +48,7 @@ export const router = createBrowserRouter([
     element: <Chat />,
   },
   {
-    path: "/file-manager",
+    path: "/filemanager",
     element: <FileManager />,
   },
   {
