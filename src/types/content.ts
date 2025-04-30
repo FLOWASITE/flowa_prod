@@ -16,7 +16,7 @@ export interface Content {
   id: string;
   topicId: string;
   topicTitle?: string; // Added to store topic title directly
-  platform: 'facebook' | 'instagram' | 'tiktok' | 'threads' | 'linkedin';
+  platform: 'facebook' | 'instagram' | 'tiktok' | 'threads' | 'linkedin' | 'twitter' | 'youtube';
   text: string;
   imageUrl?: string;
   status: 'draft' | 'approved' | 'rejected' | 'scheduled' | 'published';

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { format, isSameDay } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Content } from '@/types/content';
 import { ScheduledPost } from './ScheduledPost';
 import { SchedulePostDialog } from './SchedulePostDialog';
