@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
-import { format, isSameDay, addDays } from 'date-fns';
-import { vi } from 'date-fns/locale';
-import { Button } from "@/components/ui/button";
+import { format, isSameDay } from 'date-fns';
 import { Plus } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import { Content } from '@/types/content';
 import { ScheduledPost } from './ScheduledPost';
 import { SchedulePostDialog } from './SchedulePostDialog';
@@ -45,7 +44,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     // For now, we'll just show a toast notification
     toast({
       title: editingPost ? "Bài viết đã được cập nhật" : "Bài viết đã được tạo",
-      description: `${format(post.scheduledAt!, 'HH:mm dd/MM/yyyy', { locale: vi })} - ${post.text?.substring(0, 30)}...`,
+      description: `${format(post.scheduledAt!, 'HH:mm dd/MM/yyyy')} - ${post.text?.substring(0, 30)}...`,
     });
   };
 
@@ -95,7 +94,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 return (
                   <div 
                     key={`${slotIndex}-${dateIndex}`} 
-                    className={`p-2 min-h-[100px] border-r ${
+                    className={`p-2 min-h-[100px] border-r relative ${
                       isSameDay(date, new Date()) ? 'bg-rose-50' : 'bg-white'
                     } ${dateIndex === 6 ? '' : 'border-r'}`}
                   >

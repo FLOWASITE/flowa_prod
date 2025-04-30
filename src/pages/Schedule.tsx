@@ -8,12 +8,16 @@ import { ScheduleHeader } from '@/components/schedule/ScheduleHeader';
 import { CalendarView } from '@/components/schedule/CalendarView';
 import { ListView } from '@/components/schedule/ListView';
 import { GridView } from '@/components/schedule/GridView';
+import { useContentFetch } from '@/hooks/useContentFetch';
 
 const Schedule = () => {
   const [viewMode, setViewMode] = useState<'calendar' | 'list' | 'grid' | 'overview'>('calendar');
   
+  // Sử dụng dữ liệu thực từ useContentFetch hoặc dữ liệu giả lập
+  const { content } = useContentFetch(true);
+  
   // Filter scheduled content
-  const scheduledContent = mockContents.filter(
+  const scheduledContent = content.filter(
     content => content.status === 'scheduled' && content.scheduledAt
   );
   

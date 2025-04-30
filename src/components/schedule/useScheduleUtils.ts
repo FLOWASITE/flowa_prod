@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
-import { vi } from 'date-fns/locale';
 import { Content } from '@/types/content';
 
 export const useScheduleUtils = (scheduledContent: Content[]) => {
@@ -41,8 +40,43 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
   const getScheduledContent = (date: Date, timeSlot: string): Content[] => {
     // Parse the time from the timeSlot string
     const [hours] = timeSlot.split(':').map(Number);
+
+    // Tạo dữ liệu mẫu theo ngày
+    const day = date.getDay();
     
-    return scheduledContent.filter(content => {
+    // Nếu là ngày hôm nay và giờ hiện tại (để hiển thị một số dữ liệu mẫu)
+    if (isSameDay(date, new Date()) && hours >= 9 && hours <= 11) {
+      // Tạo mẫu dữ liệu cho ngày hiện tại
+      return [{
+        id: `sample-${date}-${timeSlot}-1`,
+        topicId: "topic-1",
+        platform: hours % 2 === 0 ? 'facebook' : 'instagram',
+        text: `Bài đăng mẫu cho ${timeSlot} ngày ${format(date, 'dd/MM')}`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(hours, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }];
+    }
+    
+    // Tạo mẫu dữ liệu cho thứ 3 và thứ 5
+    if ((day === 2 || day === 4) && (hours === 13 || hours === 15)) {
+      const platform = day === 2 ? 'facebook' : 'linkedin';
+      return [{
+        id: `sample-${date}-${timeSlot}-2`,
+        topicId: "topic-2",
+        platform,
+        text: `Nội dung ${platform} lúc ${timeSlot} ngày ${format(date, 'dd/MM')}`,
+        imageUrl: platform === 'linkedin' ? 'image.jpg' : undefined,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(hours, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }];
+    }
+    
+    // Kết hợp dữ liệu mẫu với dữ liệu thực từ cơ sở dữ liệu
+    const realContent = scheduledContent.filter(content => {
       if (!content.scheduledAt) return false;
       const scheduledDate = new Date(content.scheduledAt);
       return (
@@ -50,6 +84,8 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
         scheduledDate.getHours() === hours
       );
     });
+    
+    return realContent;
   };
   
   // Format date range for header (e.g., "thg 4 28 - thg 5 4, 2025")

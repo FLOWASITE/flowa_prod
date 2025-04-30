@@ -15,7 +15,7 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
   const time = content.scheduledAt ? format(new Date(content.scheduledAt), 'HH:mm') : '';
   
   return (
-    <div className="mb-2 bg-white border rounded shadow-sm">
+    <div className="mb-2 bg-white border rounded shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={onEdit}>
       <div className="p-3 pb-2">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center">
@@ -43,14 +43,22 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({ content, onEdit })
           <div className="flex space-x-1">
             <button 
               className="text-gray-500 hover:bg-gray-100 p-1 rounded"
-              onClick={onEdit}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit && onEdit();
+              }}
             >
               <span className="sr-only">Sửa</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15 6L18 9M13 20H21M5 16L14 7L17 10L8 19L4 20L5 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <button className="text-gray-500 hover:bg-gray-100 p-1 rounded">
+            <button 
+              className="text-gray-500 hover:bg-gray-100 p-1 rounded"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
               <span className="sr-only">Xóa</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 7H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
