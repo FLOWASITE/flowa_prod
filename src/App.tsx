@@ -20,6 +20,7 @@ import AccountType from "./pages/AccountType";
 import Register from "./pages/Register";
 import Pricing from "./pages/Pricing";
 import Invoices from "./pages/Invoices";
+import ProfileSettings from "./pages/ProfileSettings";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -82,6 +83,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/invoices" element={<Invoices />} />
+              <Route path="/profile-settings" element={<ProfileSettings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
