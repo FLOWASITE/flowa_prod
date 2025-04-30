@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
@@ -71,8 +72,8 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
           </div>
         </div>
         
-        {/* Ensure these buttons are always visible regardless of sidebar state */}
-        <div className="flex items-center space-x-4 z-50">
+        {/* Header buttons - always visible with higher z-index */}
+        <div className="flex items-center space-x-4 z-50 relative">
           {/* Language Selector */}
           <div className="relative group">
             <Button 
