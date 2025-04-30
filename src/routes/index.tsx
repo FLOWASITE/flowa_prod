@@ -14,6 +14,7 @@ import NotFound from "@/pages/NotFound";
 import AccountType from "@/pages/AccountType";
 import Register from "@/pages/Register";
 import Pricing from "@/pages/Pricing";
+import Invoices from "@/pages/Invoices";
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ export const router = createBrowserRouter([
   {
     path: "/pricing",
     element: <Pricing />,
+  },
+  {
+    path: "/invoices",
+    element: <Invoices />,
   },
   {
     path: "*",

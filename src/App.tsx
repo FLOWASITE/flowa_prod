@@ -19,6 +19,7 @@ import FileManager from "./pages/FileManager";
 import AccountType from "./pages/AccountType";
 import Register from "./pages/Register";
 import Pricing from "./pages/Pricing";
+import Invoices from "./pages/Invoices";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -80,6 +81,7 @@ function App() {
               <Route path="/account-type" element={<AccountType />} />
               <Route path="/register" element={<Register />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/invoices" element={<Invoices />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
