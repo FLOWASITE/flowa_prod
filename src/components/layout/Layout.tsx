@@ -42,14 +42,24 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       )}
       
+      {/* Fixed header that stays visible when scrolling */}
+      <div 
+        className="fixed top-0 right-0 z-20 w-full transition-all duration-300"
+        style={{ 
+          left: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px' // Adjust width based on sidebar state
+        }}
+      >
+        <Header />
+      </div>
+
       {/* Main content with padding that adjusts based on sidebar state */}
       <div 
         className="flex-1 w-full transition-all duration-300"
         style={{ 
-          marginLeft: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px' // 16px (w-16) or 64px (w-64) in pixels
+          marginLeft: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // 16px (w-16) or 64px (w-64) in pixels
+          marginTop: '4rem' // Add top margin for fixed header (64px)
         }}
       >
-        <Header />
         <main className="p-3 md:p-6 min-h-[calc(100vh-4rem)]">
           {children}
         </main>

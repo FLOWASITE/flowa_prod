@@ -54,7 +54,7 @@ export function Header() {
   }, []);
   
   return (
-    <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-4 px-6">
+    <header className="border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm py-4 px-6 shadow-sm h-16">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-1">
           <BrandSwitcher />
