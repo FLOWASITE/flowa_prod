@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/integrations/supabase/client';
 import { Language } from '@/types/language';
-import { getTranslation } from './translations';
+import { getTranslation } from '@/components/layout/sidebar/translations';
 import { 
   LayoutDashboard, 
   BriefcaseBusiness, 
