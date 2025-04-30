@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { mockChatConversations } from '@/data/mockData';
@@ -10,10 +10,13 @@ import {
   MessagesSquare, 
   Settings, 
   Search, 
-  MessageCircle,
+  Zap, 
   BarChart3,
-  Zap,
-  RefreshCcw
+  RefreshCcw,
+  Pin,
+  ArrowUpDown,
+  PanelLeftOpen,
+  PanelRightOpen
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { 
@@ -32,6 +35,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { platformIcons } from '@/components/chat/PlatformIcons';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Chat = () => {
   const [activeConversations, setActiveConversations] = useState(
@@ -40,6 +45,7 @@ const Chat = () => {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [integrationDialogOpen, setIntegrationDialogOpen] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const filteredConversations = activeConversations.filter(conversation => {
     const matchesPlatform = selectedPlatform === 'all' || conversation.platform === selectedPlatform;
@@ -48,76 +54,122 @@ const Chat = () => {
     return matchesPlatform && matchesSearch;
   });
 
+  // Handle responsive sidebar
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setShowSidebar(false);
+      } else {
+        setShowSidebar(true);
+      }
+    };
+
+    // Set initial state
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <Layout>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">Chatbot AI</h1>
-          <p className="text-muted-foreground">Quản lý trò chuyện trên nhiều nền tảng</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Thống kê
-          </Button>
-          
-          <Dialog open={integrationDialogOpen} onOpenChange={setIntegrationDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" onClick={() => setIntegrationDialogOpen(true)}>
-                <Zap className="h-4 w-4 mr-2" />
-                Kết nối mới
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Kết nối nền tảng trò chuyện</DialogTitle>
-              </DialogHeader>
-              <PlatformIntegration />
-            </DialogContent>
-          </Dialog>
+      <div className="bg-gradient-to-r from-primary-container/50 to-secondary-container/30 rounded-lg p-6 mb-6 shadow-md3-1">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-primary">Chatbot AI</h1>
+            <p className="text-muted-foreground">Quản lý trò chuyện trên nhiều nền tảng</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" className="bg-white/80 backdrop-blur-sm">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Thống kê
+            </Button>
+            
+            <Dialog open={integrationDialogOpen} onOpenChange={setIntegrationDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="shadow-md3-1" onClick={() => setIntegrationDialogOpen(true)}>
+                  <Zap className="h-4 w-4 mr-2" />
+                  Kết nối mới
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px]">
+                <DialogHeader>
+                  <DialogTitle>Kết nối nền tảng trò chuyện</DialogTitle>
+                </DialogHeader>
+                <PlatformIntegration />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-220px)]">
-        <div className="lg:col-span-1">
-          <ChatSidebar />
-        </div>
-        
-        <div className="lg:col-span-3 border rounded-lg overflow-hidden flex flex-col">
-          <div className="bg-white dark:bg-gray-950 p-4 border-b flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold">Hỗ trợ khách hàng</h3>
-                <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
-                  {platformIcons['messenger']}
-                  <span className="ml-1">Messenger</span>
-                </Badge>
+      <Card className="rounded-xl border shadow-md3-1 overflow-hidden h-[calc(100vh-220px)]">
+        <div className="grid grid-cols-1 h-full">
+          <div className="flex h-full overflow-hidden">
+            {/* Collapsible sidebar */}
+            {showSidebar && (
+              <div className="w-full md:w-80 border-r bg-gray-50/70 dark:bg-gray-900/70 backdrop-blur-sm transition-all duration-300 ease-in-out">
+                <ChatSidebar />
               </div>
-              <p className="text-sm text-muted-foreground">Nguyễn Văn A - Online 2 phút trước</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon">
-                <RefreshCcw className="h-4 w-4" />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Settings className="h-4 w-4" />
+            )}
+            
+            <div className="flex-1 flex flex-col">
+              <div className="bg-white dark:bg-gray-950 p-4 border-b flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {/* Toggle sidebar button */}
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="lg:hidden mr-1"
+                    onClick={() => setShowSidebar(!showSidebar)}
+                  >
+                    {showSidebar ? <PanelLeftOpen className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Chỉnh sửa hội thoại</DropdownMenuItem>
-                  <DropdownMenuItem>Gán cho nhân viên</DropdownMenuItem>
-                  <DropdownMenuItem>Đánh dấu đã đọc</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-600">Kết thúc hội thoại</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold">Nguyễn Văn A</h3>
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                        {platformIcons['messenger']}
+                        <span className="ml-1">Messenger</span>
+                      </Badge>
+                      <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+                        Đang hoạt động
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Online 2 phút trước</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="icon">
+                    <RefreshCcw className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Pin className="h-4 w-4" />
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Chỉnh sửa hội thoại</DropdownMenuItem>
+                      <DropdownMenuItem>Gán cho nhân viên</DropdownMenuItem>
+                      <DropdownMenuItem>Đánh dấu đã đọc</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-600">Kết thúc hội thoại</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+              
+              <ChatWindow />
             </div>
           </div>
-          
-          <ChatWindow />
         </div>
-      </div>
+      </Card>
     </Layout>
   );
 };
