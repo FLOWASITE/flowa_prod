@@ -60,7 +60,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
   return (
     <header className="border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm py-4 px-6 shadow-sm h-16">
       <div className="flex items-center justify-between">
-        <div className={`flex items-center space-x-4 flex-1 transition-all duration-300`}>
+        <div className="flex items-center space-x-4 flex-1">
           <BrandSwitcher />
           <div className="relative max-w-md">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -72,8 +72,8 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
           </div>
         </div>
         
-        {/* Header action buttons with absolute positioning to ensure visibility */}
-        <div className="absolute right-6 top-4 flex items-center space-x-4">
+        {/* Header buttons with fixed positioning to ensure they're always visible */}
+        <div className="flex items-center space-x-4 relative z-50">
           {/* Language Selector */}
           <div className="relative group">
             <Button 
