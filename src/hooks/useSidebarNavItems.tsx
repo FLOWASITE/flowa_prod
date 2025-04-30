@@ -46,6 +46,8 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
     },
   });
   
+  console.log("Current user role:", userRole);
+  
   // Create navigation items based on user role and language
   const navItems = useMemo(() => {
     const allItems: NavItem[] = [

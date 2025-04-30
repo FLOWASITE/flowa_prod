@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { api } from '@/integrations/supabase/client';
@@ -45,17 +45,26 @@ export function useUsers() {
         
         // For demonstration purposes, assign roles based on email
         if (userEmail === 'davide@gmail.com') {
+          console.log("User is admin");
           return 'admin';
         }
+        console.log("User is staff");
         return 'staff';
       } catch (error) {
         console.error("Error getting user role:", error);
         // For development, use a default role based on URL params or hardcoded value
         const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('role') || 'staff';
+        const role = urlParams.get('role') || 'admin'; // Default to admin for debugging
+        console.log("Using fallback role:", role);
+        return role;
       }
     },
   });
+
+  // Log role for debugging
+  useEffect(() => {
+    console.log("Current user role in useUsers hook:", currentUserRole);
+  }, [currentUserRole]);
 
   // Return mock user data
   const { data: users, isLoading, error } = useQuery({
@@ -64,7 +73,7 @@ export function useUsers() {
       console.log("Returning mock user data");
       return mockUsers;
     },
-    enabled: currentUserRole === 'admin', // Only fetch users if current user is admin
+    enabled: true, // Always fetch users data for debugging
   });
 
   // Mock mutation for updating user roles
