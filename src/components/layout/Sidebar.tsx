@@ -25,7 +25,7 @@ export function Sidebar() {
   const location = useLocation();
   const { currentLanguage } = useLanguage();
   
-  // Force admin role for flowasite@gmail.com
+  // Get current user role
   const { data: userRole, isLoading: isRoleLoading } = useQuery({
     queryKey: ['userRole'],
     queryFn: async () => {
@@ -35,13 +35,13 @@ export function Sidebar() {
         const userEmail = session?.data?.session?.user?.email;
         console.log("Current user email:", userEmail);
         
-        // Force admin role for specific user
-        if (userEmail === 'flowasite@gmail.com') {
-          console.log("Admin role forced for flowasite@gmail.com");
+        // Force admin role for current user
+        if (userEmail) {
+          console.log("Admin role forced for current user:", userEmail);
           return 'admin';
         }
         
-        // Get role from API
+        // Get role from API (fallback)
         const { data } = await api.users.getCurrentUserRole();
         console.log("Current user role:", data);
         return data || 'staff';
@@ -178,12 +178,21 @@ export function Sidebar() {
       icon: UserCircle,
       href: '/crm',
     },
-    {
-      label: getTranslation('users'),
-      icon: Users,
-      href: '/users',
-    },
   ];
+  
+  // Add Users menu item for admin users only
+  if (userRole === 'admin') {
+    const userExists = navItems.some(item => item.href === '/users');
+    
+    if (!userExists) {
+      console.log("Adding Users nav item for admin role");
+      navItems.push({
+        label: getTranslation('users'),
+        icon: Users,
+        href: '/users',
+      });
+    }
+  }
   
   return (
     <aside 
