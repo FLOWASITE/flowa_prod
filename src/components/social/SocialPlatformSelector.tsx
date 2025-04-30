@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Youtube, Twitter, MessageSquare, Share2, Plus } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Youtube, Twitter, MessageSquare, Share2, Plus, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -14,8 +14,8 @@ export function SocialPlatformSelector() {
       en: 'Connect a new account',
     },
     addMore: {
-      vi: 'Thêm nhiều tài khoản mạng xã hội để tăng hiệu suất trực tuyến của bạn.',
-      en: 'Add more social accounts to increase your online performance.',
+      vi: 'Thêm nhiều tài khoản mạng xã hội để tăng hiệu suất trực tuyến của thương hiệu.',
+      en: 'Add more social accounts to increase your brand\'s online performance.',
     },
     new: {
       vi: 'Mới',
@@ -107,9 +107,9 @@ export function SocialPlatformSelector() {
   ];
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-800 border rounded-lg p-6">
       <div className="flex items-center space-x-2 mb-6">
-        <div className="bg-gray-100 rounded-full w-12 h-12 flex items-center justify-center">
+        <div className="bg-gray-100 dark:bg-gray-700 rounded-full w-12 h-12 flex items-center justify-center">
           <span className="font-medium">{t('availableConnections')}</span>
         </div>
         <div>
@@ -121,11 +121,11 @@ export function SocialPlatformSelector() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {socialPlatforms.map((platform) => (
           <div key={platform.name} className="space-y-2">
-            <div className="flex items-center gap-2 text-gray-700">
+            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
               <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
               <span>{platform.name}</span>
               {platform.isNew && (
-                <Badge variant="outline" className="text-xs bg-gray-100 border-gray-200">
+                <Badge variant="outline" className="text-xs bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
                   {t('new')}
                 </Badge>
               )}

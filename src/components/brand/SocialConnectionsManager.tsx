@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { SocialAccountsList } from '@/components/social/SocialAccountsList';
 import { SocialPlatformSelector } from '@/components/social/SocialPlatformSelector';
 import { ChatbotIntegrations } from '@/components/social/ChatbotIntegrations';
+import { Badge } from '@/components/ui/badge';
 
 type SocialAccount = {
   id: number;
@@ -77,10 +78,6 @@ export function SocialConnectionsManager() {
   ]);
 
   const translations = {
-    selectBrand: {
-      vi: 'Chọn thương hiệu',
-      en: 'Select brand'
-    },
     socialAccounts: {
       vi: 'Tài khoản mạng xã hội',
       en: 'Social Accounts'
@@ -88,11 +85,19 @@ export function SocialConnectionsManager() {
     chatbotIntegrations: {
       vi: 'Tích hợp Chatbot AI',
       en: 'AI Chatbot Integrations'
+    },
+    connectionCount: {
+      vi: (count: number) => `Có ${count} kết nối`,
+      en: (count: number) => `${count} connections`
     }
   };
 
-  const t = (key: keyof typeof translations) => {
-    return translations[key][currentLanguage.code] || translations[key].en;
+  const t = (key: keyof typeof translations, ...args: any[]) => {
+    const translation = translations[key][currentLanguage.code] || translations[key].en;
+    if (typeof translation === 'function') {
+      return translation(...args);
+    }
+    return translation;
   };
 
   // Filter accounts by selected brand
@@ -101,35 +106,22 @@ export function SocialConnectionsManager() {
 
   return (
     <div className="space-y-8">
-      {/* Brand selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-        <div className="w-full sm:w-64">
-          <Select value={selectedBrandId} onValueChange={setSelectedBrandId}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder={t('selectBrand')} />
-            </SelectTrigger>
-            <SelectContent>
-              {brands.map(brand => (
-                <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-          <TabsList className="grid grid-cols-2 w-full sm:w-[400px]">
-            <TabsTrigger value="social" className="flex items-center gap-2">
-              <Share2 className="h-4 w-4" />
-              {t('socialAccounts')}
-            </TabsTrigger>
-            <TabsTrigger value="chatbot" className="flex items-center gap-2">
-              <Bot className="h-4 w-4" />
-              {t('chatbotIntegrations')}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid grid-cols-2 w-full md:w-[400px] mb-4">
+          <TabsTrigger value="social" className="flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            <span>{t('socialAccounts')}</span>
+            <Badge variant="secondary" className="ml-1 bg-gray-100 dark:bg-gray-700 text-xs">
+              {filteredAccounts.length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="chatbot" className="flex items-center gap-2">
+            <Bot className="h-4 w-4" />
+            <span>{t('chatbotIntegrations')}</span>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       
       {/* Tab content */}
       <div>

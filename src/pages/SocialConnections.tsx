@@ -1,9 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SocialConnectionsManager } from '@/components/brand/SocialConnectionsManager';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { BrandSwitcher } from '@/components/brand/BrandSwitcher';
+import { Building2, Share2, Bot, Store } from 'lucide-react';
 
 const SocialConnections = () => {
   const { currentLanguage } = useLanguage();
@@ -20,6 +22,14 @@ const SocialConnections = () => {
     allConnected: {
       vi: 'Quản lý tài khoản',
       en: 'Account Management',
+    },
+    brandConnections: {
+      vi: 'Kết nối của thương hiệu',
+      en: 'Brand Connections',
+    },
+    selectBrandPrompt: {
+      vi: 'Chọn thương hiệu để xem và quản lý các kết nối',
+      en: 'Select a brand to view and manage connections'
     }
   };
   
@@ -36,8 +46,18 @@ const SocialConnections = () => {
             <p className="text-gray-500 mt-1">{t('description')}</p>
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-lg font-medium">{t('allConnected')}</h2>
+          {/* Brand Selection Area with improved UX */}
+          <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 mb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Store className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-medium">{t('brandConnections')}</h2>
+            </div>
+            
+            <p className="text-sm text-gray-500 mb-4">{t('selectBrandPrompt')}</p>
+            
+            <div className="flex items-center gap-4">
+              <BrandSwitcher />
+            </div>
           </div>
 
           <ScrollArea className="w-full">

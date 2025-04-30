@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { SocialAccountCard } from './SocialAccountCard';
 import { EmptySocialAccountState } from './EmptySocialAccountState';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Share2, Store } from 'lucide-react';
 
 interface SocialAccountsListProps {
   accounts: Array<{
@@ -25,6 +26,10 @@ export function SocialAccountsList({ accounts, brandName }: SocialAccountsListPr
     socialAccounts: {
       vi: 'Tài khoản mạng xã hội',
       en: 'Social Accounts'
+    },
+    brandAccounts: {
+      vi: 'Tài khoản mạng xã hội của',
+      en: 'Social Accounts for'
     }
   };
 
@@ -33,15 +38,21 @@ export function SocialAccountsList({ accounts, brandName }: SocialAccountsListPr
   };
 
   return (
-    <div className="space-y-4 mb-10">
-      <h2 className="text-lg font-medium">
-        {brandName} - {t('socialAccounts')}
-      </h2>
+    <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 space-y-4 mb-6">
+      <div className="flex items-center gap-2">
+        <Store className="h-5 w-5 text-blue-600" />
+        <Share2 className="h-5 w-5 text-primary" />
+        <h2 className="text-lg font-medium">
+          {`${t('brandAccounts')} ${brandName}`}
+        </h2>
+      </div>
       
       {accounts.length > 0 ? (
-        accounts.map(account => (
-          <SocialAccountCard key={account.id} account={account} />
-        ))
+        <div className="space-y-4">
+          {accounts.map(account => (
+            <SocialAccountCard key={account.id} account={account} />
+          ))}
+        </div>
       ) : (
         <EmptySocialAccountState />
       )}
