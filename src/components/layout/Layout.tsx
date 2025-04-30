@@ -22,8 +22,8 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Desktop sidebar - always visible on desktop, now fixed */}
-      <div className="hidden md:block fixed left-0 top-0 h-full z-20">
+      {/* Desktop sidebar - always visible on desktop, with lower z-index */}
+      <div className="hidden md:block fixed left-0 top-0 h-full z-10">
         <Sidebar onCollapsedChange={handleCollapsedChange} />
       </div>
       
@@ -42,9 +42,9 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       )}
       
-      {/* Fixed header that stays visible when scrolling, with higher z-index to ensure buttons visibility */}
+      {/* Fixed header with highest z-index to ensure it's always on top */}
       <div 
-        className="fixed top-0 right-0 z-30 w-full transition-all duration-300"
+        className="fixed top-0 right-0 z-50 w-full transition-all duration-300"
         style={{ 
           left: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // Adjust width based on sidebar state
         }}
