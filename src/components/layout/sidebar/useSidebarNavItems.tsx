@@ -14,6 +14,7 @@ import {
   Users,
   UserCircle,
   FolderTree,
+  MessageSquare,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -63,7 +64,7 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
       },
       {
         label: getTranslation('content', currentLanguage),
-        icon: Bot,  // Changed from Image to Bot for more AI relevance
+        icon: Bot,  // Using Bot for content
         href: '/content',
       },
       {
@@ -78,7 +79,7 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
       },
       {
         label: getTranslation('chat', currentLanguage),
-        icon: Bot,  // Changed from MessageCircle to Bot for more AI relevance
+        icon: MessageSquare,  // Changed to MessageSquare for chat, to differentiate from Content
         href: '/chat',
       },
       {
