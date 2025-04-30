@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { RecentTopics } from '@/components/dashboard/RecentTopics';
@@ -13,8 +14,10 @@ import {
 } from 'lucide-react';
 import { mockTopics } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { isSupabaseConnected } from '@/integrations/supabase/client';
+import { isSupabaseConnected, supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
+import { Brand } from '@/types';
+import { toast } from 'sonner';
 
 interface DashboardProps {
   backendStatus?: 'checking' | 'connected' | 'disconnected';
@@ -25,11 +28,74 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
   const [status, setStatus] = useState<'checking' | 'connected' | 'disconnected'>(
     initialStatus || 'checking'
   );
+  const [userName, setUserName] = useState<string>('Duy Vo');
+  const [currentBrand, setCurrentBrand] = useState<Brand | null>(null);
 
   useEffect(() => {
     if (initialStatus) {
       setStatus(initialStatus);
     }
+    
+    // Get user information if available
+    const getUserProfile = async () => {
+      const { data: session } = await supabase.auth.getSession();
+      if (session?.session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('id', session.session.user.id)
+          .single();
+          
+        if (profile) {
+          const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+          if (fullName) {
+            setUserName(fullName);
+          }
+        }
+      }
+    };
+    
+    // Get the most recent brand
+    const getLatestBrand = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('brands')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(1);
+          
+        if (error) {
+          console.error('Error fetching brands:', error);
+          return;
+        }
+        
+        if (data && data.length > 0) {
+          const brand: Brand = {
+            id: data[0].id,
+            name: data[0].name,
+            description: data[0].description,
+            logo: data[0].logo || undefined,
+            website: data[0].website || undefined,
+            colors: {
+              primary: data[0].primary_color,
+              secondary: data[0].secondary_color,
+            },
+            tone: data[0].tone || 'Professional',
+            themes: data[0].themes || [],
+            createdAt: new Date(data[0].created_at),
+            updatedAt: new Date(data[0].updated_at),
+          };
+          
+          setCurrentBrand(brand);
+        }
+      } catch (error) {
+        console.error('Error fetching latest brand:', error);
+      }
+    };
+    
+    getUserProfile();
+    getLatestBrand();
+    checkSupabaseConnection();
   }, [initialStatus]);
 
   const checkSupabaseConnection = async () => {
@@ -120,7 +186,12 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
   return (
     <Layout>
       <div className="mb-8">
-        <h1 className="text-4xl font-bold">Duy Vo</h1>
+        <h1 className="text-4xl font-bold">{userName}</h1>
+        {currentBrand && (
+          <p className="text-muted-foreground mt-2">
+            {currentLanguage.code === 'vi' ? 'Thương hiệu hiện tại' : 'Current Brand'}: <span className="font-medium">{currentBrand.name}</span>
+          </p>
+        )}
       </div>
 
       <OnboardingSteps />

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell, Search, DollarSign, Settings, LogOut, Users, HelpCircle } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -16,9 +16,42 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LanguageSelector } from './LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { BrandSwitcher } from '../brand/BrandSwitcher';
+import { supabase } from '@/integrations/supabase/client';
 
 export function Header() {
   const { currentLanguage } = useLanguage();
+  const [userName, setUserName] = useState('Duy Vo');
+  const [userEmail, setUserEmail] = useState('flowasite@gmail.com');
+  const [userAvatar, setUserAvatar] = useState('/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png');
+  
+  useEffect(() => {
+    // Get user information if available
+    const getUserProfile = async () => {
+      const { data: session } = await supabase.auth.getSession();
+      if (session?.session?.user) {
+        setUserEmail(session.session.user.email || 'flowasite@gmail.com');
+        
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('first_name, last_name, avatar_url')
+          .eq('id', session.session.user.id)
+          .single();
+          
+        if (profile) {
+          const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+          if (fullName) {
+            setUserName(fullName);
+          }
+          
+          if (profile.avatar_url) {
+            setUserAvatar(profile.avatar_url);
+          }
+        }
+      }
+    };
+    
+    getUserProfile();
+  }, []);
   
   return (
     <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-4 px-6">
@@ -47,20 +80,20 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar>
-                  <AvatarImage src="/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png" />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarImage src={userAvatar} />
+                  <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-80 bg-white/90 backdrop-blur-sm dark:bg-gray-950/90" align="end">
               <div className="flex items-center p-3 space-x-3">
                 <Avatar>
-                  <AvatarImage src="/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png" />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarImage src={userAvatar} />
+                  <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col space-y-0.5">
-                  <p className="text-sm font-medium">Duy Vo</p>
-                  <p className="text-xs text-gray-500">flowasite@gmail.com</p>
+                  <p className="text-sm font-medium">{userName}</p>
+                  <p className="text-xs text-gray-500">{userEmail}</p>
                 </div>
               </div>
               <DropdownMenuSeparator className="bg-gray-200/50 dark:bg-gray-700/50" />
