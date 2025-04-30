@@ -7,9 +7,6 @@ import { toast } from 'sonner';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import PersonalInfoSection from '@/components/profile/PersonalInfoSection';
 import SettingsSection from '@/components/profile/SettingsSection';
-import { Button } from '@/components/ui/button';
-import { Share2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const ProfileSettings = () => {
   const { currentLanguage } = useLanguage();
@@ -129,30 +126,6 @@ const ProfileSettings = () => {
             onPhoneNumberChange={(value) => handleFieldChange('phoneNumber', value)}
             currentLanguage={currentLanguage}
           />
-
-          {/* Brand Management Section with Social Media Management Button */}
-          <section>
-            <h2 className="text-xl font-medium mb-6">
-              {currentLanguage.code === 'vi' ? 'Quản lý thương hiệu' : 'Brand Management'}
-            </h2>
-            
-            <div className="space-y-4">
-              <p className="text-gray-500">
-                {currentLanguage.code === 'vi' 
-                  ? 'Kết nối và quản lý các tài khoản mạng xã hội của bạn' 
-                  : 'Connect and manage your social media accounts'}
-              </p>
-              
-              <div className="flex">
-                <Link to="/social-connections">
-                  <Button variant="secondary" className="gap-2">
-                    <Share2 className="h-4 w-4" />
-                    {currentLanguage.code === 'vi' ? 'Quản lý mạng xã hội' : 'Manage Social Media'}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </section>
 
           <SettingsSection currentLanguage={currentLanguage} />
         </div>
