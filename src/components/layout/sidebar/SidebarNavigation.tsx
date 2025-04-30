@@ -13,7 +13,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   collapsed
 }) => {
   return (
-    <nav className="flex-1 overflow-y-auto p-2">
+    <nav className="flex-1 overflow-y-auto p-2 scrollbar-thin">
       <ul className="space-y-1">
         {navItems.map((item) => (
           <SidebarNavItem 

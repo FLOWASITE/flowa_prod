@@ -32,7 +32,7 @@ const Topics = () => {
   
   return (
     <Layout>
-      <div className="space-y-8">
+      <div className="space-y-8 overflow-y-auto">
         {/* Topic Request Form Section */}
         <div>
           <TopicRequestForm />
@@ -73,6 +73,6 @@ const Topics = () => {
       </div>
     </Layout>
   );
-};
+}
 
 export default Topics;

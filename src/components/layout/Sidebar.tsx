@@ -22,7 +22,7 @@ export function Sidebar() {
   return (
     <aside 
       className={cn(
-        "min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-all duration-300 border-r border-gray-200 dark:border-gray-800",
+        "h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-all duration-300 border-r border-gray-200 dark:border-gray-800 overflow-y-auto",
         collapsed ? "w-16" : "w-64"
       )}
     >

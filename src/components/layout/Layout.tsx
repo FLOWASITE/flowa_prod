@@ -17,8 +17,8 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Desktop sidebar - always visible on desktop */}
-      <div className="hidden md:block">
+      {/* Desktop sidebar - always visible on desktop, now fixed */}
+      <div className="hidden md:block fixed left-0 top-0 h-full z-30">
         <Sidebar />
       </div>
       
@@ -37,9 +37,10 @@ export function Layout({ children }: LayoutProps) {
         </Sheet>
       )}
       
-      <div className="flex-1 w-full">
+      {/* Main content with padding to prevent overlap with fixed sidebar */}
+      <div className="flex-1 w-full md:ml-64">
         <Header />
-        <main className="p-3 md:p-6">
+        <main className="p-3 md:p-6 min-h-[calc(100vh-4rem)]">
           {children}
         </main>
       </div>
