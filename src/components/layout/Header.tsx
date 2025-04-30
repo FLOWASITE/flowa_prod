@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, Badge, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness } from 'lucide-react';
+import { Bell, Search, Badge, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness, Receipt } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -139,6 +139,12 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
               </div>
               <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
               <DropdownMenuGroup>
+                <Link to="/pricing">
+                  <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                    <Receipt className="mr-3 h-5 w-5" />
+                    <span>{currentLanguage.code === 'vi' ? "Bảng giá" : "Pricing"}</span>
+                  </DropdownMenuItem>
+                </Link>
                 <Link to="/account-type">
                   <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                     <Badge className="mr-3 h-5 w-5" />
