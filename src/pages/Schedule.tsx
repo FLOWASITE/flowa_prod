@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { mockContents } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Grid, List, Plus, LayoutGrid } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Grid, List, Plus, LayoutGrid, Mail, AlertCircle, Info } from 'lucide-react';
 import { format, addDays, startOfWeek, isSameDay, parse, getDay } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Content } from '@/types/content';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const Schedule = () => {
   const [viewMode, setViewMode] = useState<'calendar' | 'list' | 'grid' | 'overview'>('calendar');
@@ -20,7 +21,7 @@ const Schedule = () => {
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(weekStartDate, i));
   
   // Time slots from 9:00 to 18:00
-  const timeSlots = Array.from({ length: 10 }, (_, i) => {
+  const timeSlots = Array.from({ length: 13 }, (_, i) => {
     const hour = i + 9;
     return `${hour.toString().padStart(2, '0')}:00`;
   });
@@ -70,6 +71,109 @@ const Schedule = () => {
     } else {
       return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
     }
+  };
+  
+  const getPlatformIcon = (platform: string) => {
+    switch (platform) {
+      case 'facebook':
+        return (
+          <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+            f
+          </div>
+        );
+      case 'instagram':
+        return (
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 flex items-center justify-center text-white text-xs">
+            i
+          </div>
+        );
+      case 'tiktok':
+        return (
+          <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center text-white text-xs">
+            t
+          </div>
+        );
+      case 'threads':
+        return (
+          <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs">
+            th
+          </div>
+        );
+      case 'linkedin':
+        return (
+          <div className="w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center text-white text-xs">
+            in
+          </div>
+        );
+      default:
+        return (
+          <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-white text-xs">
+            ?
+          </div>
+        );
+    }
+  };
+  
+  const renderScheduledPost = (content: Content) => {
+    const time = content.scheduledAt ? format(new Date(content.scheduledAt), 'HH:mm') : '';
+    
+    return (
+      <div key={content.id} className="mb-2 bg-white border rounded-md overflow-hidden shadow-sm">
+        <div className="p-3 pb-0">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center">
+              <div className="mr-2 flex gap-1">
+                {getPlatformIcon(content.platform)}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <Info className="h-4 w-4 text-blue-500 cursor-help" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Nội dung không có chủ đề</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div>
+                <span className="text-sm font-semibold text-blue-600">
+                  {time}
+                </span>
+              </div>
+            </div>
+            <div className="flex space-x-1">
+              <button className="text-gray-500 hover:bg-gray-100 p-1 rounded">
+                <span className="sr-only">Sửa</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 6L18 9M13 20H21M5 16L14 7L17 10L8 19L4 20L5 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button className="text-gray-500 hover:bg-gray-100 p-1 rounded">
+                <span className="sr-only">Xóa</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M10 11V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14 11V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 7L6 19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 7V4C9 3.73478 9.10536 3.48043 9.29289 3.29289C9.48043 3.10536 9.73478 3 10 3H14C14.2652 3 14.5196 3.10536 14.7071 3.29289C14.8946 3.48043 15 3.73478 15 4V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div className="text-sm mb-2 line-clamp-2">{content.text}</div>
+          {content.imageUrl && (
+            <div className="mb-2">
+              <div className="flex items-center">
+                <Mail className="h-4 w-4 mr-1 text-gray-500" />
+                <span className="text-xs text-gray-500">Có hình ảnh</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
   
   const renderPostCard = (content: Content, key: number) => {
@@ -136,7 +240,7 @@ const Schedule = () => {
                   >
                     {contentForSlot.length > 0 ? (
                       contentForSlot.map((content, contentIndex) => 
-                        renderPostCard(content, contentIndex)
+                        renderScheduledPost(content)
                       )
                     ) : (
                       <Button 
@@ -304,7 +408,7 @@ const Schedule = () => {
           
           {/* Add time slot button */}
           <div className="mt-6 flex justify-between items-center">
-            <Button className="flex items-center gap-2">
+            <Button className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black">
               <Plus className="h-4 w-4" />
               Thêm khung giờ
             </Button>
