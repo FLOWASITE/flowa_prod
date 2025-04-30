@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ChevronDown, QuestionCircle } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 
 const ProfileSettings = () => {
@@ -234,7 +233,7 @@ const ProfileSettings = () => {
                 {currentLanguage.code === 'vi' ? 'Cài đặt' : 'Settings'}
               </h2>
               <Button className="rounded-full bg-yellow-500 hover:bg-yellow-600 text-white">
-                <QuestionCircle className="mr-2 h-5 w-5" />
+                <HelpCircle className="mr-2 h-5 w-5" />
                 {currentLanguage.code === 'vi' ? 'Hỏi ngay!' : 'Ask away!'}
               </Button>
             </div>
