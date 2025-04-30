@@ -7,9 +7,9 @@ import { getTranslation } from './translations';
 import { 
   LayoutDashboard, 
   BriefcaseBusiness, 
-  FileText, 
+  BookText, 
   Image, 
-  MessageCircle, 
+  Bot,
   Calendar,
   Users,
   UserCircle,
@@ -58,12 +58,12 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
       },
       {
         label: getTranslation('topics', currentLanguage),
-        icon: FileText,
+        icon: BookText,  // Changed from FileText to BookText for more AI/content relevance
         href: '/topics',
       },
       {
         label: getTranslation('content', currentLanguage),
-        icon: Image,
+        icon: Bot,  // Changed from Image to Bot for more AI relevance
         href: '/content',
       },
       {
@@ -78,7 +78,7 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
       },
       {
         label: getTranslation('chat', currentLanguage),
-        icon: MessageCircle,
+        icon: Bot,  // Changed from MessageCircle to Bot for more AI relevance
         href: '/chat',
       },
       {
