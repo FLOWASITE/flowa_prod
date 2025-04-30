@@ -34,10 +34,22 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         const userEmail = session?.data?.session?.user?.email;
         console.log("Current user email:", userEmail);
         
-        // For demonstration purposes, assign roles based on email
-        if (userEmail === 'davide@gmail.com') {
+        // Check URL params first for testing
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        
+        if (roleParam === 'admin') {
+          console.log("Using URL param: admin role");
           return 'admin';
         }
+        
+        // Check against known admin emails
+        if (userEmail === 'davide@gmail.com' || userEmail === 'flowasite@gmail.com') {
+          console.log("User is admin from email check");
+          return 'admin';
+        }
+        
+        console.log("User is staff (default)");
         return 'staff';
       } catch (error) {
         console.error("Error getting user role:", error);
@@ -46,7 +58,7 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
     },
   });
   
-  console.log("Current user role:", userRole);
+  console.log("Current user role in sidebar:", userRole);
   
   // Create navigation items based on user role and language
   const navItems = useMemo(() => {
