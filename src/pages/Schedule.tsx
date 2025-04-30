@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Content } from '@/types/content';
-import { useScheduleUtils } from '@/components/schedule/useScheduleUtils';
+import { useScheduleUtils } from '@/utils/schedule/useScheduleUtils';
 import { ScheduleHeader } from '@/components/schedule/ScheduleHeader';
-import { CalendarView } from '@/components/schedule/CalendarView';
+import { CalendarView } from '@/components/schedule/calendar/CalendarView';
 import { ListView } from '@/components/schedule/ListView';
 import { GridView } from '@/components/schedule/GridView';
 import { useContentFetch } from '@/hooks/useContentFetch';
