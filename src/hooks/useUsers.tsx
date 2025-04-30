@@ -30,6 +30,16 @@ export function useUsers() {
       role: 'staff',
       createdAt: '2025-04-15T00:00:00Z',
       lastSignIn: '2025-04-29T00:00:00Z'
+    },
+    {
+      id: '3',
+      email: 'flowasite@gmail.com',
+      firstName: 'Flow',
+      lastName: 'Site',
+      avatarUrl: '',
+      role: 'admin',
+      createdAt: '2025-04-30T00:00:00Z',
+      lastSignIn: '2025-04-30T00:00:00Z'
     }
   ];
 
@@ -44,7 +54,7 @@ export function useUsers() {
         console.log("Current user email:", userEmail);
         
         // For demonstration purposes, assign roles based on email
-        if (userEmail === 'davide@gmail.com') {
+        if (userEmail === 'davide@gmail.com' || userEmail === 'flowasite@gmail.com') {
           console.log("User is admin");
           return 'admin';
         }
