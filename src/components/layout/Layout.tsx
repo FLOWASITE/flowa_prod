@@ -49,7 +49,7 @@ export function Layout({ children }: LayoutProps) {
           left: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px' // Adjust width based on sidebar state
         }}
       >
-        <Header />
+        <Header sidebarCollapsed={sidebarCollapsed} />
       </div>
 
       {/* Main content with padding that adjusts based on sidebar state */}

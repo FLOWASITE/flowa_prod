@@ -18,7 +18,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { BrandSwitcher } from '../brand/BrandSwitcher';
 import { supabase } from '@/integrations/supabase/client';
 
-export function Header() {
+interface HeaderProps {
+  sidebarCollapsed?: boolean;
+}
+
+export function Header({ sidebarCollapsed = false }: HeaderProps) {
   const { currentLanguage } = useLanguage();
   const [userName, setUserName] = useState('Duy Vo');
   const [userEmail, setUserEmail] = useState('flowasite@gmail.com');
@@ -56,7 +60,7 @@ export function Header() {
   return (
     <header className="border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm py-4 px-6 shadow-sm h-16">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4 flex-1">
+        <div className={`flex items-center space-x-4 flex-1 transition-all duration-300 ${sidebarCollapsed ? 'pl-0' : 'pl-0 md:pl-4'}`}>
           <BrandSwitcher />
           <div className="relative max-w-md">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -68,7 +72,7 @@ export function Header() {
           </div>
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className={`flex items-center space-x-4 transition-all duration-300 ${sidebarCollapsed ? 'mr-0' : 'mr-0 md:mr-4'}`}>
           {/* Enhanced Language Selector with hover effect */}
           <div className="relative group">
             <Button 

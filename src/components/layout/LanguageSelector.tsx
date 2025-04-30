@@ -31,9 +31,12 @@ export function LanguageSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Globe className="h-5 w-5 cursor-pointer text-gray-700 dark:text-gray-300" />
+        <Globe className="h-5 w-5 cursor-pointer text-gray-700 dark:text-gray-300 transition-colors hover:text-primary" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[200px] bg-white dark:bg-gray-950 shadow-lg border border-gray-200 dark:border-gray-800">
+      <DropdownMenuContent 
+        align="end" 
+        className="w-[200px] bg-white dark:bg-gray-950 shadow-lg border border-gray-200 dark:border-gray-800 z-50"
+      >
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
