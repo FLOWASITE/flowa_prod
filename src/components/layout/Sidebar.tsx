@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onCollapsedChange }: SidebarProps = {}) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true); // Changed to true as default
   const { currentLanguage } = useLanguage();
   const { navItems, userRole } = useSidebarNavItems(currentLanguage);
   
@@ -20,6 +20,11 @@ export function Sidebar({ onCollapsedChange }: SidebarProps = {}) {
   useEffect(() => {
     console.log("Current user role in sidebar:", userRole);
   }, [userRole]);
+  
+  // Notify parent component about initial collapsed state
+  useEffect(() => {
+    onCollapsedChange?.(collapsed);
+  }, []);
   
   const toggleCollapsed = () => {
     const newCollapsed = !collapsed;

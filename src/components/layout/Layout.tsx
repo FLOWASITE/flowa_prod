@@ -14,7 +14,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Changed to true as default
 
   const handleCollapsedChange = (collapsed: boolean) => {
     setSidebarCollapsed(collapsed);
