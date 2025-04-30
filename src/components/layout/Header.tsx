@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, Badge, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness, Receipt } from 'lucide-react';
+import { Bell, Search, Crown, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness, Receipt } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -139,7 +139,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                   <p className="text-xs text-gray-500 dark:text-gray-400">{userEmail}</p>
                 </div>
                 
-                {/* Account Type Badge - Positioned to the right */}
+                {/* Account Type Badge - Now clickable */}
                 <div className="ml-auto">
                   <AccountTypeBadge type={accountType as any} size="md" />
                 </div>
@@ -150,12 +150,6 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                   <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
                     <Receipt className="mr-3 h-5 w-5" />
                     <span>{currentLanguage.code === 'vi' ? "Bảng giá" : "Pricing"}</span>
-                  </DropdownMenuItem>
-                </Link>
-                <Link to="/account-type">
-                  <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-                    <Badge className="mr-3 h-5 w-5" />
-                    <span>{currentLanguage.code === 'vi' ? "Loại tài khoản" : "Account Type"}</span>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem className="py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">

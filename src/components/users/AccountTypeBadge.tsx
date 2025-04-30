@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { Badge } from "lucide-react";
+import { Crown, Star, Award, Diamond } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 type AccountType = 'free' | 'basic' | 'professional' | 'enterprise';
 
@@ -10,13 +11,15 @@ interface AccountTypeBadgeProps {
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
   className?: string;
+  clickable?: boolean;
 }
 
 export function AccountTypeBadge({ 
   type = 'free', 
   size = 'md', 
   showLabel = true,
-  className 
+  className,
+  clickable = true
 }: AccountTypeBadgeProps) {
   const sizeClasses = {
     sm: 'h-6 w-6',
@@ -28,32 +31,32 @@ export function AccountTypeBadge({
     free: {
       color: 'bg-gray-200 text-gray-700',
       gradient: 'from-gray-200 to-gray-300',
-      icon: <Badge className="h-3 w-3" />,
+      icon: <Star className="h-3 w-3" />,
       label: 'Free'
     },
     basic: {
       color: 'bg-blue-200 text-blue-700',
       gradient: 'from-blue-200 to-blue-300',
-      icon: <Badge className="h-3 w-3" />,
+      icon: <Award className="h-3 w-3" />,
       label: 'Basic'
     },
     professional: {
       color: 'bg-primary text-white',
       gradient: 'from-primary via-primary-container to-secondary-container',
-      icon: <Badge className="h-3 w-3" />,
+      icon: <Crown className="h-3 w-3" />,
       label: 'Professional'
     },
     enterprise: {
       color: 'bg-purple-600 text-white',
       gradient: 'from-purple-400 to-purple-700',
-      icon: <Badge className="h-3 w-3" />,
+      icon: <Diamond className="h-3 w-3" />,
       label: 'Enterprise'
     }
   };
 
   const config = typeConfig[type];
-
-  return (
+  
+  const badgeContent = (
     <div className={cn("flex items-center gap-2", className)}>
       <div 
         className={cn(
@@ -79,5 +82,13 @@ export function AccountTypeBadge({
         </span>
       )}
     </div>
+  );
+
+  return clickable ? (
+    <Link to="/account-type" className="hover:opacity-80 transition-opacity">
+      {badgeContent}
+    </Link>
+  ) : (
+    badgeContent
   );
 }

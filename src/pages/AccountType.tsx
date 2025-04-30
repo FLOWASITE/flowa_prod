@@ -2,7 +2,7 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card } from '@/components/ui/card';
-import { Badge, CircleUser } from 'lucide-react';
+import { Crown, CircleUser } from 'lucide-react';
 import { AccountTypeBadge } from '@/components/users/AccountTypeBadge';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -46,7 +46,7 @@ const AccountType = () => {
                 
                 {/* Position the account badge on the bottom right of the avatar */}
                 <div className="absolute -bottom-2 -right-2">
-                  <AccountTypeBadge type={accountType as any} size="lg" showLabel={false} />
+                  <AccountTypeBadge type={accountType as any} size="lg" showLabel={false} clickable={false} />
                 </div>
               </div>
               
@@ -55,7 +55,7 @@ const AccountType = () => {
               </h2>
               
               <div className="flex items-center justify-center mt-2">
-                <AccountTypeBadge type={accountType as any} size="md" />
+                <AccountTypeBadge type={accountType as any} size="md" clickable={false} />
               </div>
               
               <div className="mt-6">
@@ -71,7 +71,7 @@ const AccountType = () => {
           {/* Features card */}
           <Card className="p-6 md:col-span-2 bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-4">
-              <Badge className="h-5 w-5 text-primary" />
+              <Crown className="h-5 w-5 text-primary" />
               <h2 className="text-xl font-bold">
                 {currentLanguage.code === 'vi' ? 'Tính năng Professional' : 'Professional Features'}
               </h2>
