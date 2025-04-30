@@ -50,12 +50,21 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     const isToday = date.getDate() === currentDay && date.getMonth() === currentMonth;
     
     // Handle the specific posts shown in the example image
+    // These are the topic IDs from mockTopics in the mockData.ts file
+    const validTopicIds = [
+      "topic-1", 
+      "topic-2", 
+      "topic-3", 
+      "topic-4", 
+      "topic-5"
+    ];
+    
     // Thursday posts (Thứ Tư - 30/04)
     if (date.getDate() === 30 && date.getMonth() === 3) {
       if (timeSlot === '09:00') {
         return [{
           id: `sample-09-${date}`,
-          topicId: "topic-1",
+          topicId: validTopicIds[0], // Using valid topic ID from mockData
           platform: 'instagram',
           text: `Bài đăng mẫu cho 09:00 ngày 30/04`,
           status: 'scheduled',
@@ -68,7 +77,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '10:00') {
         return [{
           id: `sample-10-${date}`,
-          topicId: "topic-2",
+          topicId: validTopicIds[1], // Using valid topic ID from mockData
           platform: 'facebook',
           text: `Bài đăng mẫu cho 10:00 ngày 30/04`,
           status: 'scheduled',
@@ -81,7 +90,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
       if (timeSlot === '11:00') {
         return [{
           id: `sample-11-${date}`,
-          topicId: "topic-3",
+          topicId: validTopicIds[2], // Using valid topic ID from mockData
           platform: 'instagram',
           text: `Bài đăng mẫu cho 11:00 ngày 30/04`,
           status: 'scheduled',
@@ -96,7 +105,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     if (date.getDate() === 29 && date.getMonth() === 3 && timeSlot === '13:00') {
       return [{
         id: `sample-13-${date}`,
-        topicId: "topic-4",
+        topicId: validTopicIds[3], // Using valid topic ID from mockData
         platform: 'facebook',
         text: `Nội dung facebook lúc 13:00 ngày 29/04`,
         status: 'scheduled',
@@ -110,7 +119,7 @@ export const useScheduleUtils = (scheduledContent: Content[]) => {
     if (date.getDate() === 1 && date.getMonth() === 4 && timeSlot === '13:00') {
       return [{
         id: `sample-13-${date}`,
-        topicId: "topic-5",
+        topicId: validTopicIds[4], // Using valid topic ID from mockData
         platform: 'linkedin',
         text: `Nội dung linkedin lúc 13:00 ngày 01/05`,
         imageUrl: 'image.jpg',

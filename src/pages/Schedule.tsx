@@ -14,10 +14,12 @@ import { useTopicsFetch } from '@/hooks/useTopicsFetch';
 const Schedule = () => {
   const [viewMode, setViewMode] = useState<'calendar' | 'list' | 'grid' | 'overview'>('calendar');
   
-  // Use real data from useContentFetch and useTopicsFetch
+  // Use real data from useContentFetch and useTopicsFetch with useLocalData=true
   const { content } = useContentFetch(true);
   const { topics } = useTopicsFetch(true);
   
+  console.log("Available topics in Schedule:", topics);
+
   // Filter scheduled content
   const scheduledContent = content.filter(
     content => content.status === 'scheduled' && content.scheduledAt

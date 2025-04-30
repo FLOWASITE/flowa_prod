@@ -51,10 +51,19 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
     setDialogOpen(false);
   };
 
-  // Get topic title by topic ID
+  // Get topic title by topic ID - improved to include better logging
   const getTopicTitle = (topicId: string) => {
+    console.log("Looking for topic with ID:", topicId);
+    console.log("Available topics:", topics);
+    
     const topic = topics.find(t => t.id === topicId);
-    return topic ? topic.title : "Không có chủ đề";
+    if (topic) {
+      console.log("Found topic:", topic.title);
+      return topic.title;
+    } else {
+      console.log("Topic not found for ID:", topicId);
+      return "Không có chủ đề";
+    }
   };
 
   // Get day names in Vietnamese
