@@ -18,6 +18,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { BrandSwitcher } from '../brand/BrandSwitcher';
 import { supabase } from '@/lib/supabase';
 import { Link } from 'react-router-dom';
+import { AccountTypeBadge } from '../users/AccountTypeBadge';
 
 interface HeaderProps {
   sidebarCollapsed?: boolean;
@@ -28,6 +29,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
   const [userName, setUserName] = useState('Duy Vo');
   const [userEmail, setUserEmail] = useState('flowasite@gmail.com');
   const [userAvatar, setUserAvatar] = useState('/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png');
+  const [accountType, setAccountType] = useState('professional');
   
   useEffect(() => {
     // Get user information if available
@@ -135,6 +137,11 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                 <div className="flex flex-col space-y-0.5">
                   <p className="text-sm font-medium">{userName}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">{userEmail}</p>
+                </div>
+                
+                {/* Account Type Badge - Positioned to the right */}
+                <div className="ml-auto">
+                  <AccountTypeBadge type={accountType as any} size="md" />
                 </div>
               </div>
               <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />
