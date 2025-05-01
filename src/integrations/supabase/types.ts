@@ -9,6 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          active: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          key: string
+          name: string
+          permissions: string[]
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key: string
+          name: string
+          permissions?: string[]
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key?: string
+          name?: string
+          permissions?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      api_logs: {
+        Row: {
+          client_ip: string | null
+          created_at: string
+          endpoint: string
+          id: string
+          method: string
+          request_body: Json | null
+          response_body: Json | null
+          status_code: number
+          user_id: string | null
+        }
+        Insert: {
+          client_ip?: string | null
+          created_at?: string
+          endpoint: string
+          id?: string
+          method: string
+          request_body?: Json | null
+          response_body?: Json | null
+          status_code: number
+          user_id?: string | null
+        }
+        Update: {
+          client_ip?: string | null
+          created_at?: string
+          endpoint?: string
+          id?: string
+          method?: string
+          request_body?: Json | null
+          response_body?: Json | null
+          status_code?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       brand_knowledge: {
         Row: {
           brand_id: string
@@ -539,6 +608,41 @@ export type Database = {
             columns: ["brand_id"]
             isOneToOne: false
             referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rate_limits: {
+        Row: {
+          api_key_id: string | null
+          created_at: string
+          endpoint: string
+          id: string
+          requests_per_minute: number
+          updated_at: string
+        }
+        Insert: {
+          api_key_id?: string | null
+          created_at?: string
+          endpoint: string
+          id?: string
+          requests_per_minute?: number
+          updated_at?: string
+        }
+        Update: {
+          api_key_id?: string | null
+          created_at?: string
+          endpoint?: string
+          id?: string
+          requests_per_minute?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rate_limits_api_key_id_fkey"
+            columns: ["api_key_id"]
+            isOneToOne: false
+            referencedRelation: "api_keys"
             referencedColumns: ["id"]
           },
         ]

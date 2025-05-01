@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Content, Topic } from '@/types';
-import { supabase } from '@/lib/supabase';
+import { apiClient } from '@/api/apiClient';
 import { toast } from 'sonner';
 
 export const useContentActions = (useLocalData: boolean, topics: Topic[]) => {
@@ -28,12 +28,7 @@ export const useContentActions = (useLocalData: boolean, topics: Topic[]) => {
     
     toast.promise(
       async () => {
-        const { error } = await supabase
-          .from('content')
-          .delete()
-          .eq('id', contentId);
-        
-        if (error) throw error;
+        await apiClient.delete(`/content/${contentId}`);
         return true;
       },
       {
