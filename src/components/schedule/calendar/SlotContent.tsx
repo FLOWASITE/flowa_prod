@@ -71,23 +71,9 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         // Always render posts in a group style, even if there's only one post
         return (
           <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            {/* Topic header */}
-            <div className="px-3 pt-2 pb-1 border-b flex justify-between items-center">
+            {/* Topic header - removed edit/delete buttons as requested */}
+            <div className="px-3 py-2 border-b">
               <div className="text-sm font-medium">{topicTitle}</div>
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => handleOpenEditDialog(firstPost)}
-                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
-                >
-                  <Edit size={16} />
-                </button>
-                <button 
-                  onClick={() => handleDelete(firstPost)}
-                  className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
             </div>
             
             {/* Posts in the group */}
