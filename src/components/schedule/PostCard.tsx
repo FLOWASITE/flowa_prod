@@ -35,9 +35,6 @@ export const PostCard: React.FC<PostCardProps> = ({
   
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
   
-  // Display platform name (replace 'twitter' with 'X')
-  const displayPlatform = content.platform === 'twitter' ? 'X' : content.platform;
-  
   // Determine content types
   const hasImage = Boolean(content.imageUrl);
   const hasVideo = content.text?.includes('video') || false; // Example condition, adjust based on your data model
@@ -52,8 +49,8 @@ export const PostCard: React.FC<PostCardProps> = ({
     if (onDelete) onDelete();
   };
 
-  // Title to display
-  const displayTitle = isInGroup ? displayPlatform : (topicTitle || content.text?.substring(0, 20) + '...');
+  // Title to display - showing only topic title, not platform name
+  const displayTitle = isInGroup ? "" : (topicTitle || content.text?.substring(0, 20) + '...');
 
   return (
     <div 
@@ -67,9 +64,11 @@ export const PostCard: React.FC<PostCardProps> = ({
             <div className="w-4 h-4 shrink-0">
               <PlatformIcon platform={content.platform} size="small" />
             </div>
-            <div className="text-xs font-medium truncate max-w-[100px]">
-              {displayTitle}
-            </div>
+            {displayTitle && (
+              <div className="text-xs font-medium truncate max-w-[100px]">
+                {displayTitle}
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-1.5">
             <Badge variant="outline" className="text-xs py-0 h-5">

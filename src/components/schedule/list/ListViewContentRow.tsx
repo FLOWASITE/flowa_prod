@@ -65,7 +65,7 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
         </div>
       </TableCell>
       
-      {/* Social accounts column - Now just showing the icon */}
+      {/* Social accounts column - Only showing the icon */}
       <TableCell className="text-center">
         <div className="flex justify-center">
           <PlatformIcon platform={content.platform} size="small" />
