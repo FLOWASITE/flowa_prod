@@ -9,7 +9,7 @@ import { useTopicsFetch } from '@/hooks/useTopicsFetch';
 import { ListViewHeader } from './list/ListViewHeader';
 import { ListViewEmpty } from './list/ListViewEmpty';
 import { ListViewDayGroup } from './list/ListViewDayGroup';
-import { groupContentByDay, getTopicTitle, getTopicColor, topicColorMap } from './list/ListViewUtils';
+import { useListViewData } from '@/hooks/useListViewData';
 
 interface ListViewProps {
   scheduledContent: Content[];
@@ -27,35 +27,19 @@ export const ListView: React.FC<ListViewProps> = ({
 }) => {
   const { topics } = useTopicsFetch(true);
   
-  // Generate the content data for the week using the same data source as CalendarView
-  const allContent: Content[] = [];
-  
-  // Loop through each day of the week
-  let currentDate = new Date(weekStartDate);
-  while (currentDate <= weekEndDate) {
-    // Loop through each time slot
-    timeSlots.forEach(timeSlot => {
-      const contentForSlot = getScheduledContent(new Date(currentDate), timeSlot);
-      if (contentForSlot.length > 0) {
-        allContent.push(...contentForSlot);
-      }
-    });
-    
-    // Move to next day
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-  
-  // Group content by day using our utility function
-  const contentByDay = groupContentByDay(allContent);
-
-  // Create helper functions for topic title and color
-  const getTopicTitleForContent = (content: Content): string => {
-    return getTopicTitle(content, topics);
-  };
-
-  const getTopicColorForContent = (content: Content): string => {
-    return getTopicColor(content, topics, topicColorMap);
-  };
+  // Use our new hook to get the data
+  const { 
+    contentByDay, 
+    getTopicTitle, 
+    getTopicColor, 
+    isEmpty 
+  } = useListViewData({
+    weekStartDate,
+    weekEndDate,
+    getScheduledContent,
+    timeSlots,
+    topics
+  });
 
   return (
     <div className="rounded-md overflow-hidden border border-gray-200">
@@ -67,12 +51,12 @@ export const ListView: React.FC<ListViewProps> = ({
               key={date.toISOString()}
               date={date}
               dayContent={dayContent}
-              getTopicTitle={getTopicTitleForContent}
-              getTopicColor={getTopicColorForContent}
+              getTopicTitle={getTopicTitle}
+              getTopicColor={getTopicColor}
             />
           ))}
           
-          {Object.keys(contentByDay).length === 0 && <ListViewEmpty />}
+          {isEmpty && <ListViewEmpty />}
         </TableBody>
       </Table>
     </div>
