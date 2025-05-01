@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Youtube, X, MessageCircle, Globe, TrendingUp, Rss, Share2 } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Youtube, X, MessageCircle, Globe, TrendingUp, Rss, Share2, Music } from 'lucide-react';
 
 interface PlatformIconProps {
   platform: string;
@@ -66,7 +66,7 @@ export const PlatformIcon: React.FC<PlatformIconProps> = ({ platform, size = 'me
     case 'tiktok':
       return (
         <div className={`${container} rounded-full bg-black flex items-center justify-center text-white`}>
-          <span className={text}>TT</span>
+          <Music className={icon} />
         </div>
       );
     case 'threads':

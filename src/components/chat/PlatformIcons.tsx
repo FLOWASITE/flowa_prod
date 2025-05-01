@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MessageCircle, MessageSquare, Facebook, X, Linkedin, Send, PenLine, Instagram, Video } from 'lucide-react';
+import { MessageCircle, MessageSquare, Facebook, X, Linkedin, Send, PenLine, Instagram, Music } from 'lucide-react';
 
 export const platformIcons = {
   messenger: <Facebook className="h-4 w-4 text-blue-600" />,
@@ -9,7 +9,7 @@ export const platformIcons = {
   linkedin: <Linkedin className="h-4 w-4 text-blue-700" />,
   twitter: <X className="h-4 w-4 text-black" />, // Changed from Twitter to X icon
   telegram: <Send className="h-4 w-4 text-blue-500" />,
-  tiktok: <Video className="h-4 w-4 text-black" />,
+  tiktok: <Music className="h-4 w-4 text-black" />, // Updated from Video to Music
   instagram: <Instagram className="h-4 w-4 text-pink-600" />,
   facebook: <Facebook className="h-4 w-4 text-blue-600" />
 };
