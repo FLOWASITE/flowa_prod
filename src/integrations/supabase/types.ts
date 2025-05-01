@@ -98,10 +98,51 @@ export type Database = {
         }
         Relationships: []
       }
+      chatbot_integrations: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          id: string
+          platform: string
+          settings: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          platform: string
+          settings?: Json | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          platform?: string
+          settings?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_integrations_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content: {
         Row: {
           approved_at: string | null
           created_at: string
+          engagement_comments: number | null
+          engagement_likes: number | null
+          engagement_shares: number | null
           id: string
           image_url: string | null
           platform: string
@@ -110,11 +151,17 @@ export type Database = {
           status: string
           text: string
           topic_id: string | null
+          topic_title: string | null
           updated_at: string
+          video_thumbnail: string | null
+          video_url: string | null
         }
         Insert: {
           approved_at?: string | null
           created_at?: string
+          engagement_comments?: number | null
+          engagement_likes?: number | null
+          engagement_shares?: number | null
           id?: string
           image_url?: string | null
           platform: string
@@ -123,11 +170,17 @@ export type Database = {
           status: string
           text: string
           topic_id?: string | null
+          topic_title?: string | null
           updated_at?: string
+          video_thumbnail?: string | null
+          video_url?: string | null
         }
         Update: {
           approved_at?: string | null
           created_at?: string
+          engagement_comments?: number | null
+          engagement_likes?: number | null
+          engagement_shares?: number | null
           id?: string
           image_url?: string | null
           platform?: string
@@ -136,7 +189,10 @@ export type Database = {
           status?: string
           text?: string
           topic_id?: string | null
+          topic_title?: string | null
           updated_at?: string
+          video_thumbnail?: string | null
+          video_url?: string | null
         }
         Relationships: [
           {
@@ -480,6 +536,97 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "qa_pairs_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scheduling_preferences: {
+        Row: {
+          best_times: Json | null
+          brand_id: string | null
+          created_at: string
+          default_time_slots: string[] | null
+          id: string
+          posting_frequency: Json | null
+          updated_at: string
+        }
+        Insert: {
+          best_times?: Json | null
+          brand_id?: string | null
+          created_at?: string
+          default_time_slots?: string[] | null
+          id?: string
+          posting_frequency?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          best_times?: Json | null
+          brand_id?: string | null
+          created_at?: string
+          default_time_slots?: string[] | null
+          id?: string
+          posting_frequency?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduling_preferences_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_accounts: {
+        Row: {
+          access_token: string | null
+          account_type: string
+          brand_id: string | null
+          created_at: string
+          id: string
+          name: string
+          platform: string
+          refresh_token: string | null
+          status: string
+          token_expires_at: string | null
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          account_type: string
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          platform: string
+          refresh_token?: string | null
+          status: string
+          token_expires_at?: string | null
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          account_type?: string
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          platform?: string
+          refresh_token?: string | null
+          status?: string
+          token_expires_at?: string | null
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_accounts_brand_id_fkey"
             columns: ["brand_id"]
             isOneToOne: false
             referencedRelation: "brands"

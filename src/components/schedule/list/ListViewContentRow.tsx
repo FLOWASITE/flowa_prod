@@ -56,7 +56,7 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
   } else if (isPartial) {
     statusBadgeText = "Một phần";
     statusBadgeClass = "bg-blue-50 text-blue-600 border-blue-200";
-    StatusIcon = CircleDot;  // Using CircleDot instead of CircleHalf
+    StatusIcon = CircleDot;
   } else if (isFull) {
     statusBadgeText = "Đầy đủ";
     statusBadgeClass = "bg-green-50 text-green-600 border-green-200";
@@ -87,7 +87,7 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
       <TableCell>
         <div className="flex items-center space-x-2">
           <span className={`w-3 h-3 rounded-full ${topicColor}`}></span>
-          <span>{topicTitle}</span>
+          <span>{topicTitle || content.topicTitle || "Không có chủ đề"}</span>
         </div>
       </TableCell>
       

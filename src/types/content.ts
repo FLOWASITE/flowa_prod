@@ -15,15 +15,20 @@ export interface Topic {
 export interface Content {
   id: string;
   topicId: string;
-  topicTitle?: string; // Added to store topic title directly
+  topicTitle?: string; // Added field from database update
   platform: 'facebook' | 'instagram' | 'tiktok' | 'threads' | 'linkedin' | 'twitter' | 'youtube';
   text: string;
   imageUrl?: string;
-  videoUrl?: string; // Added video URL property
+  videoUrl?: string; // Added field from database update
+  videoThumbnail?: string; // Added field from database update
   status: 'draft' | 'approved' | 'rejected' | 'scheduled' | 'published';
   scheduledAt?: Date;
   publishedAt?: Date;
   approvedAt?: Date;
+  // Engagement metrics
+  engagementLikes?: number;
+  engagementComments?: number;
+  engagementShares?: number;
   createdAt: Date;
   updatedAt: Date;
 }

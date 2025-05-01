@@ -38,7 +38,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   // Determine content types
   const hasText = Boolean(content.text && content.text.trim().length > 0);
   const hasImage = Boolean(content.imageUrl);
-  const hasVideo = Boolean(content.videoUrl) || content.text?.includes('video');
+  const hasVideo = Boolean(content.videoUrl || content.videoThumbnail);
   
   // Define content status
   const isEmpty = !hasText && !hasImage && !hasVideo;
@@ -55,7 +55,7 @@ export const PostCard: React.FC<PostCardProps> = ({
     statusColor = "text-amber-500";
     bgColor = "bg-amber-50";
   } else if (isPartial) {
-    StatusIcon = CircleDot;  // Using CircleDot instead of CircleHalf
+    StatusIcon = CircleDot;
     statusColor = "text-blue-500";
     bgColor = "bg-blue-50";
   } else if (isFull) {
@@ -75,7 +75,8 @@ export const PostCard: React.FC<PostCardProps> = ({
   };
 
   // Title to display - showing only topic title, not platform name
-  const displayTitle = isInGroup ? "" : (topicTitle || content.text?.substring(0, 20) + '...');
+  // Using the new topicTitle field if available
+  const displayTitle = isInGroup ? "" : (topicTitle || content.topicTitle || content.text?.substring(0, 20) + '...');
 
   return (
     <div 
