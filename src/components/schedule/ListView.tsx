@@ -2,7 +2,7 @@
 import React from 'react';
 import { format, isSameDay } from 'date-fns';
 import { Content } from '@/types/content';
-import { MoreVertical } from 'lucide-react';
+import { MoreVertical, Image, Video } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTopicsFetch } from '@/hooks/useTopicsFetch';
+import { PlatformIcon } from '@/components/schedule/PlatformIcon';
 
 interface ListViewProps {
   scheduledContent: Content[];
@@ -116,8 +117,8 @@ export const ListView: React.FC<ListViewProps> = ({
             <TableHead className="w-16">Ngày</TableHead>
             <TableHead className="w-24">Thời gian</TableHead>
             <TableHead className="w-48">Chủ đề</TableHead>
-            <TableHead className="w-32">Mạng xã hội</TableHead>
-            <TableHead className="w-32">Loại bài</TableHead>
+            <TableHead className="w-16">Mạng XH</TableHead>
+            <TableHead className="w-20">Loại</TableHead>
             <TableHead>Nội dung</TableHead>
             <TableHead className="w-12"></TableHead>
           </TableRow>
@@ -139,6 +140,10 @@ export const ListView: React.FC<ListViewProps> = ({
               // Check if this is the first item of the day
               const isFirstOfDay = contentIdx === 0 || 
                 !isSameDay(new Date(content.scheduledAt!), new Date(dayContent[contentIdx - 1].scheduledAt!));
+              
+              // Check if content has image or video
+              const hasImage = content.imageUrl ? true : false;
+              const hasVideo = content.text?.includes('video') || false; // Simple example, adjust based on your actual data
               
               return (
                 <TableRow key={content.id} className="hover:bg-gray-50">
@@ -168,24 +173,34 @@ export const ListView: React.FC<ListViewProps> = ({
                     </div>
                   </TableCell>
                   
-                  {/* Social accounts column */}
-                  <TableCell>
-                    <Badge variant="outline" className="capitalize">
-                      {content.platform}
-                    </Badge>
+                  {/* Social accounts column - Now just showing the icon */}
+                  <TableCell className="text-center">
+                    <div className="flex justify-center">
+                      <PlatformIcon platform={content.platform} size="small" />
+                    </div>
                   </TableCell>
                   
-                  {/* Post type column */}
+                  {/* Post type column - Now with icons */}
                   <TableCell>
-                    {content.imageUrl ? (
-                      <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
-                        Hình ảnh
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
-                        Văn bản
-                      </Badge>
-                    )}
+                    <div className="flex items-center space-x-1">
+                      {hasImage && (
+                        <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1">
+                          <Image className="h-3 w-3" />
+                          <span>Hình</span>
+                        </Badge>
+                      )}
+                      {hasVideo && (
+                        <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 flex items-center gap-1">
+                          <Video className="h-3 w-3" />
+                          <span>Video</span>
+                        </Badge>
+                      )}
+                      {!hasImage && !hasVideo && (
+                        <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
+                          Văn bản
+                        </Badge>
+                      )}
+                    </div>
                   </TableCell>
                   
                   {/* Content column */}
