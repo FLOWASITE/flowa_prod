@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
+import { Edit, Trash2, FileText, Image, Video, Circle, CircleDot, CircleCheck } from 'lucide-react';
 import { Content } from '@/types/content';
 import { PlatformIcon } from './PlatformIcon';
 import { Badge } from '@/components/ui/badge';
@@ -57,7 +57,7 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({
   } else if (isPartial) {
     statusBadgeText = "Đã có một phần nội dung";
     statusBadgeClass = "bg-blue-50 text-blue-600 border-blue-200";
-    StatusIcon = CircleHalf;
+    StatusIcon = CircleDot;  // Using CircleDot instead of CircleHalf
     bgColor = "bg-blue-50";
   } else if (isFull) {
     statusBadgeText = "Đã có đầy đủ nội dung";

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Content } from '@/types/content';
-import { MoreVertical, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
+import { MoreVertical, FileText, Image, Video, Circle, CircleDot, CircleCheck } from 'lucide-react';
 import {
   TableCell,
   TableRow,
@@ -56,7 +56,7 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
   } else if (isPartial) {
     statusBadgeText = "Một phần";
     statusBadgeClass = "bg-blue-50 text-blue-600 border-blue-200";
-    StatusIcon = CircleHalf;
+    StatusIcon = CircleDot;  // Using CircleDot instead of CircleHalf
   } else if (isFull) {
     statusBadgeText = "Đầy đủ";
     statusBadgeClass = "bg-green-50 text-green-600 border-green-200";

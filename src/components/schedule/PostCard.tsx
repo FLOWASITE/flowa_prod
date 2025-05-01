@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
+import { Edit, Trash2, FileText, Image, Video, Circle, CircleDot, CircleCheck } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { PlatformIcon } from './PlatformIcon';
@@ -55,7 +55,7 @@ export const PostCard: React.FC<PostCardProps> = ({
     statusColor = "text-amber-500";
     bgColor = "bg-amber-50";
   } else if (isPartial) {
-    StatusIcon = CircleHalf;
+    StatusIcon = CircleDot;  // Using CircleDot instead of CircleHalf
     statusColor = "text-blue-500";
     bgColor = "bg-blue-50";
   } else if (isFull) {

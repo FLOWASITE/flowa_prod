@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
+import { Edit, Trash2, FileText, Image, Video, Circle, CircleDot, CircleCheck } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -59,7 +59,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
     statusText = "Chưa có nội dung";
   } else if (isPartial) {
     bgColor = "bg-blue-50";
-    StatusIcon = CircleHalf;
+    StatusIcon = CircleDot;  // Using CircleDot instead of CircleHalf
     statusColor = "text-blue-500";
     statusClass = "bg-blue-50 text-blue-600 border-blue-200";
     statusText = "Đã có một phần nội dung";
