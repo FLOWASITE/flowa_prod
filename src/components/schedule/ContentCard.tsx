@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, Image, Video, AlertCircle } from 'lucide-react';
+import { Edit, Trash2, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -35,19 +35,51 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
   
   // Determine content types
+  const hasText = Boolean(content.text && content.text.trim().length > 0);
   const hasImage = Boolean(content.imageUrl);
   const hasVideo = Boolean(content.videoUrl) || content.text?.includes('video');
-  const hasText = Boolean(content.text && content.text.trim().length > 0);
+  
+  // Define content status
   const isEmpty = !hasText && !hasImage && !hasVideo;
+  const isPartial = (hasText && !hasImage && !hasVideo) || (!hasText && (hasImage || hasVideo));
+  const isFull = hasText && (hasImage || hasVideo);
+  
+  // Choose color for card based on content status
+  let bgColor = "bg-white";
+  let StatusIcon = Circle;
+  let statusColor = "text-amber-500";
+  let statusClass = "bg-amber-50 text-amber-600 border-amber-200";
+  let statusText = "Chưa có nội dung";
+
+  if (isEmpty) {
+    bgColor = "bg-amber-50";
+    StatusIcon = Circle;
+    statusColor = "text-amber-500";
+    statusClass = "bg-amber-50 text-amber-600 border-amber-200";
+    statusText = "Chưa có nội dung";
+  } else if (isPartial) {
+    bgColor = "bg-blue-50";
+    StatusIcon = CircleHalf;
+    statusColor = "text-blue-500";
+    statusClass = "bg-blue-50 text-blue-600 border-blue-200";
+    statusText = "Đã có một phần nội dung";
+  } else if (isFull) {
+    bgColor = "bg-green-50";
+    StatusIcon = CircleCheck;
+    statusColor = "text-green-500";
+    statusClass = "bg-green-50 text-green-600 border-green-200";
+    statusText = "Đã có đầy đủ nội dung";
+  }
   
   return (
-    <Card className={`mb-2 overflow-hidden border-l-4 ${borderColor} shadow-sm hover:shadow-md transition-shadow`}>
+    <Card className={`mb-2 overflow-hidden border-l-4 ${borderColor} shadow-sm hover:shadow-md transition-shadow ${bgColor}`}>
       <CardContent className="p-3">
         {/* Header with platform, time and actions */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <PlatformIcon platform={content.platform} />
             <span className="text-xs font-medium">{time}</span>
+            <StatusIcon className={`h-4 w-4 ${statusColor}`} />
           </div>
           
           <div className="flex space-x-1">
@@ -83,30 +115,29 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       </CardContent>
       
       {/* Media indicators */}
-      <CardFooter className="px-3 py-1.5 bg-gray-50 flex gap-2">
-        {isEmpty && (
-          <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
-            <AlertCircle className="h-3 w-3" />
-            <span>Chưa có nội dung</span>
-          </Badge>
-        )}
-        {hasText && (
-          <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200 px-1.5 py-0.5 text-xs">
-            Text
-          </Badge>
-        )}
-        {hasImage && (
-          <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
-            <Image className="h-3 w-3" />
-            <span>Image</span>
-          </Badge>
-        )}
-        {hasVideo && (
-          <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
-            <Video className="h-3 w-3" />
-            <span>Video</span>
-          </Badge>
-        )}
+      <CardFooter className="px-3 py-1.5 flex gap-2">
+        <Badge variant="outline" className={`flex items-center gap-1 px-1.5 py-0.5 text-xs ${statusClass}`}>
+          <StatusIcon className="h-3 w-3" />
+          <span>{statusText}</span>
+        </Badge>
+        
+        <div className="flex gap-1">
+          {hasText && (
+            <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
+              <FileText className="h-3 w-3" />
+            </Badge>
+          )}
+          {hasImage && (
+            <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
+              <Image className="h-3 w-3" />
+            </Badge>
+          )}
+          {hasVideo && (
+            <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
+              <Video className="h-3 w-3" />
+            </Badge>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

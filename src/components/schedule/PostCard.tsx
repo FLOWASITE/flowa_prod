@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, Image, Video, AlertCircle } from 'lucide-react';
+import { Edit, Trash2, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { PlatformIcon } from './PlatformIcon';
@@ -36,9 +36,33 @@ export const PostCard: React.FC<PostCardProps> = ({
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
   
   // Determine content types
+  const hasText = Boolean(content.text && content.text.trim().length > 0);
   const hasImage = Boolean(content.imageUrl);
   const hasVideo = Boolean(content.videoUrl) || content.text?.includes('video');
-  const isEmpty = !content.text && !hasImage && !hasVideo;
+  
+  // Define content status
+  const isEmpty = !hasText && !hasImage && !hasVideo;
+  const isPartial = (hasText && !hasImage && !hasVideo) || (!hasText && (hasImage || hasVideo));
+  const isFull = hasText && (hasImage || hasVideo);
+  
+  // Choose status indicator and background color
+  let StatusIcon = Circle;
+  let statusColor = "text-amber-500"; // Empty (default)
+  let bgColor = "bg-white";
+
+  if (isEmpty) {
+    StatusIcon = Circle;
+    statusColor = "text-amber-500";
+    bgColor = "bg-amber-50";
+  } else if (isPartial) {
+    StatusIcon = CircleHalf;
+    statusColor = "text-blue-500";
+    bgColor = "bg-blue-50";
+  } else if (isFull) {
+    StatusIcon = CircleCheck;
+    statusColor = "text-green-500";
+    bgColor = "bg-green-50";
+  }
   
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,7 +80,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   return (
     <div 
       key={index} 
-      className={`mb-1 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow 
+      className={`mb-1 ${bgColor} border rounded-md shadow-sm hover:shadow-md transition-shadow 
         ${isInGroup ? 'border-l-2' : 'border-l-4'} ${borderColor}`}
     >
       <div className="p-1.5">
@@ -76,9 +100,12 @@ export const PostCard: React.FC<PostCardProps> = ({
               {format(new Date(content.scheduledAt!), 'HH:mm')}
             </Badge>
             
+            {/* Status indicator */}
+            <StatusIcon className={`h-3.5 w-3.5 ${statusColor}`} />
+            
             {/* Content type indicators */}
             <div className="flex gap-1">
-              {isEmpty && <AlertCircle className="h-3 w-3 text-amber-500" />}
+              {hasText && <FileText className="h-3 w-3 text-gray-500" />}
               {hasImage && <Image className="h-3 w-3 text-blue-500" />}
               {hasVideo && <Video className="h-3 w-3 text-red-500" />}
             </div>

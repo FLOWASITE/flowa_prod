@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Content } from '@/types/content';
-import { MoreVertical, Image, Video, AlertCircle } from 'lucide-react';
+import { MoreVertical, FileText, Image, Video, Circle, CircleHalf, CircleCheck } from 'lucide-react';
 import {
   TableCell,
   TableRow,
@@ -37,8 +37,31 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
   hasImage,
   hasVideo
 }) => {
-  const isEmpty = !content.text && !hasImage && !hasVideo;
   const hasText = Boolean(content.text && content.text.trim().length > 0);
+  
+  // Define content status
+  const isEmpty = !hasText && !hasImage && !hasVideo;
+  const isPartial = (hasText && !hasImage && !hasVideo) || (!hasText && (hasImage || hasVideo));
+  const isFull = hasText && (hasImage || hasVideo);
+  
+  // Select badge properties based on content status
+  let statusBadgeText = "Trống";
+  let statusBadgeClass = "bg-amber-50 text-amber-600 border-amber-200";
+  let StatusIcon = Circle;
+
+  if (isEmpty) {
+    statusBadgeText = "Trống";
+    statusBadgeClass = "bg-amber-50 text-amber-600 border-amber-200";
+    StatusIcon = Circle;
+  } else if (isPartial) {
+    statusBadgeText = "Một phần";
+    statusBadgeClass = "bg-blue-50 text-blue-600 border-blue-200";
+    StatusIcon = CircleHalf;
+  } else if (isFull) {
+    statusBadgeText = "Đầy đủ";
+    statusBadgeClass = "bg-green-50 text-green-600 border-green-200";
+    StatusIcon = CircleCheck;
+  }
   
   return (
     <TableRow key={content.id} className="hover:bg-gray-50">
@@ -75,30 +98,35 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
         </div>
       </TableCell>
       
-      {/* Post type column - Now with icons */}
+      {/* Content status column */}
       <TableCell>
         <div className="flex items-center space-x-1">
-          {isEmpty && (
-            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              <span>Trống</span>
+          <Badge variant="outline" className={`flex items-center gap-1 ${statusBadgeClass}`}>
+            <StatusIcon className="h-3 w-3" />
+            <span>{statusBadgeText}</span>
+          </Badge>
+        </div>
+      </TableCell>
+      
+      {/* Content types column */}
+      <TableCell>
+        <div className="flex gap-1">
+          {hasText && (
+            <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200">
+              <FileText className="h-3 w-3 mr-1" />
+              Văn bản
             </Badge>
           )}
           {hasImage && (
-            <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1">
-              <Image className="h-3 w-3" />
-              <span>Hình</span>
+            <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
+              <Image className="h-3 w-3 mr-1" />
+              Hình
             </Badge>
           )}
           {hasVideo && (
-            <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 flex items-center gap-1">
-              <Video className="h-3 w-3" />
-              <span>Video</span>
-            </Badge>
-          )}
-          {hasText && !isEmpty && !hasImage && !hasVideo && (
-            <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
-              Văn bản
+            <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
+              <Video className="h-3 w-3 mr-1" />
+              Video
             </Badge>
           )}
         </div>
