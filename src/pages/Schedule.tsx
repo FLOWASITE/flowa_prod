@@ -58,7 +58,7 @@ const Schedule = () => {
         {viewMode === 'list' && (
           <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">
             <Plus className="mr-1 h-4 w-4" />
-            Add time slot
+            Thêm khung giờ
           </Button>
         )}
         
@@ -77,6 +77,8 @@ const Schedule = () => {
               scheduledContent={scheduledContent} 
               weekStartDate={weekStartDate}
               weekEndDate={weekEndDate}
+              getScheduledContent={getScheduledContent}
+              timeSlots={timeSlots}
             />
           )}
           {viewMode === 'overview' && <GridView scheduledContent={scheduledContent} />}
