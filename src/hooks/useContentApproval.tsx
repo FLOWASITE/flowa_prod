@@ -5,6 +5,18 @@ import { apiClient } from '@/api/apiClient';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 
+interface FileTopic {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+interface Platform {
+  id: string;
+  name: string;
+  platform_type: string;
+}
+
 export const useContentApproval = () => {
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -22,14 +34,14 @@ export const useContentApproval = () => {
       await apiClient.post<Content>(`/content/${content.id}/approve`);
       
       // Check if the topic already exists in the file manager
-      const fileTopics = await apiClient.get<any[]>('/files/topics');
+      const fileTopics = await apiClient.get<FileTopic[]>('/files/topics');
       
       let fileTopicId;
       
       // If topic doesn't exist, create it
       const existingTopic = fileTopics.find(t => t.name === topic.title);
       if (!existingTopic) {
-        const newTopic = await apiClient.post('/files/topics', {
+        const newTopic = await apiClient.post<FileTopic>('/files/topics', {
           name: topic.title,
           description: topic.description || '',
         });
@@ -42,14 +54,14 @@ export const useContentApproval = () => {
       }
       
       // Check if platform exists for this topic
-      const platforms = await apiClient.get<any[]>(`/files/platforms?topic_id=${fileTopicId}`);
+      const platforms = await apiClient.get<Platform[]>(`/files/platforms?topic_id=${fileTopicId}`);
       
       // If platform doesn't exist, create it
       const existingPlatform = platforms.find(p => p.platform_type === content.platform);
       if (!existingPlatform) {
         const platformName = `${topic.title} - ${content.platform}`;
         
-        await apiClient.post('/files/platforms', {
+        await apiClient.post<Platform>('/files/platforms', {
           topic_id: fileTopicId,
           platform_type: content.platform,
           name: platformName,
@@ -61,7 +73,7 @@ export const useContentApproval = () => {
       
       // If content has image, create file entry
       if (content.imageUrl) {
-        const platformData = await apiClient.get<any[]>(`/files/platforms?topic_id=${fileTopicId}&platform_type=${content.platform}`);
+        const platformData = await apiClient.get<Platform[]>(`/files/platforms?topic_id=${fileTopicId}&platform_type=${content.platform}`);
         
         if (platformData.length > 0) {
           const platformId = platformData[0].id;
