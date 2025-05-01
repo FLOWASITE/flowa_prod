@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, Image, Video } from 'lucide-react';
+import { Edit, Trash2, Image, Video, AlertCircle } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { PlatformIcon } from './PlatformIcon';
@@ -37,7 +37,8 @@ export const PostCard: React.FC<PostCardProps> = ({
   
   // Determine content types
   const hasImage = Boolean(content.imageUrl);
-  const hasVideo = content.text?.includes('video') || false; // Example condition, adjust based on your data model
+  const hasVideo = Boolean(content.videoUrl) || content.text?.includes('video');
+  const isEmpty = !content.text && !hasImage && !hasVideo;
   
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -77,6 +78,7 @@ export const PostCard: React.FC<PostCardProps> = ({
             
             {/* Content type indicators */}
             <div className="flex gap-1">
+              {isEmpty && <AlertCircle className="h-3 w-3 text-amber-500" />}
               {hasImage && <Image className="h-3 w-3 text-blue-500" />}
               {hasVideo && <Video className="h-3 w-3 text-red-500" />}
             </div>

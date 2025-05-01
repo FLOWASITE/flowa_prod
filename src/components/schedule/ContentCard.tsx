@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, Image, Video } from 'lucide-react';
+import { Edit, Trash2, Image, Video, AlertCircle } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -36,8 +36,9 @@ export const ContentCard: React.FC<ContentCardProps> = ({
   
   // Determine content types
   const hasImage = Boolean(content.imageUrl);
-  const hasVideo = content.text?.includes('video') || false; // This is a placeholder, in a real system we'd have a proper field
+  const hasVideo = Boolean(content.videoUrl) || content.text?.includes('video');
   const hasText = Boolean(content.text && content.text.trim().length > 0);
+  const isEmpty = !hasText && !hasImage && !hasVideo;
   
   return (
     <Card className={`mb-2 overflow-hidden border-l-4 ${borderColor} shadow-sm hover:shadow-md transition-shadow`}>
@@ -77,12 +78,18 @@ export const ContentCard: React.FC<ContentCardProps> = ({
         
         {/* Topic title or content */}
         <div className="text-sm mt-2 line-clamp-2 font-medium">
-          {topicTitle || content.text}
+          {topicTitle || content.text || "Chưa có nội dung"}
         </div>
       </CardContent>
       
       {/* Media indicators */}
       <CardFooter className="px-3 py-1.5 bg-gray-50 flex gap-2">
+        {isEmpty && (
+          <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 flex items-center gap-1 px-1.5 py-0.5 text-xs">
+            <AlertCircle className="h-3 w-3" />
+            <span>Chưa có nội dung</span>
+          </Badge>
+        )}
         {hasText && (
           <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200 px-1.5 py-0.5 text-xs">
             Text

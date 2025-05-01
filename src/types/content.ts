@@ -19,6 +19,7 @@ export interface Content {
   platform: 'facebook' | 'instagram' | 'tiktok' | 'threads' | 'linkedin' | 'twitter' | 'youtube';
   text: string;
   imageUrl?: string;
+  videoUrl?: string; // Added video URL property
   status: 'draft' | 'approved' | 'rejected' | 'scheduled' | 'published';
   scheduledAt?: Date;
   publishedAt?: Date;

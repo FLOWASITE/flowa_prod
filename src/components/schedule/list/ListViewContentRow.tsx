@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Content } from '@/types/content';
-import { MoreVertical, Image, Video } from 'lucide-react';
+import { MoreVertical, Image, Video, AlertCircle } from 'lucide-react';
 import {
   TableCell,
   TableRow,
@@ -37,6 +37,9 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
   hasImage,
   hasVideo
 }) => {
+  const isEmpty = !content.text && !hasImage && !hasVideo;
+  const hasText = Boolean(content.text && content.text.trim().length > 0);
+  
   return (
     <TableRow key={content.id} className="hover:bg-gray-50">
       {/* Date column */}
@@ -75,6 +78,12 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
       {/* Post type column - Now with icons */}
       <TableCell>
         <div className="flex items-center space-x-1">
+          {isEmpty && (
+            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              <span>Trống</span>
+            </Badge>
+          )}
           {hasImage && (
             <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1">
               <Image className="h-3 w-3" />
@@ -87,7 +96,7 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
               <span>Video</span>
             </Badge>
           )}
-          {!hasImage && !hasVideo && (
+          {hasText && !isEmpty && !hasImage && !hasVideo && (
             <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
               Văn bản
             </Badge>
@@ -98,7 +107,9 @@ export const ListViewContentRow: React.FC<ListViewContentRowProps> = ({
       {/* Content column */}
       <TableCell>
         <div className="flex items-center">
-          <p className="text-sm truncate max-w-md">{content.text?.substring(0, 50)}...</p>
+          <p className="text-sm truncate max-w-md">
+            {content.text ? `${content.text.substring(0, 50)}...` : "Chưa có nội dung"}
+          </p>
         </div>
       </TableCell>
       

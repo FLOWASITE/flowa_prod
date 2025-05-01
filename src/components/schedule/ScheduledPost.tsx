@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2, Image, Video } from 'lucide-react';
+import { Edit, Trash2, Image, Video, AlertCircle } from 'lucide-react';
 import { Content } from '@/types/content';
 import { PlatformIcon } from './PlatformIcon';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +35,9 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({
   
   // Determine content types
   const hasImage = Boolean(content.imageUrl);
-  const hasVideo = content.text?.includes('video') || false; // Simple check, improve as needed
+  const hasVideo = Boolean(content.videoUrl) || content.text?.includes('video');
+  const hasText = Boolean(content.text && content.text.trim().length > 0);
+  const isEmpty = !hasText && !hasImage && !hasVideo;
   
   return (
     <div 
@@ -73,11 +75,17 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({
         
         {/* Topic title instead of post content */}
         <div className="text-sm mt-2 line-clamp-2 font-medium">
-          {topicTitle || content.text}
+          {topicTitle || content.text || "Chưa có nội dung"}
         </div>
         
         {/* Content type indicators */}
         <div className="mt-2 flex items-center gap-2">
+          {isEmpty && (
+            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 flex items-center gap-1 text-xs">
+              <AlertCircle className="h-3 w-3" />
+              <span>Chưa có nội dung</span>
+            </Badge>
+          )}
           {hasImage && (
             <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1 text-xs">
               <Image className="h-3 w-3" />

@@ -9,14 +9,21 @@ export const generateSamplePost = (
   hours: number, 
   platform: Content['platform'], 
   topicId: string, 
-  topicTitle: string
+  topicTitle: string,
+  hasImage: boolean = false,
+  hasVideo: boolean = false,
+  isEmpty: boolean = false
 ): Content => {
+  const text = isEmpty ? "" : `Bài đăng ${platform} cho ${topicTitle}`;
+  
   return {
     id: `sample-${hours}-${platform}-${date}`,
     topicId,
     topicTitle,
     platform,
-    text: `Bài đăng ${platform} cho ${topicTitle}`,
+    text: text,
+    imageUrl: hasImage ? 'image.jpg' : undefined,
+    videoUrl: hasVideo ? 'video.mp4' : undefined, // Added videoUrl property
     status: 'scheduled',
     scheduledAt: new Date(new Date(date).setHours(hours, 0, 0, 0)),
     createdAt: new Date(),
@@ -32,28 +39,29 @@ export const generateSharedTopicPosts = (date: Date): Content[] => {
     const hours = 15;
     
     return [
-      generateSamplePost(date, hours, 'facebook', topicId, sharedTopicTitle),
-      generateSamplePost(date, hours, 'instagram', topicId, sharedTopicTitle),
-      generateSamplePost(date, hours, 'tiktok', topicId, sharedTopicTitle),
-      generateSamplePost(date, hours, 'linkedin', topicId, sharedTopicTitle),
-      generateSamplePost(date, hours, 'twitter', topicId, sharedTopicTitle)
+      generateSamplePost(date, hours, 'facebook', topicId, sharedTopicTitle, true, false), // With image
+      generateSamplePost(date, hours, 'instagram', topicId, sharedTopicTitle, true, false), // With image
+      generateSamplePost(date, hours, 'tiktok', topicId, sharedTopicTitle, false, true), // With video
+      generateSamplePost(date, hours, 'linkedin', topicId, sharedTopicTitle, false, false), // Text only
+      generateSamplePost(date, hours, 'twitter', topicId, sharedTopicTitle, false, false) // Text only
     ];
   }
   return [];
 };
 
-// Generate multiple topics for the same time slot (NEW)
+// Generate multiple topics for the same time slot
 export const generateMultipleTopicsForTimeSlot = (date: Date, timeSlot: string): Content[] => {
   // Add multiple topics for Thursday (2nd May) at 14:00
   if (date.getDate() === 2 && date.getMonth() === 4 && timeSlot === "14:00") {
     return [
-      // Topic 1: Product Launch
+      // Topic 1: Product Launch - with image and text
       {
         id: `sample-14-topic1-fb-${date}`,
         topicId: "sample-topic-multiple-1",
         topicTitle: "Ra mắt sản phẩm mới",
         platform: 'facebook',
         text: `Thông báo ra mắt sản phẩm mới trên Facebook`,
+        imageUrl: 'image.jpg',
         status: 'scheduled',
         scheduledAt: new Date(date.setHours(14, 0, 0, 0)),
         createdAt: new Date(),
@@ -72,20 +80,20 @@ export const generateMultipleTopicsForTimeSlot = (date: Date, timeSlot: string):
         updatedAt: new Date(),
       },
       
-      // Topic 2: Promotion
+      // Topic 2: Promotion - empty content (waiting for content)
       {
         id: `sample-14-topic2-fb-${date}`,
         topicId: "sample-topic-multiple-2",
         topicTitle: "Chương trình khuyến mãi tháng 5",
         platform: 'facebook',
-        text: `Thông tin về chương trình khuyến mãi trên Facebook`,
+        text: ``,
         status: 'scheduled',
         scheduledAt: new Date(date.setHours(14, 0, 0, 0)),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       
-      // Topic 3: Industry News
+      // Topic 3: Industry News - text only
       {
         id: `sample-14-topic3-li-${date}`,
         topicId: "sample-topic-multiple-3",
@@ -116,6 +124,7 @@ export const generateWednesdaySamples = (date: Date, timeSlot: string): Content[
       topicTitle: SAMPLE_TOPICS[0],
       platform: 'instagram',
       text: `Bài đăng mẫu cho 09:00 ngày 30/04`,
+      imageUrl: 'image.jpg', // With image
       status: 'scheduled',
       scheduledAt: new Date(date.setHours(9, 0, 0, 0)),
       createdAt: new Date(),
@@ -130,6 +139,7 @@ export const generateWednesdaySamples = (date: Date, timeSlot: string): Content[
       topicTitle: SAMPLE_TOPICS[1],
       platform: 'facebook',
       text: `Bài đăng mẫu cho 10:00 ngày 30/04`,
+      videoUrl: 'video.mp4', // With video
       status: 'scheduled',
       scheduledAt: new Date(date.setHours(10, 0, 0, 0)),
       createdAt: new Date(),
@@ -189,10 +199,30 @@ export const generateTuesdaySamples = (date: Date, timeSlot: string): Content[] 
     ];
   }
   
+  // Add an example of an empty post (no content yet)
+  if (timeSlot === '16:00') {
+    const topicId = "sample-topic-empty";
+    const topicTitle = "Chờ nội dung";
+    
+    return [
+      {
+        id: `sample-16-empty-${date}`,
+        topicId: topicId,
+        topicTitle: topicTitle,
+        platform: 'tiktok',
+        text: '',
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(16, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+  }
+  
   return [];
 };
 
-// Generate Friday (1st May) samples
+// Generate Friday (1st May) samples with combined content types
 export const generateFridaySamples = (date: Date, timeSlot: string): Content[] => {
   if (date.getDate() !== 1 || date.getMonth() !== 4) return [];
   
@@ -239,6 +269,23 @@ export const generateFridaySamples = (date: Date, timeSlot: string): Content[] =
         updatedAt: new Date(),
       }
     ];
+  }
+  
+  // Add an example with both image and video content
+  if (timeSlot === '10:00') {
+    return [{
+      id: `sample-10-${date}`,
+      topicId: "sample-topic-multimedia",
+      topicTitle: "Nội dung đa phương tiện",
+      platform: 'tiktok',
+      text: `Chiến dịch video và hình ảnh ngày 01/05`,
+      imageUrl: 'image.jpg',
+      videoUrl: 'video.mp4',
+      status: 'scheduled',
+      scheduledAt: new Date(date.setHours(10, 0, 0, 0)),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }];
   }
   
   return [];
