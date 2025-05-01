@@ -39,7 +39,7 @@ export const TimeSlotRow: React.FC<TimeSlotRowProps> = ({
         return (
           <div 
             key={`${slotIndex}-${dateIndex}`} 
-            className={`p-2 min-h-[100px] relative ${
+            className={`p-1 min-h-[120px] max-h-[200px] overflow-hidden relative ${
               isCurrentDay ? 'bg-rose-50' : 'bg-white'
             } ${dateIndex < 6 ? 'border-r' : ''}`}
           >

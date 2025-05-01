@@ -55,34 +55,34 @@ export const PostCard: React.FC<PostCardProps> = ({
   return (
     <div 
       key={index} 
-      className={`mb-2 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow 
+      className={`mb-1 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow 
         ${isInGroup ? 'border-l-2' : 'border-l-4'} ${borderColor}`}
     >
-      <div className="p-2">
+      <div className="p-1">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 shrink-0">
+          <div className="flex items-center gap-1">
+            <div className="w-4 h-4 shrink-0">
               <PlatformIcon platform={content.platform} size="small" />
             </div>
-            <div className="text-xs font-medium truncate max-w-[120px]">
+            <div className="text-xs font-medium truncate max-w-[100px]">
               {isInGroup ? displayPlatform : displayTitle}
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs py-0 h-5">
               {format(new Date(content.scheduledAt!), 'HH:mm')}
             </Badge>
             <button 
               onClick={handleEdit}
-              className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+              className="p-0.5 rounded-full hover:bg-gray-100 text-gray-600"
             >
-              <Edit size={14} />
+              <Edit size={12} />
             </button>
             <button 
               onClick={handleDelete}
-              className="p-1 rounded-full hover:bg-gray-100 text-gray-600"
+              className="p-0.5 rounded-full hover:bg-gray-100 text-gray-600"
             >
-              <Trash2 size={14} />
+              <Trash2 size={12} />
             </button>
           </div>
         </div>

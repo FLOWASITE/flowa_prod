@@ -62,7 +62,7 @@ export const SlotContent: React.FC<SlotContentProps> = ({
   };
   
   return (
-    <>
+    <div className="h-full w-full overflow-auto">
       {Object.keys(groupedContent).map((topicId, groupIndex) => {
         const postsForTopic = groupedContent[topicId];
         const firstPost = postsForTopic[0];
@@ -72,12 +72,12 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         return (
           <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Topic header - removed edit/delete buttons as requested */}
-            <div className="px-3 py-2 border-b">
-              <div className="text-sm font-medium">{topicTitle}</div>
+            <div className="px-3 py-1 border-b">
+              <div className="text-sm font-medium truncate">{topicTitle}</div>
             </div>
             
             {/* Posts in the group */}
-            <div className="p-2">
+            <div className="p-1">
               {postsForTopic.map((post, postIndex) => (
                 <div 
                   key={`post-${postIndex}`} 
@@ -98,6 +98,6 @@ export const SlotContent: React.FC<SlotContentProps> = ({
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
