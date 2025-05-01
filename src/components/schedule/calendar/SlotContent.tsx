@@ -68,20 +68,7 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         const firstPost = postsForTopic[0];
         const topicTitle = getTopicTitle(firstPost);
         
-        // If there's only one post for this topic, render it with the new style
-        if (postsForTopic.length === 1) {
-          return (
-            <ScheduledPost 
-              key={`single-${groupIndex}`}
-              content={firstPost}
-              onEdit={() => handleOpenEditDialog(firstPost)}
-              onDelete={() => handleDelete(firstPost)}
-              topicTitle={topicTitle}
-            />
-          );
-        }
-        
-        // If there are multiple posts for the same topic, render them in a group
+        // Always render posts in a group style, even if there's only one post
         return (
           <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Topic header */}
