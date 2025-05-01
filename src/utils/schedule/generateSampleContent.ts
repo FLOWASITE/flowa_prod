@@ -98,17 +98,34 @@ export const generateTuesdaySamples = (date: Date, timeSlot: string): Content[] 
   if (date.getDate() !== 29 || date.getMonth() !== 3) return [];
   
   if (timeSlot === '13:00') {
-    return [{
-      id: `sample-13-${date}`,
-      topicId: "sample-topic-4",
-      topicTitle: SAMPLE_TOPICS[3],
-      platform: 'facebook',
-      text: `Nội dung facebook lúc 13:00 ngày 29/04`,
-      status: 'scheduled',
-      scheduledAt: new Date(date.setHours(13, 0, 0, 0)),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }];
+    const topicId = "sample-topic-4";
+    const topicTitle = SAMPLE_TOPICS[3];
+    
+    return [
+      {
+        id: `sample-13-fb-${date}`,
+        topicId: topicId,
+        topicTitle: topicTitle,
+        platform: 'facebook',
+        text: `Nội dung facebook lúc 13:00 ngày 29/04`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(13, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: `sample-13-ig-${date}`,
+        topicId: topicId,
+        topicTitle: topicTitle,
+        platform: 'instagram',
+        text: `Nội dung instagram lúc 13:00 ngày 29/04`,
+        imageUrl: 'image.jpg',
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(13, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
   }
   
   return [];
@@ -131,6 +148,36 @@ export const generateFridaySamples = (date: Date, timeSlot: string): Content[] =
       createdAt: new Date(),
       updatedAt: new Date(),
     }];
+  }
+  
+  if (timeSlot === '16:00') {
+    const topicId = "sample-topic-6";
+    const topicTitle = "Khóa học trực tuyến";
+    
+    return [
+      {
+        id: `sample-16-fb-${date}`,
+        topicId: topicId,
+        topicTitle: topicTitle,
+        platform: 'facebook',
+        text: `Khóa học trực tuyến Facebook - 16:00 ngày 01/05`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(16, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: `sample-16-li-${date}`,
+        topicId: topicId,
+        topicTitle: topicTitle,
+        platform: 'linkedin',
+        text: `Khóa học trực tuyến LinkedIn - 16:00 ngày 01/05`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(16, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
   }
   
   return [];
