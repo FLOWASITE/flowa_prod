@@ -1,10 +1,8 @@
 
 import React from 'react';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Content } from '@/types/content';
-import { ScheduledPost } from '../ScheduledPost';
 import { PostCard } from '../PostCard';
 
 interface SlotContentProps {
@@ -71,7 +69,7 @@ export const SlotContent: React.FC<SlotContentProps> = ({
         // Always render posts in a group style, even if there's only one post
         return (
           <div key={`group-${groupIndex}`} className="mb-2 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            {/* Topic header - removed edit/delete buttons as requested */}
+            {/* Topic header */}
             <div className="px-3 py-1 border-b">
               <div className="text-sm font-medium truncate">{topicTitle}</div>
             </div>

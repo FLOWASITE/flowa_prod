@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Image, Video } from 'lucide-react';
 import { Content } from '@/types/content';
 import { Badge } from '@/components/ui/badge';
 import { PlatformIcon } from './PlatformIcon';
@@ -10,7 +10,7 @@ interface PostCardProps {
   content: Content;
   index: number;
   topicTitle?: string;
-  isInGroup?: boolean; // New prop to indicate if this card is part of a group
+  isInGroup?: boolean; 
   onEdit?: () => void;
   onDelete?: () => void;
 }
@@ -35,11 +35,12 @@ export const PostCard: React.FC<PostCardProps> = ({
   
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
   
-  // Use content's topicTitle if available, fallback to passed topicTitle, then to content.text
-  const displayTitle = content.topicTitle || topicTitle || content.text?.substring(0, 20) + '...';
-  
   // Display platform name (replace 'twitter' with 'X')
   const displayPlatform = content.platform === 'twitter' ? 'X' : content.platform;
+  
+  // Determine content types
+  const hasImage = Boolean(content.imageUrl);
+  const hasVideo = content.text?.includes('video') || false; // Example condition, adjust based on your data model
   
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,27 +52,37 @@ export const PostCard: React.FC<PostCardProps> = ({
     if (onDelete) onDelete();
   };
 
-  // Now using the same card style for all posts, whether in a group or not
+  // Title to display
+  const displayTitle = isInGroup ? displayPlatform : (topicTitle || content.text?.substring(0, 20) + '...');
+
   return (
     <div 
       key={index} 
       className={`mb-1 bg-white border rounded-md shadow-sm hover:shadow-md transition-shadow 
         ${isInGroup ? 'border-l-2' : 'border-l-4'} ${borderColor}`}
     >
-      <div className="p-1">
+      <div className="p-1.5">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <div className="w-4 h-4 shrink-0">
               <PlatformIcon platform={content.platform} size="small" />
             </div>
             <div className="text-xs font-medium truncate max-w-[100px]">
-              {isInGroup ? displayPlatform : displayTitle}
+              {displayTitle}
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <Badge variant="outline" className="text-xs py-0 h-5">
               {format(new Date(content.scheduledAt!), 'HH:mm')}
             </Badge>
+            
+            {/* Content type indicators */}
+            <div className="flex gap-1">
+              {hasImage && <Image className="h-3 w-3 text-blue-500" />}
+              {hasVideo && <Video className="h-3 w-3 text-red-500" />}
+            </div>
+            
+            {/* Action buttons */}
             <button 
               onClick={handleEdit}
               className="p-0.5 rounded-full hover:bg-gray-100 text-gray-600"

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Image, Video } from 'lucide-react';
 import { Content } from '@/types/content';
 import { PlatformIcon } from './PlatformIcon';
 import { Badge } from '@/components/ui/badge';
@@ -32,6 +32,10 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({
   };
   
   const borderColor = borderColors[content.platform as keyof typeof borderColors] || 'border-gray-300';
+  
+  // Determine content types
+  const hasImage = Boolean(content.imageUrl);
+  const hasVideo = content.text?.includes('video') || false; // Simple check, improve as needed
   
   return (
     <div 
@@ -72,12 +76,21 @@ export const ScheduledPost: React.FC<ScheduledPostProps> = ({
           {topicTitle || content.text}
         </div>
         
-        {/* Image indicator */}
-        {content.imageUrl && (
-          <div className="mt-2 flex items-center">
-            <Badge variant="secondary" className="text-xs">Có hình ảnh</Badge>
-          </div>
-        )}
+        {/* Content type indicators */}
+        <div className="mt-2 flex items-center gap-2">
+          {hasImage && (
+            <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1 text-xs">
+              <Image className="h-3 w-3" />
+              <span>Ảnh</span>
+            </Badge>
+          )}
+          {hasVideo && (
+            <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 flex items-center gap-1 text-xs">
+              <Video className="h-3 w-3" />
+              <span>Video</span>
+            </Badge>
+          )}
+        </div>
       </div>
     </div>
   );
