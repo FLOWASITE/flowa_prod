@@ -5,7 +5,8 @@ import {
   generateSharedTopicPosts, 
   generateWednesdaySamples, 
   generateTuesdaySamples, 
-  generateFridaySamples 
+  generateFridaySamples,
+  generateMultipleTopicsForTimeSlot
 } from './generateSampleContent';
 
 // Get scheduled content for a specific date and time slot
@@ -16,6 +17,10 @@ export const getScheduledContent = (
 ): Content[] => {
   // Parse the time from the timeSlot string
   const [hours] = timeSlot.split(':').map(Number);
+  
+  // Check for multiple topics in the same time slot (new)
+  const multipleTopicsContent = generateMultipleTopicsForTimeSlot(date, timeSlot);
+  if (multipleTopicsContent.length > 0) return multipleTopicsContent;
   
   // Check for sample content based on date
   // First check for shared topic content

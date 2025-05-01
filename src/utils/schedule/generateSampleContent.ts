@@ -42,6 +42,67 @@ export const generateSharedTopicPosts = (date: Date): Content[] => {
   return [];
 };
 
+// Generate multiple topics for the same time slot (NEW)
+export const generateMultipleTopicsForTimeSlot = (date: Date, timeSlot: string): Content[] => {
+  // Add multiple topics for Thursday (2nd May) at 14:00
+  if (date.getDate() === 2 && date.getMonth() === 4 && timeSlot === "14:00") {
+    return [
+      // Topic 1: Product Launch
+      {
+        id: `sample-14-topic1-fb-${date}`,
+        topicId: "sample-topic-multiple-1",
+        topicTitle: "Ra mắt sản phẩm mới",
+        platform: 'facebook',
+        text: `Thông báo ra mắt sản phẩm mới trên Facebook`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(14, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: `sample-14-topic1-ig-${date}`,
+        topicId: "sample-topic-multiple-1",
+        topicTitle: "Ra mắt sản phẩm mới",
+        platform: 'instagram',
+        text: `Hình ảnh sản phẩm mới trên Instagram`,
+        imageUrl: 'image.jpg',
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(14, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      
+      // Topic 2: Promotion
+      {
+        id: `sample-14-topic2-fb-${date}`,
+        topicId: "sample-topic-multiple-2",
+        topicTitle: "Chương trình khuyến mãi tháng 5",
+        platform: 'facebook',
+        text: `Thông tin về chương trình khuyến mãi trên Facebook`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(14, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      
+      // Topic 3: Industry News
+      {
+        id: `sample-14-topic3-li-${date}`,
+        topicId: "sample-topic-multiple-3",
+        topicTitle: "Xu hướng công nghệ mới",
+        platform: 'linkedin',
+        text: `Bài phân tích về xu hướng công nghệ trên LinkedIn`,
+        status: 'scheduled',
+        scheduledAt: new Date(date.setHours(14, 0, 0, 0)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+  }
+  
+  return [];
+};
+
 // Generate Wednesday (30th April) samples
 export const generateWednesdaySamples = (date: Date, timeSlot: string): Content[] => {
   if (date.getDate() !== 30 || date.getMonth() !== 3) return [];
