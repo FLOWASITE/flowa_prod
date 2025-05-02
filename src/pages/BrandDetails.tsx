@@ -1,301 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Layout } from '@/components/layout/Layout';
-import { mockBrands } from '@/data/mockData';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Brand, ProductType } from '@/types';
-import { ArrowLeft, Edit } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { BrandBasicInfo } from '@/components/brand/details/BrandBasicInfo';
-import { BrandProductsSection } from '@/components/brand/details/BrandProductsSection';
-import { BrandVoiceToneSection } from '@/components/brand/details/BrandVoiceToneSection';
-import { BrandThemesSection } from '@/components/brand/details/BrandThemesSection';
-import { BrandKnowledgeSection } from '@/components/brand/BrandKnowledgeSection';
-import { EditBrandDialog } from '@/components/brand/EditBrandDialog';
-import { Product } from '@/components/brand/products/translations';
-import { v4 as uuidv4 } from 'uuid';
 
-const translations = {
-  brandDetails: {
-    en: 'Brand Details',
-    vi: 'Chi tiết thương hiệu',
-  },
-  products: {
-    en: 'Products & Services',
-    vi: 'Sản phẩm & Dịch vụ',
-  },
-  tone: {
-    en: 'Voice Tone',
-    vi: 'Giọng điệu',
-  },
-  themes: {
-    en: 'Theme Types',
-    vi: 'Loại chủ đề',
-  },
-  features: {
-    en: 'Features',
-    vi: 'Tính năng',
-  },
-  noProducts: {
-    en: 'No products or services added',
-    vi: 'Chưa có sản phẩm hoặc dịch vụ',
-  },
-  noThemes: {
-    en: 'No theme types added',
-    vi: 'Chưa có loại chủ đề',
-  },
-  loading: {
-    en: 'Loading brand details...',
-    vi: 'Đang tải chi tiết thương hiệu...',
-  },
-  error: {
-    en: 'Failed to load brand details',
-    vi: 'Không thể tải chi tiết thương hiệu',
-  },
-  fallbackData: {
-    en: 'Using fallback data',
-    vi: 'Đang sử dụng dữ liệu dự phòng',
-  }
-};
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Layout } from '@/components/layout/Layout';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { EditBrandDialog } from '@/components/brand/EditBrandDialog';
+import { BrandDetailsHeader } from '@/components/brand/details/BrandDetailsHeader';
+import { BrandDetailsContent } from '@/pages/brand/details/BrandDetailsContent';
+import { BrandDetailsLoading } from '@/pages/brand/details/BrandDetailsLoading';
+import { BrandNotFound } from '@/pages/brand/details/BrandNotFound';
+import { useBrandDetails } from '@/pages/brand/details/useBrandDetails';
+import { brandDetailsTranslations } from '@/pages/brand/details/translations';
 
 const BrandDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { currentLanguage } = useLanguage();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const [brand, setBrand] = useState<Brand | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const [knowledge, setKnowledge] = useState<any>(null);
-  const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
+  
+  const {
+    brand,
+    loading,
+    products,
+    setProducts,
+    showEditDialog,
+    setShowEditDialog,
+    handleBrandUpdated,
+    handleKnowledgeUpdate,
+    getKnowledgeData
+  } = useBrandDetails(id);
 
-  const t = (key: keyof typeof translations) => {
-    return translations[key][currentLanguage.code] || translations[key].en;
-  };
-
-  useEffect(() => {
-    const fetchBrandDetails = async () => {
-      try {
-        setLoading(true);
-        console.log('Fetching brand details for ID:', id); // Debug log
-        
-        // Fetch the brand
-        const { data: brandData, error: brandError } = await supabase
-          .from('brands')
-          .select('*')
-          .eq('id', id)
-          .single();
-        
-        if (brandError) {
-          console.error('Brand fetch error:', brandError); // Debug log
-          throw brandError;
-        }
-        
-        if (!brandData) {
-          console.error('No brand data found'); // Debug log
-          throw new Error('Brand not found');
-        }
-        
-        console.log('Fetched brand data:', brandData); // Debug log
-        
-        // Fetch related products
-        const { data: productsData, error: productsError } = await supabase
-          .from('products')
-          .select('*')
-          .eq('brand_id', id);
-        
-        if (productsError) {
-          console.error('Error fetching products:', productsError);
-        }
-        
-        // Fetch brand knowledge
-        const { data: knowledgeData, error: knowledgeError } = await supabase
-          .from('brand_knowledge')
-          .select('*')
-          .eq('brand_id', id)
-          .maybeSingle();
-        
-        if (knowledgeError) {
-          console.error('Error fetching brand knowledge:', knowledgeError);
-        }
-        
-        // Map the data to our Brand type
-        const mappedBrand: Brand = {
-          id: brandData.id,
-          name: brandData.name,
-          description: brandData.description,
-          logo: brandData.logo || undefined,
-          website: brandData.website || undefined,
-          colors: {
-            primary: brandData.primary_color,
-            secondary: brandData.secondary_color,
-          },
-          tone: brandData.tone || 'Professional',
-          themes: brandData.themes || [],
-          createdAt: new Date(brandData.created_at),
-          updatedAt: new Date(brandData.updated_at),
-          knowledge: knowledgeData ? {
-            history: knowledgeData.history,
-            values: knowledgeData.values,
-            targetAudience: knowledgeData.target_audience,
-            guidelines: knowledgeData.guidelines,
-          } : undefined
-        };
-        
-        // Map products
-        const mappedProducts: ProductType[] = productsData ? productsData.map((product: any) => ({
-          id: product.id,
-          brandId: product.brand_id,
-          name: product.name,
-          description: product.description,
-          features: product.features || [],
-          image: product.image,
-          createdAt: new Date(product.created_at),
-          updatedAt: new Date(product.updated_at)
-        })) : [];
-        
-        setBrand(mappedBrand);
-        setProducts(mappedProducts);
-        setKnowledge(knowledgeData);
-      } catch (error: any) {
-        console.error('Error fetching brand details:', error);
-        toast({
-          title: t('error'),
-          description: error.message,
-          variant: 'destructive',
-        });
-        
-        // Fallback to mock data if available
-        const mockBrand = mockBrands.find(b => b.id === id);
-        if (mockBrand) {
-          setBrand(mockBrand);
-          toast({
-            title: t('fallbackData'),
-            variant: 'default',
-          });
-        } else {
-          // If no mock data found for this ID, navigate back
-          navigate('/brands');
-          toast({
-            title: 'Brand not found',
-            description: 'The requested brand could not be found',
-            variant: 'destructive',
-          });
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    if (id) {
-      fetchBrandDetails();
-    }
-  }, [id, toast, navigate]);
-
-  const handleBrandUpdated = (updatedBrand: Brand) => {
-    setBrand(updatedBrand);
+  const t = (key: keyof typeof brandDetailsTranslations) => {
+    return brandDetailsTranslations[key][currentLanguage.code] || brandDetailsTranslations[key].en;
   };
 
   if (loading) {
-    return (
-      <Layout>
-        <div className="max-w-[1400px] mx-auto p-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-pulse text-xl text-muted-foreground">{t('loading')}</div>
-          </div>
-        </div>
-      </Layout>
-    );
+    return <BrandDetailsLoading />;
   }
 
   if (!brand) {
-    return (
-      <Layout>
-        <div className="max-w-[1400px] mx-auto">
-          <p>Brand not found</p>
-        </div>
-      </Layout>
-    );
+    return <BrandNotFound />;
   }
 
-  // Convert products to the format expected by BrandKnowledgeSection
-  const productsList: Product[] = products.map(product => ({
-    name: product.name,
-    description: product.description,
-    features: product.features,
-    pricing: product.pricing || '',
-    benefits: product.benefits || '',
-  }));
-
-  const knowledgeData = {
-    brandInfo: brand?.knowledge?.history || '',
-    qaPairs: brand?.knowledge?.qaPairs || [],
-    products: productsList
-  };
+  const knowledgeData = getKnowledgeData();
 
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto">
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex items-center">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/brands')} 
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <h1 className="text-2xl font-semibold">{t('brandDetails')}</h1>
-          </div>
-          
-          <Button 
-            onClick={() => setShowEditDialog(true)} 
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Edit className="h-4 w-4" />
-            {currentLanguage.code === 'vi' ? 'Chỉnh sửa' : 'Edit'}
-          </Button>
-        </div>
+        <BrandDetailsHeader onEditClick={() => setShowEditDialog(true)} />
 
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <BrandBasicInfo brand={brand} />
-            
-            {/* Voice tone section */}
-            <div className="md:col-span-1">
-              <BrandVoiceToneSection tone={brand?.tone} />
-            </div>
-            
-            {/* Themes section */}
-            <div className="md:col-span-1">
-              <BrandThemesSection themes={brand?.themes || []} />
-            </div>
-            
-            {/* Knowledge section */}
-            <div className="md:col-span-2">
-              <BrandKnowledgeSection 
-                onUpdate={(knowledge) => {
-                  setKnowledge(knowledge);
-                  if (knowledge.products) {
-                    const updatedProducts = knowledge.products.map((product: Product) => ({
-                      ...product,
-                      id: uuidv4(),
-                      brandId: brand!.id,
-                      createdAt: new Date(),
-                      updatedAt: new Date()
-                    }));
-                    setProducts(updatedProducts as ProductType[]);
-                  }
-                }}
-                data={knowledgeData}
-              />
-            </div>
-          </div>
-        </div>
+        <BrandDetailsContent
+          brand={brand}
+          products={products}
+          setProducts={setProducts}
+          knowledgeData={knowledgeData}
+          onKnowledgeUpdate={handleKnowledgeUpdate}
+        />
       </div>
       
       {brand && (
