@@ -82,5 +82,12 @@ export const translations = {
     fr: 'Retour',
     es: 'Volver',
     th: 'กลับ',
+  },
+  noProducts: {
+    vi: 'Chưa có sản phẩm nào',
+    en: 'No products yet',
+    fr: 'Pas encore de produits',
+    es: 'No hay productos todavía',
+    th: 'ยังไม่มีสินค้า',
   }
 };
