@@ -20,13 +20,6 @@ const translations = {
     fr: 'Créez une liste de produits et services pour votre marque',
     es: 'Cree una lista de productos y servicios para su marca',
     th: 'สร้างรายการสินค้าและบริการสำหรับแบรนด์ของคุณ',
-  },
-  totalProducts: {
-    vi: 'Tổng số sản phẩm: ',
-    en: 'Total Products: ',
-    fr: 'Total des produits: ',
-    es: 'Total de productos: ',
-    th: 'สินค้าทั้งหมด: ',
   }
 };
 
@@ -58,11 +51,6 @@ export function ProductSection({ products, onProductsChange }: ProductSectionPro
           products={products}
           onProductsChange={onProductsChange}
         />
-        {products.length > 0 && (
-          <p className="text-sm text-muted-foreground mt-2">
-            {t('totalProducts')} {products.length}
-          </p>
-        )}
       </CardContent>
     </Card>
   );
