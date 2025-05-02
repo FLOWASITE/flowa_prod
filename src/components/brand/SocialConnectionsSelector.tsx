@@ -8,10 +8,11 @@ import {
   Twitter,
   MessageSquare,
   Share2,
-  MessagesSquare,
   Share
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const translations = {
   socialConnections: {
@@ -21,6 +22,14 @@ const translations = {
     es: 'Conexiones sociales',
     th: 'การเชื่อมต่อโซเชียล',
     id: 'Koneksi Sosial'
+  },
+  socialDescription: {
+    vi: 'Kết nối tài khoản mạng xã hội của thương hiệu để quản lý nội dung',
+    en: 'Connect your brand\'s social media accounts to manage content',
+    fr: 'Connectez les comptes de médias sociaux de votre marque pour gérer le contenu',
+    es: 'Conecte las cuentas de redes sociales de su marca para administrar el contenido',
+    th: 'เชื่อมต่อบัญชีโซเชียลมีเดียของแบรนด์ของคุณเพื่อจัดการเนื้อหา',
+    id: 'Hubungkan akun media sosial merek Anda untuk mengelola konten'
   }
 };
 
@@ -67,12 +76,6 @@ const socialPlatforms = [
     actions: ['+ Profile'],
     color: '#000000'
   },
-  {
-    name: 'Universal Posting',
-    icon: MessagesSquare,
-    actions: ['+ Add'],
-    color: '#6366f1'
-  }
 ];
 
 export function SocialConnectionsSelector() {
@@ -83,31 +86,42 @@ export function SocialConnectionsSelector() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Share className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-semibold">{t('socialConnections')}</h3>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {socialPlatforms.map((platform) => (
-          <div key={platform.name} className="space-y-2">
-            <div className="flex items-center gap-2 text-gray-700">
-              <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
-              <span>{platform.name}</span>
+    <Card className="border border-muted">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-lg font-medium">
+          <Share className="h-5 w-5 text-primary" />
+          {t('socialConnections')}
+        </CardTitle>
+        <CardDescription>
+          {t('socialDescription')}
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {socialPlatforms.map((platform) => (
+            <div key={platform.name} className="p-4 border rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors">
+              <div className="flex items-center gap-2 mb-3">
+                <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
+                <span className="font-medium">{platform.name}</span>
+              </div>
+              <div className="space-y-2">
+                {platform.actions.map((action) => (
+                  <Button
+                    key={action}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full text-left flex justify-start"
+                  >
+                    {action}
+                  </Button>
+                ))}
+              </div>
             </div>
-            {platform.actions.map((action) => (
-              <button
-                key={action}
-                type="button"
-                className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-sm"
-              >
-                {action}
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

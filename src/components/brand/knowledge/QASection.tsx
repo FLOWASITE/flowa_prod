@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { Label } from '@/components/ui/label';
 import { QADialog } from '@/components/brand/QADialog';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MessageSquareQuestion } from 'lucide-react';
 
 const translations = {
   manageQA: {
@@ -11,6 +12,20 @@ const translations = {
     fr: 'Gérer Q&R',
     es: 'Gestionar preguntas y respuestas',
     th: 'จัดการคำถามและคำตอบ',
+  },
+  qaDescription: {
+    vi: 'Tạo cơ sở kiến thức câu hỏi và trả lời để giúp định hình giọng điệu thương hiệu của bạn',
+    en: 'Create a knowledge base of questions and answers to help shape your brand voice',
+    fr: 'Créez une base de connaissances de questions et réponses pour aider à façonner la voix de votre marque',
+    es: 'Cree una base de conocimientos de preguntas y respuestas para ayudar a dar forma a la voz de su marca',
+    th: 'สร้างฐานความรู้คำถามและคำตอบเพื่อช่วยกำหนดโทนเสียงของแบรนด์ของคุณ',
+  },
+  totalQA: {
+    vi: 'Tổng số Q&A: ',
+    en: 'Total Q&A: ',
+    fr: 'Total Q&R: ',
+    es: 'Total de preguntas y respuestas: ',
+    th: 'คำถามและคำตอบทั้งหมด: ',
   }
 };
 
@@ -32,12 +47,27 @@ export function QASection({ qaPairs, onChange }: QASectionProps) {
   };
 
   return (
-    <div className="space-y-2 border-t pt-4">
-      <Label className="text-md font-medium">{t('manageQA')}</Label>
-      <QADialog 
-        qaPairs={qaPairs}
-        onChange={onChange}
-      />
-    </div>
+    <Card className="border border-muted">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-lg font-medium">
+          <MessageSquareQuestion className="h-5 w-5 text-primary" />
+          {t('manageQA')}
+        </CardTitle>
+        <CardDescription>
+          {t('qaDescription')}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <QADialog 
+          qaPairs={qaPairs}
+          onChange={onChange}
+        />
+        {qaPairs.length > 0 && (
+          <p className="text-sm text-muted-foreground mt-2">
+            {t('totalQA')} {qaPairs.length}
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }

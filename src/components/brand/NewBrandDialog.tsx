@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Dialog,
@@ -10,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Globe, Plus } from 'lucide-react';
+import { Plus, Globe, Info } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { Brand } from '@/types';
@@ -21,6 +22,9 @@ import { BrandKnowledgeSection } from './BrandKnowledgeSection';
 import { SocialConnectionsSelector } from './SocialConnectionsSelector';
 import { LogoUpload } from './LogoUpload';
 import { useBrandForm } from '@/hooks/useBrandForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
 
 const translations = {
   newBrand: {
@@ -225,113 +229,194 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
           {t('newBrand')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[800px] p-0 overflow-hidden bg-white dark:bg-gray-950 border-2">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <DialogHeader className="p-6 pb-0">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden bg-white dark:bg-gray-950 border-2">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+          <DialogHeader className="p-6 pb-4 border-b">
             <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
               {t('createNewBrand')}
             </DialogTitle>
           </DialogHeader>
           
-          <div className="px-6 space-y-6 max-h-[70vh] overflow-y-auto">
-            <div className="grid grid-cols-1 gap-6">
-              <LogoUpload
-                onLogoChange={(logo) => handleChange({ target: { name: 'logo', value: logo } } as any)}
-                translations={{
-                  uploadLogo: t('uploadLogo'),
-                  dragAndDrop: t('dragAndDrop')
-                }}
-              />
-
-              <div className="space-y-2">
-                <Label htmlFor="name">{t('brandName')}</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+          <Tabs defaultValue="basic" className="flex-1">
+            <div className="flex border-b">
+              <TabsList className="h-auto p-0 bg-transparent flex-wrap">
+                <TabsTrigger 
+                  value="basic" 
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+                >
+                  1. {t('brandName')} & Logo
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="tone" 
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+                >
+                  2. {t('toneOfVoice')}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="themes" 
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+                >
+                  3. {t('themes')}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="knowledge" 
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+                >
+                  4. Brand Knowledge
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="social" 
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
+                >
+                  5. {t('socialConnections')}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+            
+            <div className="p-6 max-h-[60vh] overflow-y-auto">
+              <TabsContent value="basic" className="mt-0 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-base font-medium">{t('brandName')}</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="website" className="text-base font-medium flex items-center gap-2">
+                        <Globe className="h-4 w-4" />
+                        {t('website')}
+                      </Label>
+                      <Input
+                        id="website"
+                        name="website"
+                        value={formData.website}
+                        onChange={handleChange}
+                        placeholder="https://"
+                        className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-base font-medium">Brand Colors</Label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <Label htmlFor="primaryColor" className="text-sm">{t('primaryColor')}</Label>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              id="primaryColor"
+                              name="primaryColor"
+                              type="color"
+                              value={formData.primaryColor}
+                              onChange={handleChange}
+                              className="h-10 w-10 p-0.5 rounded cursor-pointer"
+                            />
+                            <span className="text-sm text-muted-foreground">{formData.primaryColor}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <Label htmlFor="secondaryColor" className="text-sm">{t('secondaryColor')}</Label>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              id="secondaryColor"
+                              name="secondaryColor"
+                              type="color"
+                              value={formData.secondaryColor}
+                              onChange={handleChange}
+                              className="h-10 w-10 p-0.5 rounded cursor-pointer"
+                            />
+                            <span className="text-sm text-muted-foreground">{formData.secondaryColor}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-base font-medium block mb-2">{t('logo')}</Label>
+                    <LogoUpload
+                      onLogoChange={(logo) => handleChange({ target: { name: 'logo', value: logo } } as any)}
+                      translations={{
+                        uploadLogo: t('uploadLogo'),
+                        dragAndDrop: t('dragAndDrop')
+                      }}
+                    />
+                    
+                    <div className="mt-4 p-3 bg-muted/50 rounded-md">
+                      <div className="flex items-center mb-2">
+                        <Info className="h-4 w-4 text-muted-foreground mr-2" />
+                        <span className="text-sm font-medium">Brand Preview</span>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 p-4 border rounded-md bg-card">
+                        <div className="flex-shrink-0">
+                          {formData.logo ? (
+                            <img src={formData.logo} alt="Logo preview" className="h-10 w-10 object-contain" />
+                          ) : (
+                            <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
+                              <span className="text-muted-foreground font-medium">
+                                {formData.name ? formData.name[0].toUpperCase() : '?'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="font-medium" style={{color: formData.primaryColor}}>
+                            {formData.name || 'Your Brand Name'}
+                          </h4>
+                          <div className="h-1 w-16 mt-1 rounded-full" style={{background: formData.secondaryColor}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="tone" className="mt-0 space-y-4">
+                <ToneSelector
+                  selectedTones={selectedTones}
+                  onTonesChange={setSelectedTones}
                 />
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-full flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="flex-shrink-0">
-                    <Input
-                      id="primaryColor"
-                      name="primaryColor"
-                      type="color"
-                      value={formData.primaryColor}
-                      onChange={handleChange}
-                      className="h-8 w-8 p-0.5 rounded cursor-pointer border-0"
+              </TabsContent>
+              
+              <TabsContent value="themes" className="mt-0 space-y-4">
+                <ThemeSelector
+                  selectedThemes={selectedThemes}
+                  onThemesChange={setSelectedThemes}
+                />
+              </TabsContent>
+              
+              <TabsContent value="knowledge" className="mt-0 space-y-6">
+                <div className="space-y-6">
+                  <BrandKnowledgeSection
+                    data={brandKnowledge}
+                    onUpdate={setBrandKnowledge}
+                  />
+                  
+                  <div className="border-t pt-6">
+                    <ProductSelector 
+                      products={products}
+                      onProductsChange={setProducts}
                     />
                   </div>
-                  <span>{t('primaryColor')}</span>
                 </div>
-                <div className="w-full flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="flex-shrink-0">
-                    <Input
-                      id="secondaryColor"
-                      name="secondaryColor"
-                      type="color"
-                      value={formData.secondaryColor}
-                      onChange={handleChange}
-                      className="h-8 w-8 p-0.5 rounded cursor-pointer border-0"
-                    />
-                  </div>
-                  <span>{t('secondaryColor')}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="logo" className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  {t('website')}
-                </Label>
-                <Input
-                  id="website"
-                  name="website"
-                  value={formData.website}
-                  onChange={handleChange}
-                  placeholder="https://"
-                  className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
-                <ProductSelector 
-                  products={products}
-                  onProductsChange={setProducts}
-                />
-              </div>
-
-              <ToneSelector
-                selectedTones={selectedTones}
-                onTonesChange={setSelectedTones}
-              />
-
-              <ThemeSelector
-                selectedThemes={selectedThemes}
-                onThemesChange={setSelectedThemes}
-              />
-
-              <BrandKnowledgeSection
-                data={brandKnowledge}
-                onUpdate={setBrandKnowledge}
-              />
-
-              <div className="border-t border-b py-6 -mx-6 px-6 bg-gray-50 dark:bg-gray-900/50">
+              </TabsContent>
+              
+              <TabsContent value="social" className="mt-0">
                 <SocialConnectionsSelector />
-              </div>
+              </TabsContent>
             </div>
-          </div>
+          </Tabs>
           
-          <DialogFooter className="p-6 bg-gray-50 dark:bg-gray-900/50 border-t">
+          <DialogFooter className="p-6 bg-muted/30 border-t">
             <Button 
               type="button" 
               variant="outline" 
