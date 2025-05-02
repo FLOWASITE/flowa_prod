@@ -3,7 +3,7 @@ import React from 'react';
 import { ProductSelector } from '@/components/brand/products/ProductSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingBag, FileText } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { Product } from '../products/translations';
 
 const translations = {
