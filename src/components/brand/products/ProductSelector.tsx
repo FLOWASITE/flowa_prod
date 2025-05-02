@@ -6,6 +6,7 @@ import { EmptyProductState } from './EmptyProductState';
 import { ProductActions } from './actions/ProductActions';
 import { Product } from './translations';
 import { ImportProductsDialog } from './import/ImportProductsDialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ProductSelectorProps {
   products: Product[];
@@ -57,17 +58,21 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
         onOpenImportDialog={() => setIsImportDialogOpen(true)} 
       />
 
-      <div className="space-y-6">
-        {products.map((product, index) => (
-          <ProductItem
-            key={index}
-            product={product}
-            index={index}
-            onUpdate={updateProduct}
-            onRemove={removeProduct}
-          />
-        ))}
-      </div>
+      {products.length > 0 && (
+        <ScrollArea className="h-[30vh] border rounded-md">
+          <div className="p-4 space-y-6">
+            {products.map((product, index) => (
+              <ProductItem
+                key={index}
+                product={product}
+                index={index}
+                onUpdate={updateProduct}
+                onRemove={removeProduct}
+              />
+            ))}
+          </div>
+        </ScrollArea>
+      )}
 
       <ImportProductsDialog 
         open={isImportDialogOpen}
