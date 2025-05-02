@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { mockBrands } from '@/data/mockData';
@@ -170,14 +171,27 @@ const Brands = () => {
           values: newBrand.knowledge.values,
           target_audience: newBrand.knowledge.targetAudience,
           guidelines: newBrand.knowledge.guidelines,
-          product_pricing: newBrand.knowledge.productPricing,
-          product_benefits: newBrand.knowledge.productBenefits
         };
         
         const { error: knowledgeError } = await supabase.from('brand_knowledge').insert(knowledgeData);
         
         if (knowledgeError) {
           console.error('Error adding brand knowledge:', knowledgeError);
+        }
+
+        // Insert QA pairs if they exist
+        if (newBrand.knowledge.qaPairs && newBrand.knowledge.qaPairs.length > 0) {
+          const qaPairsData = newBrand.knowledge.qaPairs.map(pair => ({
+            brand_id: data[0].id,
+            question: pair.question,
+            answer: pair.answer
+          }));
+          
+          const { error: qaPairsError } = await supabase.from('qa_pairs').insert(qaPairsData);
+          
+          if (qaPairsError) {
+            console.error('Error adding QA pairs:', qaPairsError);
+          }
         }
       }
       
@@ -188,6 +202,8 @@ const Brands = () => {
           description: product.description,
           features: product.features || [],
           image: product.image || null,
+          pricing: product.pricing || null,
+          benefits: product.benefits || null
         }));
         
         const { error: productsError } = await supabase.from('products').insert(productsData);
