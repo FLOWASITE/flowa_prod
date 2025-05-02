@@ -90,6 +90,13 @@ const translations = {
     es: 'Tipos de temas',
     th: 'ประเภทธีม',
   },
+  themes: {
+    en: 'Themes',
+    vi: 'Chủ đề',
+    fr: 'Thèmes',
+    es: 'Temas',
+    th: 'ธีม',
+  },
   selectThemeTypes: {
     en: 'Select theme types...',
     vi: 'Chọn loại chủ đề...',
@@ -175,6 +182,14 @@ const translations = {
     fr: 'Glisser-déposer ou cliquer pour télécharger',
     es: 'Arrastrar y soltar o hacer clic para subir',
     th: 'ลากและวางหรือคลิกเพื่ออัปโหลด',
+  },
+  socialConnections: {
+    en: 'Social Connections',
+    vi: 'Kết nối mạng xã hội',
+    fr: 'Connexions sociales',
+    es: 'Conexiones sociales',
+    th: 'การเชื่อมต่อโซเชียล',
+    id: 'Koneksi Sosial'
   }
 };
 

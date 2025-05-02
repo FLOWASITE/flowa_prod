@@ -3,7 +3,7 @@ import React from 'react';
 import { QADialog } from '@/components/brand/QADialog';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquareQuestion } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 const translations = {
   manageQA: {
@@ -50,7 +50,7 @@ export function QASection({ qaPairs, onChange }: QASectionProps) {
     <Card className="border border-muted">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg font-medium">
-          <MessageSquareQuestion className="h-5 w-5 text-primary" />
+          <MessageSquare className="h-5 w-5 text-primary" />
           {t('manageQA')}
         </CardTitle>
         <CardDescription>
