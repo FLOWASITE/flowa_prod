@@ -14,6 +14,7 @@ import { BrandVoiceToneSection } from '@/components/brand/details/BrandVoiceTone
 import { BrandThemesSection } from '@/components/brand/details/BrandThemesSection';
 import { BrandKnowledgeSection } from '@/components/brand/BrandKnowledgeSection';
 import { EditBrandDialog } from '@/components/brand/EditBrandDialog';
+import { Product } from '@/components/brand/products/translations';
 
 const translations = {
   brandDetails: {
@@ -218,12 +219,20 @@ const BrandDetails = () => {
     );
   }
 
-  const knowledgeData = brand?.knowledge ? {
-    brandInfo: brand.knowledge.history || '',
-    qaPairs: brand.knowledge.qaPairs || []
-  } : {
-    brandInfo: '',
-    qaPairs: []
+  // Convert products to the format expected by BrandKnowledgeSection
+  const productsList: Product[] = products.map(product => ({
+    name: product.name,
+    description: product.description,
+    features: product.features,
+    pricing: product.pricing || '',
+    benefits: product.benefits || '',
+    image: product.image || ''
+  }));
+
+  const knowledgeData = {
+    brandInfo: brand?.knowledge?.history || '',
+    qaPairs: brand?.knowledge?.qaPairs || [],
+    products: productsList
   };
 
   return (
@@ -256,25 +265,30 @@ const BrandDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <BrandBasicInfo brand={brand} />
             
-            {/* Products section moved up */}
-            <div className="md:col-span-2">
-              <BrandProductsSection products={products} />
-            </div>
-            
-            {/* Voice tone section moved up */}
+            {/* Voice tone section */}
             <div className="md:col-span-1">
               <BrandVoiceToneSection tone={brand?.tone} />
             </div>
             
-            {/* Themes section moved up */}
+            {/* Themes section */}
             <div className="md:col-span-1">
               <BrandThemesSection themes={brand?.themes || []} />
             </div>
             
-            {/* Knowledge section moved down */}
+            {/* Knowledge section */}
             <div className="md:col-span-2">
               <BrandKnowledgeSection 
-                onUpdate={(knowledge) => setKnowledge(knowledge)}
+                onUpdate={(knowledge) => {
+                  setKnowledge(knowledge);
+                  if (knowledge.products) {
+                    const updatedProducts = knowledge.products.map(product => ({
+                      ...product,
+                      id: product.id || uuidv4(),
+                      brandId: brand.id
+                    }));
+                    setProducts(updatedProducts as ProductType[]);
+                  }
+                }}
                 data={knowledgeData}
               />
             </div>
@@ -284,7 +298,10 @@ const BrandDetails = () => {
       
       {brand && (
         <EditBrandDialog
-          brand={brand}
+          brand={{
+            ...brand,
+            products: products
+          }}
           open={showEditDialog}
           onOpenChange={setShowEditDialog}
           onBrandUpdated={handleBrandUpdated}

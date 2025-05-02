@@ -47,9 +47,11 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
     brand.tone ? brand.tone.split(', ') : ['Professional']
   );
   const [selectedThemes, setSelectedThemes] = useState<string[]>(brand.themes || []);
+  const [products, setProducts] = useState<any[]>(brand.products || []);
   const [brandKnowledge, setBrandKnowledge] = useState({
     brandInfo: brand.knowledge?.history || '',
     qaPairs: brand.knowledge?.qaPairs || [],
+    products: brand.products || [],
   });
 
   useEffect(() => {
@@ -64,9 +66,11 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
       });
       setSelectedTones(brand.tone ? brand.tone.split(', ') : ['Professional']);
       setSelectedThemes(brand.themes || []);
+      setProducts(brand.products || []);
       setBrandKnowledge({
         brandInfo: brand.knowledge?.history || '',
         qaPairs: brand.knowledge?.qaPairs || [],
+        products: brand.products || [],
       });
     }
   }, [brand, open]);
@@ -146,6 +150,40 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
             console.error('Error inserting QA pairs:', insertQAError);
           }
         }
+
+        // Update products
+        if (products && products.length > 0) {
+          // First, delete existing products
+          const { error: deleteProductsError } = await supabase
+            .from('products')
+            .delete()
+            .eq('brand_id', brand.id);
+
+          if (deleteProductsError) {
+            console.error('Error deleting existing products:', deleteProductsError);
+          }
+
+          // Then insert new products
+          const productsData = products.map(product => ({
+            brand_id: brand.id,
+            name: product.name,
+            description: product.description,
+            features: product.features,
+            pricing: product.pricing || '',
+            benefits: product.benefits || '',
+            image: product.image || null
+          }));
+
+          if (productsData.length > 0) {
+            const { error: insertProductsError } = await supabase
+              .from('products')
+              .insert(productsData);
+
+            if (insertProductsError) {
+              console.error('Error inserting products:', insertProductsError);
+            }
+          }
+        }
       }
       
       // Map the data to our Brand type
@@ -162,6 +200,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
         tone: data.tone,
         themes: data.themes || [],
         updatedAt: new Date(data.updated_at),
+        products: products,
         knowledge: {
           ...brand.knowledge,
           history: brandKnowledge.brandInfo,
@@ -189,6 +228,12 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
     } finally {
       setLoading(false);
     }
+  };
+
+  // Update brandKnowledge object to include products
+  const updatedBrandKnowledge = {
+    ...brandKnowledge,
+    products: products,
   };
 
   return (
@@ -263,8 +308,10 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
               
               <TabsContent value="knowledge" className="mt-0 space-y-6">
                 <BrandKnowledgeTab 
-                  brandKnowledge={brandKnowledge}
+                  brandKnowledge={updatedBrandKnowledge}
                   setBrandKnowledge={setBrandKnowledge}
+                  products={products}
+                  setProducts={setProducts}
                 />
               </TabsContent>
               

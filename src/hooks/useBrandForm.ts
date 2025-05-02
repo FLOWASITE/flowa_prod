@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Brand, ProductType } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
+import { Product } from '@/components/brand/products/translations';
 
 interface FormData {
   name: string;
@@ -15,6 +16,7 @@ interface FormData {
 interface BrandKnowledge {
   brandInfo: string;
   qaPairs: Array<{ question: string; answer: string }>;
+  products?: Product[];
 }
 
 export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
@@ -29,16 +31,11 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
-  const [products, setProducts] = useState<Array<{ 
-    name: string; 
-    description: string; 
-    features: string[];
-    pricing: string;
-    benefits: string;
-  }>>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [brandKnowledge, setBrandKnowledge] = useState<BrandKnowledge>({
     brandInfo: '',
     qaPairs: [],
+    products: [],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -61,6 +58,7 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
     setBrandKnowledge({
       brandInfo: '',
       qaPairs: [],
+      products: [],
     });
   };
 

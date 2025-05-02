@@ -177,5 +177,12 @@ export const newBrandDialogTranslations = {
     fr: 'Aperçu de la marque',
     es: 'Vista previa de la marca',
     th: 'ตัวอย่างแบรนด์',
+  },
+  brandKnowledge: {
+    en: 'Brand Knowledge',
+    vi: 'Kiến thức thương hiệu',
+    fr: 'Connaissance de la marque',
+    es: 'Conocimiento de marca',
+    th: 'ความรู้เกี่ยวกับแบรนด์',
   }
 };

@@ -13,7 +13,6 @@ import { Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { Brand } from '@/types';
-import { ProductSelector } from '@/components/brand/products/ProductSelector';
 import { useBrandForm } from '@/hooks/useBrandForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BasicInfoTab } from './edit/BasicInfoTab';
@@ -56,6 +55,12 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
 
   const t = (key: keyof typeof newBrandDialogTranslations) => {
     return newBrandDialogTranslations[key][currentLanguage.code] || newBrandDialogTranslations[key].en;
+  };
+
+  // Update brandKnowledge object to include products
+  const updatedBrandKnowledge = {
+    ...brandKnowledge,
+    products: products,
   };
 
   return (
@@ -107,7 +112,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   value="knowledge" 
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
-                  4. Brand Knowledge
+                  4. {t('brandKnowledge', 'Brand Knowledge')}
                 </TabsTrigger>
                 <TabsTrigger 
                   value="social" 
@@ -143,16 +148,11 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               
               <TabsContent value="knowledge" className="mt-0 space-y-6">
                 <BrandKnowledgeTab
-                  brandKnowledge={brandKnowledge}
+                  brandKnowledge={updatedBrandKnowledge}
                   setBrandKnowledge={setBrandKnowledge}
+                  products={products}
+                  setProducts={setProducts}
                 />
-                
-                <div className="border-t pt-6">
-                  <ProductSelector 
-                    products={products}
-                    onProductsChange={setProducts}
-                  />
-                </div>
               </TabsContent>
               
               <TabsContent value="social" className="mt-0">
