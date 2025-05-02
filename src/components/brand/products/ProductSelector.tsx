@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ProductItem } from './ProductItem';
+import { ProductItem } from './item/ProductItem';
 import { EmptyProductState } from './EmptyProductState';
-import { ProductActions } from './ProductActions';
+import { ProductActions } from './actions/ProductActions';
 import { Product } from './translations';
 import { ImportProductsDialog } from './import/ImportProductsDialog';
 
