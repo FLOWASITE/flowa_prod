@@ -220,6 +220,14 @@ const BrandDetails = () => {
     );
   }
 
+  const knowledgeData = brand.knowledge ? {
+    brandInfo: brand.knowledge.history || '',
+    qaPairs: brand.knowledge.qaPairs || []
+  } : {
+    brandInfo: '',
+    qaPairs: []
+  };
+
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto">
@@ -269,15 +277,7 @@ const BrandDetails = () => {
             <div className="md:col-span-2">
               <BrandKnowledgeSection 
                 onUpdate={(knowledge) => setKnowledge(knowledge)}
-                data={brand.knowledge || {
-                  history: '',
-                  values: '',
-                  targetAudience: '',
-                  guidelines: '',
-                  qaPairs: [],
-                  productPricing: '',
-                  productBenefits: ''
-                }}
+                data={knowledgeData}
               />
             </div>
           </div>

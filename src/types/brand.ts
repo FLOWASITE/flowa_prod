@@ -21,8 +21,6 @@ export interface Brand {
       question: string;
       answer: string;
     }>;
-    productPricing?: string;
-    productBenefits?: string;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -44,6 +42,8 @@ export interface ProductType {
   name: string;
   description: string;
   features: string[];
+  pricing?: string;
+  benefits?: string;
   image?: string;
   createdAt: Date;
   updatedAt: Date;

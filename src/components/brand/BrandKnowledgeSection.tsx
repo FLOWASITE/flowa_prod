@@ -37,20 +37,6 @@ const translations = {
     es: 'Ingrese información sobre la historia de la marca, valores fundamentales, público objetivo y directrices de la marca...',
     th: 'ป้อนข้อมูลเกี่ยวกับประวัติแบรนด์ ค่านิยมหลัก กลุ่มเป้าหมาย และแนวทางแบรนด์...',
   },
-  productPricing: {
-    vi: 'Giá sản phẩm',
-    en: 'Product Pricing',
-    fr: 'Prix des produits',
-    es: 'Precios de productos',
-    th: 'ราคาสินค้า',
-  },
-  productBenefits: {
-    vi: 'Công dụng sản phẩm',
-    en: 'Product Benefits',
-    fr: 'Avantages du produit',
-    es: 'Beneficios del producto',
-    th: 'ประโยชน์ของสินค้า',
-  },
   manageQA: {
     vi: 'Quản lý câu hỏi & trả lời',
     en: 'Manage Q&A',
@@ -69,14 +55,10 @@ interface BrandKnowledgeSectionProps {
   onUpdate: (knowledge: {
     brandInfo: string;
     qaPairs: QAPair[];
-    productPricing: string;
-    productBenefits: string;
   }) => void;
   data: {
     brandInfo: string;
     qaPairs?: QAPair[];
-    productPricing?: string;
-    productBenefits?: string;
   };
 }
 
@@ -87,8 +69,6 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
   const normalizedData = {
     ...data,
     qaPairs: data.qaPairs || [],
-    productPricing: data.productPricing || '',
-    productBenefits: data.productBenefits || '',
   };
   
   const t = (key: keyof typeof translations) => {
@@ -111,22 +91,6 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
     });
   };
 
-  const handleImportPricing = (importedData: Array<{ product: string; price: string }>) => {
-    const formattedPricing = importedData
-      .map(item => `${item.product}: ${item.price}`)
-      .join('\n');
-    
-    onUpdate({
-      ...normalizedData,
-      productPricing: formattedPricing,
-    });
-    
-    toast({
-      title: `${importedData.length} product prices imported`,
-      description: "Product pricing has been updated",
-    });
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
@@ -146,31 +110,6 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
             onChange={handleChange('brandInfo')}
             placeholder={t('brandInfoPlaceholder')}
             className="min-h-[160px]"
-          />
-        </div>
-
-        <div className="space-y-4 border-t pt-4">
-          <div className="flex justify-between items-center">
-            <Label className="text-md font-medium">{t('productPricing')}</Label>
-            <ImportDialog type="pricing" onImport={handleImportPricing} />
-          </div>
-          <Textarea
-            id="productPricing"
-            value={normalizedData.productPricing}
-            onChange={handleChange('productPricing')}
-            placeholder="Ví dụ: Sản phẩm A: 200.000đ, Sản phẩm B: 350.000đ..."
-            className="min-h-[80px]"
-          />
-        </div>
-
-        <div className="space-y-4 border-t pt-4">
-          <Label className="text-md font-medium">{t('productBenefits')}</Label>
-          <Textarea
-            id="productBenefits"
-            value={normalizedData.productBenefits}
-            onChange={handleChange('productBenefits')}
-            placeholder="Ví dụ: Sản phẩm A giúp làm sạch sâu, Sản phẩm B tăng cường sức đề kháng..."
-            className="min-h-[80px]"
           />
         </div>
 

@@ -15,8 +15,6 @@ interface FormData {
 interface BrandKnowledge {
   brandInfo: string;
   qaPairs: Array<{ question: string; answer: string }>;
-  productPricing: string;
-  productBenefits: string;
 }
 
 export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
@@ -31,12 +29,16 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
 
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
-  const [products, setProducts] = useState<Array<{ name: string; description: string; features: string[] }>>([]);
+  const [products, setProducts] = useState<Array<{ 
+    name: string; 
+    description: string; 
+    features: string[];
+    pricing: string;
+    benefits: string;
+  }>>([]);
   const [brandKnowledge, setBrandKnowledge] = useState<BrandKnowledge>({
     brandInfo: '',
     qaPairs: [],
-    productPricing: '',
-    productBenefits: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,8 +61,6 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
     setBrandKnowledge({
       brandInfo: '',
       qaPairs: [],
-      productPricing: '',
-      productBenefits: ''
     });
   };
 
@@ -73,6 +73,8 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
       name: p.name,
       description: p.description,
       features: p.features,
+      pricing: p.pricing,
+      benefits: p.benefits,
       createdAt: new Date(),
       updatedAt: new Date()
     }));
@@ -98,8 +100,6 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
         targetAudience: '',
         guidelines: '',
         qaPairs: brandKnowledge.qaPairs,
-        productPricing: brandKnowledge.productPricing,
-        productBenefits: brandKnowledge.productBenefits
       }
     };
 

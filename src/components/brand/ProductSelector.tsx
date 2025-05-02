@@ -43,6 +43,20 @@ const translations = {
     es: 'Características (una por línea)',
     th: 'คุณสมบัติ (หนึ่งบรรทัดต่อหนึ่งคุณสมบัติ)',
   },
+  pricing: {
+    en: 'Pricing',
+    vi: 'Giá sản phẩm',
+    fr: 'Prix',
+    es: 'Precio',
+    th: 'ราคา',
+  },
+  benefits: {
+    en: 'Benefits',
+    vi: 'Công dụng sản phẩm',
+    fr: 'Avantages',
+    es: 'Beneficios',
+    th: 'ประโยชน์',
+  },
   noProducts: {
     en: 'No products or services added yet. Click the button below to add your first product.',
     vi: 'Chưa có sản phẩm hoặc dịch vụ nào được thêm. Nhấn nút bên dưới để thêm sản phẩm đầu tiên của bạn.',
@@ -56,6 +70,8 @@ interface Product {
   name: string;
   description: string;
   features: string[];
+  pricing: string;
+  benefits: string;
 }
 
 interface ProductSelectorProps {
@@ -73,7 +89,7 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
   const addNewProduct = () => {
     onProductsChange([
       ...products,
-      { name: '', description: '', features: [] }
+      { name: '', description: '', features: [], pricing: '', benefits: '' }
     ]);
   };
 
@@ -145,6 +161,30 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
                 placeholder="Describe your product or service..."
                 className="mt-1.5"
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor={`product-pricing-${index}`}>{t('pricing')}</Label>
+                <Input
+                  id={`product-pricing-${index}`}
+                  value={product.pricing}
+                  onChange={(e) => updateProduct(index, 'pricing', e.target.value)}
+                  placeholder="e.g. 200.000đ/month"
+                  className="mt-1.5"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor={`product-benefits-${index}`}>{t('benefits')}</Label>
+                <Input
+                  id={`product-benefits-${index}`}
+                  value={product.benefits}
+                  onChange={(e) => updateProduct(index, 'benefits', e.target.value)}
+                  placeholder="e.g. Increases productivity by 30%"
+                  className="mt-1.5"
+                />
+              </div>
             </div>
 
             <div>
