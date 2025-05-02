@@ -23,33 +23,19 @@ const translations = {
     es: 'Agregue conocimiento de marca para que la IA aprenda y genere mejor contenido',
     th: 'เพิ่มความรู้เกี่ยวกับแบรนด์เพื่อให้ AI เรียนรู้และสร้างเนื้อหาที่ดีขึ้น',
   },
-  history: {
-    vi: 'Lịch sử thương hiệu',
-    en: 'Brand History',
-    fr: 'Histoire de la marque',
-    es: 'Historia de la marca',
-    th: 'ประวัติแบรนด์',
+  brandInfo: {
+    vi: 'Thông tin thương hiệu',
+    en: 'Brand Information',
+    fr: 'Informations sur la marque',
+    es: 'Información de la marca',
+    th: 'ข้อมูลแบรนด์',
   },
-  values: {
-    vi: 'Giá trị cốt lõi',
-    en: 'Core Values',
-    fr: 'Valeurs fondamentales',
-    es: 'Valores fundamentales',
-    th: 'ค่านิยมหลัก',
-  },
-  targetAudience: {
-    vi: 'Đối tượng mục tiêu',
-    en: 'Target Audience',
-    fr: 'Public cible',
-    es: 'Público objetivo',
-    th: 'กลุ่มเป้าหมาย',
-  },
-  brandGuidelines: {
-    vi: 'Hướng dẫn thương hiệu',
-    en: 'Brand Guidelines',
-    fr: 'Directives de la marque',
-    es: 'Directrices de marca',
-    th: 'แนวทางแบรนด์',
+  brandInfoPlaceholder: {
+    vi: 'Nhập thông tin về lịch sử thương hiệu, giá trị cốt lõi, đối tượng mục tiêu và hướng dẫn thương hiệu...',
+    en: 'Enter information about brand history, core values, target audience and brand guidelines...',
+    fr: 'Entrez des informations sur l\'histoire de la marque, les valeurs fondamentales, le public cible et les directives de la marque...',
+    es: 'Ingrese información sobre la historia de la marca, valores fundamentales, público objetivo y directrices de la marca...',
+    th: 'ป้อนข้อมูลเกี่ยวกับประวัติแบรนด์ ค่านิยมหลัก กลุ่มเป้าหมาย และแนวทางแบรนด์...',
   },
   productPricing: {
     vi: 'Giá sản phẩm',
@@ -81,19 +67,13 @@ interface QAPair {
 
 interface BrandKnowledgeSectionProps {
   onUpdate: (knowledge: {
-    history: string;
-    values: string;
-    targetAudience: string;
-    guidelines: string;
+    brandInfo: string;
     qaPairs: QAPair[];
     productPricing: string;
     productBenefits: string;
   }) => void;
   data: {
-    history: string;
-    values: string;
-    targetAudience: string;
-    guidelines: string;
+    brandInfo: string;
     qaPairs?: QAPair[];
     productPricing?: string;
     productBenefits?: string;
@@ -159,46 +139,13 @@ export function BrandKnowledgeSection({ onUpdate, data }: BrandKnowledgeSectionP
 
       <div className="grid grid-cols-1 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="history">{t('history')}</Label>
+          <Label htmlFor="brandInfo">{t('brandInfo')}</Label>
           <Textarea
-            id="history"
-            value={normalizedData.history}
-            onChange={handleChange('history')}
-            placeholder="Ví dụ: Thành lập năm 2020, chúng tôi bắt đầu với..."
-            className="min-h-[80px]"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="values">{t('values')}</Label>
-          <Textarea
-            id="values"
-            value={normalizedData.values}
-            onChange={handleChange('values')}
-            placeholder="Ví dụ: Chất lượng, Sáng tạo, Trách nhiệm..."
-            className="min-h-[80px]"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="targetAudience">{t('targetAudience')}</Label>
-          <Textarea
-            id="targetAudience"
-            value={normalizedData.targetAudience}
-            onChange={handleChange('targetAudience')}
-            placeholder="Ví dụ: Người trẻ tuổi từ 18-35, quan tâm đến..."
-            className="min-h-[80px]"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="guidelines">{t('brandGuidelines')}</Label>
-          <Textarea
-            id="guidelines"
-            value={normalizedData.guidelines}
-            onChange={handleChange('guidelines')}
-            placeholder="Ví dụ: Ngôn ngữ thương hiệu, hình ảnh..."
-            className="min-h-[80px]"
+            id="brandInfo"
+            value={normalizedData.brandInfo}
+            onChange={handleChange('brandInfo')}
+            placeholder={t('brandInfoPlaceholder')}
+            className="min-h-[160px]"
           />
         </div>
 

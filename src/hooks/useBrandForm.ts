@@ -13,10 +13,7 @@ interface FormData {
 }
 
 interface BrandKnowledge {
-  history: string;
-  values: string;
-  targetAudience: string;
-  guidelines: string;
+  brandInfo: string;
   qaPairs: Array<{ question: string; answer: string }>;
   productPricing: string;
   productBenefits: string;
@@ -36,10 +33,7 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
   const [selectedTones, setSelectedTones] = useState<string[]>(['Professional']);
   const [products, setProducts] = useState<Array<{ name: string; description: string; features: string[] }>>([]);
   const [brandKnowledge, setBrandKnowledge] = useState<BrandKnowledge>({
-    history: '',
-    values: '',
-    targetAudience: '',
-    guidelines: '',
+    brandInfo: '',
     qaPairs: [],
     productPricing: '',
     productBenefits: ''
@@ -63,10 +57,7 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
     setSelectedTones(['Professional']);
     setProducts([]);
     setBrandKnowledge({
-      history: '',
-      values: '',
-      targetAudience: '',
-      guidelines: '',
+      brandInfo: '',
       qaPairs: [],
       productPricing: '',
       productBenefits: ''
@@ -102,10 +93,10 @@ export const useBrandForm = (onBrandCreated: (brand: Brand) => void) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       knowledge: {
-        history: brandKnowledge.history,
-        values: brandKnowledge.values,
-        targetAudience: brandKnowledge.targetAudience,
-        guidelines: brandKnowledge.guidelines,
+        history: brandKnowledge.brandInfo,
+        values: '',
+        targetAudience: '',
+        guidelines: '',
         qaPairs: brandKnowledge.qaPairs,
         productPricing: brandKnowledge.productPricing,
         productBenefits: brandKnowledge.productBenefits
