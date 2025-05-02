@@ -71,6 +71,7 @@ export interface Product {
   features: string[];
   pricing: string;
   benefits: string;
+  image?: string;
 }
 
 export interface ProductSelectorProps {

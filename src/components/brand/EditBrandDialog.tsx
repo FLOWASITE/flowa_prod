@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -14,13 +13,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Globe, Info } from 'lucide-react';
 import { editDialogTranslations } from './edit/translations';
 import { BasicInfoTab } from './edit/BasicInfoTab';
 import { TonesTab } from './edit/TonesTab';
 import { ThemesTab } from './edit/ThemesTab';
 import { BrandKnowledgeTab } from './edit/BrandKnowledgeTab';
 import { SocialConnectionsTab } from './edit/SocialConnectionsTab';
+import { Product } from './products/translations';
 
 interface EditBrandDialogProps {
   brand: Brand;
@@ -51,7 +50,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
   const [brandKnowledge, setBrandKnowledge] = useState({
     brandInfo: brand.knowledge?.history || '',
     qaPairs: brand.knowledge?.qaPairs || [],
-    products: brand.products || [],
+    products: [],
   });
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
       setBrandKnowledge({
         brandInfo: brand.knowledge?.history || '',
         qaPairs: brand.knowledge?.qaPairs || [],
-        products: brand.products || [],
+        products: [],
       });
     }
   }, [brand, open]);
@@ -230,6 +229,23 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
     }
   };
 
+  // Create a properly typed handler for brandKnowledge updates
+  const handleBrandKnowledgeUpdate = (knowledge: {
+    brandInfo: string;
+    qaPairs: { question: string; answer: string; }[];
+    products?: Product[];
+  }) => {
+    setBrandKnowledge({
+      brandInfo: knowledge.brandInfo,
+      qaPairs: knowledge.qaPairs,
+      products: [],
+    });
+    
+    if (knowledge.products) {
+      setProducts(knowledge.products);
+    }
+  };
+
   // Update brandKnowledge object to include products
   const updatedBrandKnowledge = {
     ...brandKnowledge,
@@ -309,7 +325,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
               <TabsContent value="knowledge" className="mt-0 space-y-6">
                 <BrandKnowledgeTab 
                   brandKnowledge={updatedBrandKnowledge}
-                  setBrandKnowledge={setBrandKnowledge}
+                  setBrandKnowledge={handleBrandKnowledgeUpdate}
                   products={products}
                   setProducts={setProducts}
                 />

@@ -15,6 +15,7 @@ import { BrandThemesSection } from '@/components/brand/details/BrandThemesSectio
 import { BrandKnowledgeSection } from '@/components/brand/BrandKnowledgeSection';
 import { EditBrandDialog } from '@/components/brand/EditBrandDialog';
 import { Product } from '@/components/brand/products/translations';
+import { v4 as uuidv4 } from 'uuid';
 
 const translations = {
   brandDetails: {
@@ -226,7 +227,6 @@ const BrandDetails = () => {
     features: product.features,
     pricing: product.pricing || '',
     benefits: product.benefits || '',
-    image: product.image || ''
   }));
 
   const knowledgeData = {
@@ -281,10 +281,12 @@ const BrandDetails = () => {
                 onUpdate={(knowledge) => {
                   setKnowledge(knowledge);
                   if (knowledge.products) {
-                    const updatedProducts = knowledge.products.map(product => ({
+                    const updatedProducts = knowledge.products.map((product: Product) => ({
                       ...product,
-                      id: product.id || uuidv4(),
-                      brandId: brand.id
+                      id: uuidv4(),
+                      brandId: brand!.id,
+                      createdAt: new Date(),
+                      updatedAt: new Date()
                     }));
                     setProducts(updatedProducts as ProductType[]);
                   }

@@ -112,7 +112,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   value="knowledge" 
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
-                  4. {t('brandKnowledge', 'Brand Knowledge')}
+                  4. {t('brandKnowledge')}
                 </TabsTrigger>
                 <TabsTrigger 
                   value="social" 
