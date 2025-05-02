@@ -21,174 +21,7 @@ import { TonesTab } from './edit/TonesTab';
 import { ThemesTab } from './edit/ThemesTab';
 import { BrandKnowledgeTab } from './edit/BrandKnowledgeTab';
 import { SocialConnectionsTab } from './edit/SocialConnectionsTab';
-import { editDialogTranslations } from './edit/translations';
-
-const translations = {
-  newBrand: {
-    en: 'New Brand',
-    vi: 'Thương hiệu mới',
-    fr: 'Nouvelle marque',
-    es: 'Nueva marca',
-    th: 'แบรนด์ใหม่',
-  },
-  createNewBrand: {
-    en: 'Create New Brand',
-    vi: 'Tạo thương hiệu mới',
-    fr: 'Créer une nouvelle marque',
-    es: 'Crear nueva marca',
-    th: 'สร้างแบรนด์ใหม่',
-  },
-  brandName: {
-    en: 'Brand Name',
-    vi: 'Tên thương hiệu',
-    fr: 'Nom de la marque',
-    es: 'Nombre de la marca',
-    th: 'ชื่อแบรนด์',
-  },
-  description: {
-    en: 'Description',
-    vi: 'Mô tả',
-    fr: 'Description',
-    es: 'Descripción',
-    th: 'คำอธิบาย',
-  },
-  primaryColor: {
-    en: 'Primary Color',
-    vi: 'Màu chính',
-    fr: 'Couleur primaire',
-    es: 'Color primario',
-    th: 'สีหลัก',
-  },
-  secondaryColor: {
-    en: 'Secondary Color',
-    vi: 'Màu phụ',
-    fr: 'Couleur secondaire',
-    es: 'Color secundario',
-    th: 'สีรอง',
-  },
-  cancel: {
-    en: 'Cancel',
-    vi: 'Hủy bỏ',
-    fr: 'Annuler',
-    es: 'Cancelar',
-    th: 'ยกเลิก',
-  },
-  create: {
-    en: 'Create Brand',
-    vi: 'Tạo thương hiệu',
-    fr: 'Créer la marque',
-    es: 'Crear marca',
-    th: 'สร้างแบรนด์',
-  },
-  themeTypes: {
-    en: 'Theme Types',
-    vi: 'Loại chủ đề',
-    fr: 'Types de thèmes',
-    es: 'Tipos de temas',
-    th: 'ประเภทธีม',
-  },
-  themes: {
-    en: 'Themes',
-    vi: 'Chủ đề',
-    fr: 'Thèmes',
-    es: 'Temas',
-    th: 'ธีม',
-  },
-  selectThemeTypes: {
-    en: 'Select theme types...',
-    vi: 'Chọn loại chủ đề...',
-    fr: 'Sélectionnez les types de thèmes...',
-    es: 'Seleccione tipos de temas...',
-    th: 'เลือกประเภทธีม...',
-  },
-  noThemeTypesFound: {
-    en: 'No theme types found.',
-    vi: 'Không tìm thấy loại chủ đề.',
-    fr: 'Aucun type de thème trouvé.',
-    es: 'No se encontraron tipos de temas.',
-    th: 'ไม่พบประเภทธีม',
-  },
-  brandNameRequired: {
-    en: 'Brand name is required',
-    vi: 'Tên thương hiệu là bắt buộc',
-    fr: 'Le nom de la marque est requis',
-    es: 'El nombre de la marca es obligatorio',
-    th: 'จำเป็นต้องมีชื่อแบรนด์',
-  },
-  brandCreated: {
-    en: 'Brand created successfully!',
-    vi: 'Tạo thương hiệu thành công!',
-    fr: 'Marque créée avec succès!',
-    es: '¡Marca creada con éxito!',
-    th: 'สร้างแบรนด์สำเร็จ!',
-  },
-  logo: {
-    en: 'Logo URL',
-    vi: 'URL Logo',
-    fr: 'URL du logo',
-    es: 'URL del logotipo',
-    th: 'URL โลโก้',
-  },
-  website: {
-    en: 'Website URL',
-    vi: 'URL Website',
-    fr: 'URL du site web',
-    es: 'URL del sitio web',
-    th: 'URL เว็บไซต์',
-  },
-  toneOfVoice: {
-    en: 'Voice Tone',
-    vi: 'Giọng điệu',
-    fr: 'Ton de voix',
-    es: 'Tono de voz',
-    th: 'น้ำเสียง',
-  },
-  suggestedTones: {
-    en: 'Suggested Tones',
-    vi: 'Giọng điệu gợi ý',
-    fr: 'Tons suggérés',
-    es: 'Tonos sugeridos',
-    th: 'โนเสียงที่แนะนำ',
-    id: 'Nada yang Disarankan'
-  },
-  suggestedThemes: {
-    en: 'Suggested Theme Types',
-    vi: 'Loại chủ đề gợi ý',
-    fr: 'Types de thèmes suggérés',
-    es: 'Tipos de temas sugeridos',
-    th: 'ประเภทธีมที่แนะนำ',
-    id: 'Jenis Tema yang Disarankan'
-  },
-  products: {
-    en: 'Products & Services',
-    vi: 'Sản phẩm & Dịch vụ',
-    fr: 'Produits & Services',
-    es: 'Productos y servicios',
-    th: 'สินค้าและบริการ',
-  },
-  uploadLogo: {
-    en: 'Upload Logo',
-    vi: 'Tải lên Logo',
-    fr: 'Télécharger le logo',
-    es: 'Subir logo',
-    th: 'อัปโหลดโลโก้',
-  },
-  dragAndDrop: {
-    en: 'Drag and drop or click to upload',
-    vi: 'Kéo thả hoặc nhấp để tải lên',
-    fr: 'Glisser-déposer ou cliquer pour télécharger',
-    es: 'Arrastrar y soltar o hacer clic para subir',
-    th: 'ลากและวางหรือคลิกเพื่ออัปโหลด',
-  },
-  socialConnections: {
-    en: 'Social Connections',
-    vi: 'Kết nối mạng xã hội',
-    fr: 'Connexions sociales',
-    es: 'Conexiones sociales',
-    th: 'การเชื่อมต่อโซเชียล',
-    id: 'Koneksi Sosial'
-  }
-};
+import { newBrandDialogTranslations } from './new/translations';
 
 interface NewBrandDialogProps {
   onBrandCreated: (newBrand: Brand) => void;
@@ -221,8 +54,8 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
     setOpen(false);
   });
 
-  const t = (key: keyof typeof translations) => {
-    return translations[key][currentLanguage.code] || translations[key].en;
+  const t = (key: keyof typeof newBrandDialogTranslations) => {
+    return newBrandDialogTranslations[key][currentLanguage.code] || newBrandDialogTranslations[key].en;
   };
 
   return (
@@ -290,7 +123,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                 <BasicInfoTab 
                   formData={formData}
                   handleChange={handleChange}
-                  translations={editDialogTranslations}
+                  translations={newBrandDialogTranslations}
                 />
               </TabsContent>
               

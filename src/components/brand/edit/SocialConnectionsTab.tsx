@@ -3,5 +3,9 @@ import React from 'react';
 import { SocialConnectionsSelector } from '../SocialConnectionsSelector';
 
 export function SocialConnectionsTab() {
-  return <SocialConnectionsSelector />;
+  return (
+    <div className="space-y-4">
+      <SocialConnectionsSelector />
+    </div>
+  );
 }
