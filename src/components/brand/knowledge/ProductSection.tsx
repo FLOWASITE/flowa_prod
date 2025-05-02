@@ -47,19 +47,10 @@ export function ProductSection({ products, onProductsChange }: ProductSectionPro
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="border border-red-200 rounded-lg p-4 bg-red-50/30">
-          <div className="flex items-center gap-2 text-red-800 mb-4">
-            <ShoppingBag className="h-5 w-5" />
-            <h3 className="font-medium">{t('manageProducts')}</h3>
-          </div>
-          <p className="text-gray-700 mb-4">
-            {t('productDescription')}
-          </p>
-          <ProductSelector 
-            products={products}
-            onProductsChange={onProductsChange}
-          />
-        </div>
+        <ProductSelector 
+          products={products}
+          onProductsChange={onProductsChange}
+        />
       </CardContent>
     </Card>
   );

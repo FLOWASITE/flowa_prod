@@ -12,9 +12,9 @@ export function EmptyProductState() {
   };
 
   return (
-    <div className="text-center p-6 border border-dashed border-red-200 rounded-lg bg-red-50/10">
-      <Package className="h-12 w-12 mx-auto text-red-300 mb-2" />
-      <p className="text-red-800">{t('noProducts')}</p>
+    <div className="text-center p-6 border border-dashed rounded-lg bg-background">
+      <Package className="h-12 w-12 mx-auto opacity-50 mb-2" />
+      <p className="text-muted-foreground">{t('noProducts')}</p>
     </div>
   );
 }

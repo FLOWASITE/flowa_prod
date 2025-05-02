@@ -8,7 +8,7 @@ import { Product } from './translations';
 import { ImportProductsDialog } from './import/ImportProductsDialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { translations } from './translations';
 
 interface ProductSelectorProps {
@@ -60,28 +60,37 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
 
   return (
     <div className="space-y-4">
-      <Button 
-        variant="outline" 
-        onClick={() => setShowProductForm(!showProductForm)}
-        className="w-full flex justify-between items-center border-red-200 text-red-800 hover:text-red-900 hover:bg-red-100/50 hover:border-red-300"
-      >
-        <div className="flex items-center gap-2">
-          <FileText className="h-4 w-4" />
-          <span>{t('manageProducts')}</span>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          {t('totalProducts')}: {products.length}
-        </div>
-      </Button>
+      {products.length === 0 && <EmptyProductState />}
 
-      {showProductForm && (
+      {!showProductForm ? (
+        <div className="flex flex-col items-center justify-center p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
+          <p className="mb-4 text-lg font-medium">
+            {t('totalProducts')}: {products.length}
+          </p>
+          <Button 
+            onClick={() => setShowProductForm(true)}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            {t('manageProducts')}
+          </Button>
+        </div>
+      ) : (
         <>
+          <Button 
+            variant="outline" 
+            onClick={() => setShowProductForm(false)}
+            className="mb-2"
+          >
+            &larr; {t('back')}
+          </Button>
+          
           <ProductActions 
             onAddProduct={addNewProduct} 
             onOpenImportDialog={() => setIsImportDialogOpen(true)} 
           />
 
-          {products.length > 0 ? (
+          {products.length > 0 && (
             <ScrollArea className="h-[30vh] border rounded-md">
               <div className="p-4 space-y-6">
                 {products.map((product, index) => (
@@ -95,8 +104,6 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
                 ))}
               </div>
             </ScrollArea>
-          ) : (
-            <EmptyProductState />
           )}
         </>
       )}
