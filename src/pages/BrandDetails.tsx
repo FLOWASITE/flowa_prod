@@ -139,8 +139,6 @@ const BrandDetails = () => {
             values: knowledgeData.values,
             targetAudience: knowledgeData.target_audience,
             guidelines: knowledgeData.guidelines,
-            productPricing: knowledgeData.product_pricing,
-            productBenefits: knowledgeData.product_benefits,
           } : undefined
         };
         
@@ -220,7 +218,7 @@ const BrandDetails = () => {
     );
   }
 
-  const knowledgeData = brand.knowledge ? {
+  const knowledgeData = brand?.knowledge ? {
     brandInfo: brand.knowledge.history || '',
     qaPairs: brand.knowledge.qaPairs || []
   } : {
@@ -265,12 +263,12 @@ const BrandDetails = () => {
             
             {/* Voice tone section moved up */}
             <div className="md:col-span-1">
-              <BrandVoiceToneSection tone={brand.tone} />
+              <BrandVoiceToneSection tone={brand?.tone} />
             </div>
             
             {/* Themes section moved up */}
             <div className="md:col-span-1">
-              <BrandThemesSection themes={brand.themes || []} />
+              <BrandThemesSection themes={brand?.themes || []} />
             </div>
             
             {/* Knowledge section moved down */}
