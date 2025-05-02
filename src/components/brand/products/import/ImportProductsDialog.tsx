@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Upload, FileText } from 'lucide-react';
+import { Upload, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,8 @@ import { Product } from '../translations';
 import { importTranslations } from './importTranslations';
 import { ProductPreviewTable } from './ProductPreviewTable';
 import { TemplateDownloadDialog } from './TemplateDownloadDialog';
-import { parseCsvToProducts } from './csvUtils';
+import { parseCsvToProducts, ValidationError } from './csvUtils';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 interface ImportProductsDialogProps {
   open: boolean;
@@ -28,6 +29,7 @@ export function ImportProductsDialog({ open, onOpenChange, onImportProducts }: I
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [previewData, setPreviewData] = useState<Product[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
 
   const t = (key: keyof typeof importTranslations) => {
@@ -39,9 +41,24 @@ export function ImportProductsDialog({ open, onOpenChange, onImportProducts }: I
     if (!file) return;
 
     try {
-      const products = await parseCsvToProducts(file);
+      const { products, validationErrors } = await parseCsvToProducts(file);
       setPreviewData(products);
+      setValidationErrors(validationErrors);
       console.log("Parsed product data:", products);
+      console.log("Validation errors:", validationErrors);
+      
+      if (validationErrors.length > 0) {
+        toast({
+          title: t('validationErrors'),
+          description: `${validationErrors.length} issues found`,
+          variant: 'destructive',
+        });
+      } else if (products.length > 0) {
+        toast({
+          title: t('validationSuccess'),
+          variant: 'default',
+        });
+      }
     } catch (error) {
       console.error("CSV parsing error:", error);
       toast({
@@ -54,8 +71,18 @@ export function ImportProductsDialog({ open, onOpenChange, onImportProducts }: I
   };
 
   const handleImport = () => {
+    if (validationErrors.length > 0) {
+      toast({
+        title: t('validationErrors'),
+        description: t('validationErrorsDescription'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     onImportProducts(previewData);
     setPreviewData([]);
+    setValidationErrors([]);
     onOpenChange(false);
     
     toast({
@@ -101,14 +128,46 @@ export function ImportProductsDialog({ open, onOpenChange, onImportProducts }: I
               </Button>
             </div>
 
-            {previewData.length > 0 && <ProductPreviewTable products={previewData} />}
+            {validationErrors.length > 0 && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>{t('validationErrors')}</AlertTitle>
+                <AlertDescription>
+                  <div className="text-sm mt-2">
+                    <p>{t('validationErrorsDescription')}</p>
+                    <ul className="list-disc ml-6 mt-2">
+                      {validationErrors.slice(0, 5).map((error, index) => (
+                        <li key={index}>
+                          {t('rowNumber')} {error.row}: {error.field} {error.message}
+                        </li>
+                      ))}
+                      {validationErrors.length > 5 && (
+                        <li>...and {validationErrors.length - 5} more errors</li>
+                      )}
+                    </ul>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {validationErrors.length === 0 && previewData.length > 0 && (
+              <Alert variant="default" className="bg-green-50 border-green-200">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <AlertTitle className="text-green-700">{t('validationSuccess')}</AlertTitle>
+              </Alert>
+            )}
+
+            {previewData.length > 0 && <ProductPreviewTable products={previewData} validationErrors={validationErrors} />}
           </div>
 
           <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               {t('cancel')}
             </Button>
-            <Button onClick={handleImport} disabled={previewData.length === 0}>
+            <Button 
+              onClick={handleImport} 
+              disabled={previewData.length === 0 || validationErrors.length > 0}
+            >
               {t('import')}
             </Button>
           </DialogFooter>

@@ -75,5 +75,41 @@ export const importTranslations = {
   totalProductsCount: {
     en: "Total: {count} products",
     vi: "Tổng cộng: {count} sản phẩm"
+  },
+  invalidFormat: {
+    en: "Invalid CSV format",
+    vi: "Định dạng CSV không hợp lệ"
+  },
+  importDescription: {
+    en: "Import products from a CSV file. Each row should contain name, price, description, features (separated by semicolons), and benefits.",
+    vi: "Nhập sản phẩm từ tệp CSV. Mỗi hàng nên chứa tên, giá, mô tả, tính năng (phân tách bằng dấu chấm phẩy) và lợi ích."
+  },
+  uploadExcel: {
+    en: "Upload CSV File",
+    vi: "Tải lên tệp CSV"
+  },
+  validationErrors: {
+    en: "Validation Errors",
+    vi: "Lỗi xác thực"
+  },
+  validationErrorsDescription: {
+    en: "Please fix the following errors before importing:",
+    vi: "Vui lòng sửa các lỗi sau trước khi nhập:"
+  },
+  requiredField: {
+    en: "is required",
+    vi: "là bắt buộc"
+  },
+  rowNumber: {
+    en: "Row",
+    vi: "Hàng"
+  },
+  downloadConfirm: {
+    en: "Download",
+    vi: "Tải xuống"
+  },
+  validationSuccess: {
+    en: "All products are valid",
+    vi: "Tất cả sản phẩm đều hợp lệ"
   }
 };

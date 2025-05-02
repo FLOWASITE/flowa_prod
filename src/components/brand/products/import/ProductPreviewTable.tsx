@@ -7,15 +7,17 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { importTranslations } from './importTranslations';
 import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ValidationError } from './csvUtils';
 
 interface ProductPreviewTableProps {
   products: Product[];
+  validationErrors?: ValidationError[];
 }
 
 type SortField = 'name' | 'pricing' | 'description' | 'features' | 'benefits';
 type SortDirection = 'asc' | 'desc';
 
-export function ProductPreviewTable({ products }: ProductPreviewTableProps) {
+export function ProductPreviewTable({ products, validationErrors = [] }: ProductPreviewTableProps) {
   const { currentLanguage } = useLanguage();
   const [filterText, setFilterText] = useState('');
   const [sortField, setSortField] = useState<SortField>('name');
@@ -24,6 +26,20 @@ export function ProductPreviewTable({ products }: ProductPreviewTableProps) {
   const t = (key: keyof typeof importTranslations) => {
     return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
   };
+
+  // Create a map of validation errors for easier lookup
+  const errorsByRow = useMemo(() => {
+    const map = new Map<number, Map<keyof Product, string>>();
+    
+    validationErrors.forEach(error => {
+      if (!map.has(error.row)) {
+        map.set(error.row, new Map());
+      }
+      map.get(error.row)?.set(error.field, error.message);
+    });
+    
+    return map;
+  }, [validationErrors]);
 
   // Sort and filter products
   const filteredAndSortedProducts = useMemo(() => {
@@ -80,6 +96,13 @@ export function ProductPreviewTable({ products }: ProductPreviewTableProps) {
     return sortDirection === 'asc' 
       ? <ChevronUp className="inline h-4 w-4 ml-1" /> 
       : <ChevronDown className="inline h-4 w-4 ml-1" />;
+  };
+
+  // Check if a field has validation error
+  const hasError = (rowIndex: number, field: keyof Product) => {
+    // Row index in the filtered list needs to be mapped back to the original data
+    const rowNumber = rowIndex + 2; // +1 for zero index and +1 for header
+    return errorsByRow.get(rowNumber)?.has(field) || false;
   };
 
   return (
@@ -144,11 +167,46 @@ export function ProductPreviewTable({ products }: ProductPreviewTableProps) {
             ) : (
               filteredAndSortedProducts.map((product, index) => (
                 <TableRow key={index}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.pricing}</TableCell>
-                  <TableCell className="max-w-[200px] truncate">{product.description}</TableCell>
-                  <TableCell>{product.features.join(', ')}</TableCell>
-                  <TableCell>{product.benefits}</TableCell>
+                  <TableCell 
+                    className={cn(
+                      "font-medium", 
+                      hasError(index, 'name') && "bg-red-50 text-red-800 border-b border-red-200"
+                    )}
+                  >
+                    {product.name}
+                  </TableCell>
+                  <TableCell 
+                    className={cn(
+                      "", 
+                      hasError(index, 'pricing') && "bg-red-50 text-red-800 border-b border-red-200"
+                    )}
+                  >
+                    {product.pricing}
+                  </TableCell>
+                  <TableCell 
+                    className={cn(
+                      "max-w-[200px] truncate", 
+                      hasError(index, 'description') && "bg-red-50 text-red-800 border-b border-red-200"
+                    )}
+                  >
+                    {product.description}
+                  </TableCell>
+                  <TableCell 
+                    className={cn(
+                      "", 
+                      hasError(index, 'features') && "bg-red-50 text-red-800 border-b border-red-200"
+                    )}
+                  >
+                    {product.features.join(', ')}
+                  </TableCell>
+                  <TableCell 
+                    className={cn(
+                      "", 
+                      hasError(index, 'benefits') && "bg-red-50 text-red-800 border-b border-red-200"
+                    )}
+                  >
+                    {product.benefits}
+                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -158,8 +216,8 @@ export function ProductPreviewTable({ products }: ProductPreviewTableProps) {
       
       <div className="text-sm text-muted-foreground p-2 border-t">
         {filterText ? 
-          t('filteredProductsCount', { count: filteredAndSortedProducts.length, total: products.length }) : 
-          t('totalProductsCount', { count: products.length })}
+          t('filteredProductsCount').replace('{count}', filteredAndSortedProducts.length.toString()).replace('{total}', products.length.toString()) : 
+          t('totalProductsCount').replace('{count}', products.length.toString())}
       </div>
     </div>
   );
