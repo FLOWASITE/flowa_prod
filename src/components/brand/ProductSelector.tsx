@@ -1,11 +1,11 @@
-
-import React from 'react';
-import { Plus, Package } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Package, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ImportProductsDialog } from './ImportProductsDialog';
 
 const translations = {
   products: {
@@ -63,7 +63,14 @@ const translations = {
     fr: 'Aucun produit ou service ajouté pour l\'instant. Cliquez sur le bouton ci-dessous pour ajouter votre premier produit.',
     es: 'Aún no se han añadido productos o servicios. Haga clic en el botón de abajo para añadir su primer producto.',
     th: 'ยังไม่มีสินค้าหรือบริการที่เพิ่ม คลิกปุ่มด้านล่างเพื่อเพิ่มสินค้าแรกของคุณ',
-  }
+  },
+  importProducts: {
+    en: 'Import Products',
+    vi: 'Nhập sản phẩm',
+    fr: 'Importer des produits',
+    es: 'Importar productos',
+    th: 'นำเข้าสินค้า',
+  },
 };
 
 interface Product {
@@ -81,6 +88,7 @@ interface ProductSelectorProps {
 
 export function ProductSelector({ products, onProductsChange }: ProductSelectorProps) {
   const { currentLanguage } = useLanguage();
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   
   const t = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key].en;
@@ -115,6 +123,10 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
     onProductsChange(updatedProducts);
   };
 
+  const handleImportProducts = (importedProducts: Product[]) => {
+    onProductsChange([...products, ...importedProducts]);
+  };
+
   return (
     <div className="space-y-4">
       {products.length === 0 && (
@@ -123,6 +135,28 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
           <p className="text-muted-foreground">{t('noProducts')}</p>
         </div>
       )}
+
+      <div className="flex gap-2 mb-4">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={() => setIsImportDialogOpen(true)}
+          className="flex-1 bg-primary/5 border-primary/20 hover:bg-primary/10"
+        >
+          <File className="h-4 w-4 mr-2" />
+          {t('importProducts')}
+        </Button>
+        
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={addNewProduct}
+          className="flex-1 bg-primary/5 border-primary/20 hover:bg-primary/10"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          {t('addProduct')}
+        </Button>
+      </div>
 
       <div className="space-y-6">
         {products.map((product, index) => (
@@ -202,15 +236,11 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
         ))}
       </div>
 
-      <Button 
-        type="button" 
-        variant="outline" 
-        onClick={addNewProduct}
-        className="w-full bg-primary/5 border-primary/20 hover:bg-primary/10"
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        {t('addProduct')}
-      </Button>
+      <ImportProductsDialog 
+        open={isImportDialogOpen}
+        onOpenChange={setIsImportDialogOpen}
+        onImportProducts={handleImportProducts}
+      />
     </div>
   );
 }
