@@ -216,13 +216,13 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
           </Button>
         </DialogTrigger>
         
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
           <DialogHeader>
             <DialogTitle>{t('manageQA')}</DialogTitle>
           </DialogHeader>
           
-          <div className="grid grid-cols-1 gap-4 mt-4">
-            <div className="flex justify-between items-center">
+          <div className="grid grid-cols-1 gap-4 mt-2 overflow-y-auto flex-1 px-1">
+            <div className="flex justify-between items-center sticky top-0 bg-background pt-2 pb-2 z-10">
               <h3 className="font-medium">{t('qaList')}</h3>
               <Button 
                 variant="outline"
@@ -269,7 +269,7 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
             
             <div>
               <h3 className="font-medium mb-2">{t('qaList')}</h3>
-              <ScrollArea className="h-[40vh] border rounded-md">
+              <ScrollArea className="h-[30vh] border rounded-md">
                 {localQAPairs.length > 0 ? (
                   <div className="p-4 space-y-4">
                     {localQAPairs.map((pair, index) => (
@@ -300,7 +300,7 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
             </div>
           </div>
           
-          <DialogFooter>
+          <DialogFooter className="pt-4 border-t mt-4 sticky bottom-0 bg-background">
             <Button variant="outline" onClick={() => setOpen(false)}>
               {t('cancel')}
             </Button>
