@@ -69,14 +69,13 @@ export function ImportProductForm({ products, onProductsChange }: ImportProductF
               <TableHead>{t('price')}</TableHead>
               <TableHead>{t('description')}</TableHead>
               <TableHead>{t('features')}</TableHead>
-              <TableHead>{t('benefits')}</TableHead>
-              <TableHead width={80} className="text-right"></TableHead>
+              <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
                   {t('noProducts')}
                 </TableCell>
               </TableRow>
@@ -112,14 +111,6 @@ export function ImportProductForm({ products, onProductsChange }: ImportProductF
                       value={product.features.join('; ')} 
                       onChange={(e) => updateProduct(index, 'features', e.target.value)}
                       placeholder={t('featuresPlaceholder')}
-                      className="w-full"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input 
-                      value={product.benefits} 
-                      onChange={(e) => updateProduct(index, 'benefits', e.target.value)}
-                      placeholder={t('benefits')}
                       className="w-full"
                     />
                   </TableCell>
