@@ -4,6 +4,7 @@ import { QADialog } from '@/components/brand/QADialog';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquare } from 'lucide-react';
+import { QAPair } from '../qa/types';
 
 const translations = {
   manageQA: {
@@ -28,11 +29,6 @@ const translations = {
     th: 'คำถามและคำตอบทั้งหมด: ',
   }
 };
-
-interface QAPair {
-  question: string;
-  answer: string;
-}
 
 interface QASectionProps {
   qaPairs: QAPair[];
