@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
+import { Product } from './translations';
 
 const translations = {
   importProducts: {
@@ -129,14 +130,6 @@ const translations = {
     th: 'อัปโหลดไฟล์ Excel/CSV',
   }
 };
-
-interface Product {
-  name: string;
-  description: string;
-  features: string[];
-  pricing: string;
-  benefits: string;
-}
 
 interface ImportProductsDialogProps {
   open: boolean;

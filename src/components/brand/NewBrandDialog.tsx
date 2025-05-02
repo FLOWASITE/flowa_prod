@@ -14,7 +14,7 @@ import { Globe, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { Brand } from '@/types';
-import { ProductSelector } from './ProductSelector';
+import { ProductSelector } from '@/components/brand/products/ProductSelector';
 import { ToneSelector } from './ToneSelector';
 import { ThemeSelector } from './ThemeSelector';
 import { BrandKnowledgeSection } from './BrandKnowledgeSection';
