@@ -49,11 +49,16 @@ export function BrandDetailsContent({
               onKnowledgeUpdate(knowledge);
               if (knowledge.products) {
                 const updatedProducts = knowledge.products.map((product: Product) => ({
-                  ...product,
-                  id: uuidv4(),
-                  brandId: brand!.id,
-                  createdAt: new Date(),
-                  updatedAt: new Date()
+                  id: product.id || uuidv4(),
+                  brandId: product.brandId || brand.id,
+                  name: product.name,
+                  description: product.description,
+                  features: product.features,
+                  pricing: product.pricing || '',
+                  benefits: product.benefits || '',
+                  image: product.image,
+                  createdAt: product.createdAt || new Date(),
+                  updatedAt: product.updatedAt || new Date()
                 }));
                 setProducts(updatedProducts as ProductType[]);
               }

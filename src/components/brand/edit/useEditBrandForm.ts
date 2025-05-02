@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Brand } from '@/types';
+import { Brand, ProductType } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { editDialogTranslations } from './translations';
@@ -17,6 +17,37 @@ interface BrandKnowledgeState {
   qaPairs: QAPair[];
   products?: Product[];
 }
+
+// Function to convert between Product and ProductType
+const convertToProduct = (productType: ProductType): Product => {
+  return {
+    id: productType.id,
+    brandId: productType.brandId,
+    name: productType.name,
+    description: productType.description,
+    features: productType.features,
+    pricing: productType.pricing || '',
+    benefits: productType.benefits || '',
+    image: productType.image,
+    createdAt: productType.createdAt,
+    updatedAt: productType.updatedAt
+  };
+};
+
+const convertToProductType = (product: Product): ProductType => {
+  return {
+    id: product.id || '',
+    brandId: product.brandId || '',
+    name: product.name,
+    description: product.description,
+    features: product.features,
+    pricing: product.pricing,
+    benefits: product.benefits,
+    image: product.image,
+    createdAt: product.createdAt || new Date(),
+    updatedAt: product.updatedAt || new Date()
+  };
+};
 
 export function useEditBrandForm(
   brand: Brand,
@@ -40,7 +71,12 @@ export function useEditBrandForm(
     brand.tone ? brand.tone.split(', ') : ['Professional']
   );
   const [selectedThemes, setSelectedThemes] = useState<string[]>(brand.themes || []);
-  const [products, setProducts] = useState<Product[]>(brand.products || []);
+  
+  // Convert ProductType[] to Product[]
+  const [products, setProducts] = useState<Product[]>(
+    brand.products ? brand.products.map(convertToProduct) : []
+  );
+  
   const [brandKnowledge, setBrandKnowledge] = useState<BrandKnowledgeState>({
     brandInfo: brand.knowledge?.history || '',
     qaPairs: brand.knowledge?.qaPairs || [],
@@ -63,7 +99,7 @@ export function useEditBrandForm(
       });
       setSelectedTones(brand.tone ? brand.tone.split(', ') : ['Professional']);
       setSelectedThemes(brand.themes || []);
-      setProducts(brand.products || []);
+      setProducts(brand.products ? brand.products.map(convertToProduct) : []);
       setBrandKnowledge({
         brandInfo: brand.knowledge?.history || '',
         qaPairs: brand.knowledge?.qaPairs || [],
@@ -210,7 +246,7 @@ export function useEditBrandForm(
         tone: data.tone,
         themes: data.themes || [],
         updatedAt: new Date(data.updated_at),
-        products: products,
+        products: products.map(convertToProductType),
         knowledge: {
           ...brand.knowledge,
           history: brandKnowledge.brandInfo,

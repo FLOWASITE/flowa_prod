@@ -12,7 +12,7 @@ import {
 import { Brand } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { EditBrandDialog } from './EditBrandDialog';
+import { EditBrandDialog } from '@/components/brand/edit/EditBrandDialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 

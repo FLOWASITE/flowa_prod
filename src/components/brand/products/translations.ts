@@ -66,12 +66,16 @@ export const translations = {
 };
 
 export interface Product {
+  id?: string;
+  brandId?: string;
   name: string;
   description: string;
   features: string[];
   pricing: string;
   benefits: string;
   image?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ProductSelectorProps {

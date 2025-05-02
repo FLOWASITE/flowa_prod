@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { EditBrandDialog } from '@/components/brand/EditBrandDialog';
+import { EditBrandDialog } from '@/components/brand/edit/EditBrandDialog';
 import { BrandDetailsHeader } from '@/components/brand/details/BrandDetailsHeader';
 import { BrandDetailsContent } from '@/pages/brand/details/BrandDetailsContent';
 import { BrandDetailsLoading } from '@/pages/brand/details/BrandDetailsLoading';
