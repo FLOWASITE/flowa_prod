@@ -28,7 +28,7 @@ export const newBrandDialogTranslations = {
     es: 'Descripción',
     th: 'คำอธิบาย',
   },
-  website: {
+  websiteUrl: { // Changed the key from 'website' to 'websiteUrl' to avoid duplication
     en: 'Website',
     vi: 'Trang web',
     fr: 'Site web',
@@ -112,7 +112,7 @@ export const newBrandDialogTranslations = {
     es: 'URL del logotipo',
     th: 'URL โลโก้',
   },
-  website: {
+  websiteUrl: {
     en: 'Website URL',
     vi: 'URL Website',
     fr: 'URL du site web',
