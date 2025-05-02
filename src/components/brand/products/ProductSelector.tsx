@@ -8,7 +8,7 @@ import { Product } from './translations';
 import { ImportProductsDialog } from './import/ImportProductsDialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, FileText, Import } from 'lucide-react';
 import { translations } from './translations';
 
 interface ProductSelectorProps {
@@ -60,8 +60,6 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
 
   return (
     <div className="space-y-4">
-      {products.length === 0 && <EmptyProductState />}
-
       {!showProductForm ? (
         <div className="flex flex-col items-center justify-center p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
           <p className="mb-4 text-lg font-medium">
@@ -69,7 +67,7 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
           </p>
           <Button 
             onClick={() => setShowProductForm(true)}
-            className="gap-2"
+            className="gap-2 bg-[#ea384c] hover:bg-[#c52940] text-white"
           >
             <Plus className="h-4 w-4" />
             {t('manageProducts')}
@@ -77,34 +75,85 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
         </div>
       ) : (
         <>
-          <Button 
-            variant="outline" 
-            onClick={() => setShowProductForm(false)}
-            className="mb-2"
-          >
-            &larr; {t('back')}
-          </Button>
+          <div className="flex justify-between items-center mb-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowProductForm(false)}
+              className="border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
+            >
+              &larr; {t('back')}
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsImportDialogOpen(true)} 
+              className="border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              {t('importCSV')}
+            </Button>
+          </div>
           
-          <ProductActions 
-            onAddProduct={addNewProduct} 
-            onOpenImportDialog={() => setIsImportDialogOpen(true)} 
-          />
-
-          {products.length > 0 && (
-            <ScrollArea className="h-[30vh] border rounded-md">
-              <div className="p-4 space-y-6">
-                {products.map((product, index) => (
-                  <ProductItem
-                    key={index}
-                    product={product}
-                    index={index}
-                    onUpdate={updateProduct}
-                    onRemove={removeProduct}
-                  />
-                ))}
+          <div className="bg-white rounded-lg border p-4">
+            <p className="text-center text-sm text-gray-500 mb-4">
+              {t('importOrAddDirectly')}
+            </p>
+            
+            <div className="flex mb-4">
+              <Button 
+                variant="outline" 
+                className="flex-1 border-gray-300 bg-gray-200 text-gray-700 hover:bg-gray-300"
+                onClick={() => setIsImportDialogOpen(true)}
+              >
+                {t('previewCSV')}
+              </Button>
+              <Button 
+                variant="default" 
+                className="flex-1 bg-white border border-l-0 border-gray-300 text-[#ea384c] hover:bg-gray-100"
+              >
+                {t('importSuccess')}
+              </Button>
+            </div>
+            
+            <p className="text-center text-sm text-gray-500 mb-4">
+              {t('importUsingCSV')}
+            </p>
+            
+            <div className="border rounded-md overflow-hidden">
+              <div className="grid grid-cols-4 font-medium bg-white border-b">
+                <div className="p-3 border-r">{t('productName')}</div>
+                <div className="p-3 border-r">{t('price')}</div>
+                <div className="p-3 border-r">{t('description')}</div>
+                <div className="p-3">{t('features')}</div>
               </div>
-            </ScrollArea>
-          )}
+              
+              {products.length === 0 ? (
+                <div className="bg-gray-200 text-center p-6 text-gray-600">
+                  {t('noProducts')}
+                </div>
+              ) : (
+                <ScrollArea className="h-[300px]">
+                  {products.map((product, index) => (
+                    <ProductItem
+                      key={index}
+                      product={product}
+                      index={index}
+                      onUpdate={updateProduct}
+                      onRemove={removeProduct}
+                    />
+                  ))}
+                </ScrollArea>
+              )}
+            </div>
+            
+            <Button 
+              onClick={addNewProduct}
+              className="mt-4 border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
+              variant="outline"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              {t('addProduct')}
+            </Button>
+          </div>
         </>
       )}
 

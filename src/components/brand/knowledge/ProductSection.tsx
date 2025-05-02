@@ -39,7 +39,7 @@ export function ProductSection({ products, onProductsChange }: ProductSectionPro
     <Card className="border border-muted">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg font-medium">
-          <ShoppingBag className="h-5 w-5 text-primary" />
+          <ShoppingBag className="h-5 w-5 text-[#ea384c]" />
           {t('manageProducts')}
         </CardTitle>
         <CardDescription>
