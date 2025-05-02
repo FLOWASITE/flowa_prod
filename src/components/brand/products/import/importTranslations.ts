@@ -81,8 +81,8 @@ export const importTranslations = {
     vi: "Định dạng CSV không hợp lệ"
   },
   importDescription: {
-    en: "Import products from a CSV file. Each row should contain name, price, description, features (separated by semicolons), and benefits.",
-    vi: "Nhập sản phẩm từ tệp CSV. Mỗi hàng nên chứa tên, giá, mô tả, tính năng (phân tách bằng dấu chấm phẩy) và lợi ích."
+    en: "Import products from a CSV file or add them directly below.",
+    vi: "Nhập sản phẩm từ tệp CSV hoặc thêm trực tiếp bên dưới."
   },
   uploadExcel: {
     en: "Upload CSV File",
@@ -111,5 +111,33 @@ export const importTranslations = {
   validationSuccess: {
     en: "All products are valid",
     vi: "Tất cả sản phẩm đều hợp lệ"
+  },
+  addProductRow: {
+    en: "Add Product",
+    vi: "Thêm sản phẩm"
+  },
+  manualEntry: {
+    en: "Manual Entry",
+    vi: "Nhập thủ công"
+  },
+  csvPreview: {
+    en: "CSV Preview",
+    vi: "Xem trước CSV"
+  },
+  featuresPlaceholder: {
+    en: "Separate features with semicolons",
+    vi: "Phân tách tính năng bằng dấu chấm phẩy"
+  },
+  or: {
+    en: "or",
+    vi: "hoặc"
+  },
+  addManually: {
+    en: "Add Products Manually",
+    vi: "Thêm sản phẩm thủ công"
+  },
+  tabsNote: {
+    en: "You can import products via CSV or add them manually",
+    vi: "Bạn có thể nhập sản phẩm qua CSV hoặc thêm thủ công"
   }
 };
