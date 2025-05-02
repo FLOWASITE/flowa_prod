@@ -258,7 +258,11 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
                 />
               </div>
               
-              <Button type="button" onClick={handleAddQA} className="w-full">
+              <Button 
+                type="button" 
+                onClick={handleAddQA} 
+                className="w-full"
+              >
                 <Plus className="h-4 w-4 mr-2" /> {t('add')}
               </Button>
             </div>
@@ -278,6 +282,7 @@ export function QADialog({ qaPairs, onChange }: QADialogProps) {
                           onClick={() => handleDeleteQA(index)}
                         >
                           <Trash className="h-4 w-4" />
+                          <span className="sr-only">{t('delete')}</span>
                         </Button>
                         <p className="font-medium text-sm">{t('question')}:</p>
                         <p className="mb-2">{pair.question}</p>
