@@ -9,22 +9,19 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Plus, Globe, Info } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { Brand } from '@/types';
 import { ProductSelector } from '@/components/brand/products/ProductSelector';
-import { ToneSelector } from './ToneSelector';
-import { ThemeSelector } from './ThemeSelector';
-import { BrandKnowledgeSection } from './BrandKnowledgeSection';
-import { SocialConnectionsSelector } from './SocialConnectionsSelector';
-import { LogoUpload } from './LogoUpload';
 import { useBrandForm } from '@/hooks/useBrandForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
+import { BasicInfoTab } from './edit/BasicInfoTab';
+import { TonesTab } from './edit/TonesTab';
+import { ThemesTab } from './edit/ThemesTab';
+import { BrandKnowledgeTab } from './edit/BrandKnowledgeTab';
+import { SocialConnectionsTab } from './edit/SocialConnectionsTab';
+import { editDialogTranslations } from './edit/translations';
 
 const translations = {
   newBrand: {
@@ -144,7 +141,7 @@ const translations = {
     vi: 'Giọng điệu',
     fr: 'Ton de voix',
     es: 'Tono de voz',
-    th: 'น้ำเสี��ง',
+    th: 'น้ำเสียง',
   },
   suggestedTones: {
     en: 'Suggested Tones',
@@ -290,143 +287,43 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             
             <div className="p-6 max-h-[60vh] overflow-y-auto">
               <TabsContent value="basic" className="mt-0 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-base font-medium">{t('brandName')}</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="website" className="text-base font-medium flex items-center gap-2">
-                        <Globe className="h-4 w-4" />
-                        {t('website')}
-                      </Label>
-                      <Input
-                        id="website"
-                        name="website"
-                        value={formData.website}
-                        onChange={handleChange}
-                        placeholder="https://"
-                        className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="text-base font-medium">Brand Colors</Label>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <Label htmlFor="primaryColor" className="text-sm">{t('primaryColor')}</Label>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              id="primaryColor"
-                              name="primaryColor"
-                              type="color"
-                              value={formData.primaryColor}
-                              onChange={handleChange}
-                              className="h-10 w-10 p-0.5 rounded cursor-pointer"
-                            />
-                            <span className="text-sm text-muted-foreground">{formData.primaryColor}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <Label htmlFor="secondaryColor" className="text-sm">{t('secondaryColor')}</Label>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              id="secondaryColor"
-                              name="secondaryColor"
-                              type="color"
-                              value={formData.secondaryColor}
-                              onChange={handleChange}
-                              className="h-10 w-10 p-0.5 rounded cursor-pointer"
-                            />
-                            <span className="text-sm text-muted-foreground">{formData.secondaryColor}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-base font-medium block mb-2">{t('logo')}</Label>
-                    <LogoUpload
-                      onLogoChange={(logo) => handleChange({ target: { name: 'logo', value: logo } } as any)}
-                      translations={{
-                        uploadLogo: t('uploadLogo'),
-                        dragAndDrop: t('dragAndDrop')
-                      }}
-                    />
-                    
-                    <div className="mt-4 p-3 bg-muted/50 rounded-md">
-                      <div className="flex items-center mb-2">
-                        <Info className="h-4 w-4 text-muted-foreground mr-2" />
-                        <span className="text-sm font-medium">Brand Preview</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-3 p-4 border rounded-md bg-card">
-                        <div className="flex-shrink-0">
-                          {formData.logo ? (
-                            <img src={formData.logo} alt="Logo preview" className="h-10 w-10 object-contain" />
-                          ) : (
-                            <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
-                              <span className="text-muted-foreground font-medium">
-                                {formData.name ? formData.name[0].toUpperCase() : '?'}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <h4 className="font-medium" style={{color: formData.primaryColor}}>
-                            {formData.name || 'Your Brand Name'}
-                          </h4>
-                          <div className="h-1 w-16 mt-1 rounded-full" style={{background: formData.secondaryColor}}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <BasicInfoTab 
+                  formData={formData}
+                  handleChange={handleChange}
+                  translations={editDialogTranslations}
+                />
               </TabsContent>
               
               <TabsContent value="tone" className="mt-0 space-y-4">
-                <ToneSelector
+                <TonesTab 
                   selectedTones={selectedTones}
-                  onTonesChange={setSelectedTones}
+                  setSelectedTones={setSelectedTones}
                 />
               </TabsContent>
               
               <TabsContent value="themes" className="mt-0 space-y-4">
-                <ThemeSelector
+                <ThemesTab
                   selectedThemes={selectedThemes}
-                  onThemesChange={setSelectedThemes}
+                  setSelectedThemes={setSelectedThemes}
                 />
               </TabsContent>
               
               <TabsContent value="knowledge" className="mt-0 space-y-6">
-                <div className="space-y-6">
-                  <BrandKnowledgeSection
-                    data={brandKnowledge}
-                    onUpdate={setBrandKnowledge}
+                <BrandKnowledgeTab
+                  brandKnowledge={brandKnowledge}
+                  setBrandKnowledge={setBrandKnowledge}
+                />
+                
+                <div className="border-t pt-6">
+                  <ProductSelector 
+                    products={products}
+                    onProductsChange={setProducts}
                   />
-                  
-                  <div className="border-t pt-6">
-                    <ProductSelector 
-                      products={products}
-                      onProductsChange={setProducts}
-                    />
-                  </div>
                 </div>
               </TabsContent>
               
               <TabsContent value="social" className="mt-0">
-                <SocialConnectionsSelector />
+                <SocialConnectionsTab />
               </TabsContent>
             </div>
           </Tabs>
