@@ -1,115 +1,79 @@
 
 export const importTranslations = {
   importProducts: {
-    vi: 'Nhập sản phẩm',
-    en: 'Import Products',
-    fr: 'Importer des produits',
-    es: 'Importar productos',
-    th: 'นำเข้าสินค้า',
-  },
-  selectFile: {
-    vi: 'Chọn file Excel/CSV',
-    en: 'Select Excel/CSV file',
-    fr: 'Sélectionner un fichier Excel/CSV',
-    es: 'Seleccionar archivo Excel/CSV',
-    th: 'เลือกไฟล์ Excel/CSV',
+    en: "Import Products",
+    vi: "Nhập sản phẩm"
   },
   preview: {
-    vi: 'Xem trước dữ liệu',
-    en: 'Data Preview',
-    fr: 'Aperçu des données',
-    es: 'Vista previa de datos',
-    th: 'ดูตัวอย่างข้อมูล',
-  },
-  import: {
-    vi: 'Nhập',
-    en: 'Import',
-    fr: 'Importer',
-    es: 'Importar',
-    th: 'นำเข้า',
-  },
-  cancel: {
-    vi: 'Hủy',
-    en: 'Cancel',
-    fr: 'Annuler',
-    es: 'Cancelar',
-    th: 'ยกเลิก',
-  },
-  invalidFormat: {
-    vi: 'File không đúng định dạng. Vui lòng kiểm tra lại.',
-    en: 'Invalid file format. Please check the template.',
-    fr: 'Format de fichier invalide. Veuillez vérifier le modèle.',
-    es: 'Formato de archivo no válido. Por favor, revise la plantilla.',
-    th: 'รูปแบบไฟล์ไม่ถูกต้อง โปรดตรวจสอบเทมเพลต',
-  },
-  downloadTemplate: {
-    vi: 'Tải xuống mẫu',
-    en: 'Download Template',
-    fr: 'Télécharger le modèle',
-    es: 'Descargar plantilla',
-    th: 'ดาวน์โหลดเทมเพลต',
-  },
-  importDescription: {
-    vi: 'Nhập dữ liệu sản phẩm từ file Excel hoặc CSV. Vui lòng đảm bảo file của bạn có đúng định dạng.',
-    en: 'Import product data from Excel or CSV files. Please ensure your file has the correct format.',
-    fr: 'Importez des données de produits à partir de fichiers Excel ou CSV. Veuillez vous assurer que votre fichier a le format correct.',
-    es: 'Importe datos de productos de archivos Excel o CSV. Asegúrese de que su archivo tenga el formato correcto.',
-    th: 'นำเข้าข้อมูลสินค้าจากไฟล์ Excel หรือ CSV โปรดตรวจสอบว่าไฟล์ของคุณมีรูปแบบที่ถูกต้อง',
-  },
-  downloadConfirm: {
-    vi: 'Tải xuống mẫu file',
-    en: 'Download Template File',
-    fr: 'Télécharger le fichier modèle',
-    es: 'Descargar archivo de plantilla',
-    th: 'ดาวน์โหลดไฟล์เทมเพลต',
-  },
-  downloadDescription: {
-    vi: 'Tải xuống mẫu file Excel để nhập dữ liệu sản phẩm',
-    en: 'Download an Excel template for importing product data',
-    fr: 'Télécharger un modèle Excel pour importer des données de produits',
-    es: 'Descargar una plantilla Excel para importar datos de productos',
-    th: 'ดาวน์โหลดเทมเพลต Excel สำหรับการนำเข้าข้อมูลสินค้า',
+    en: "Preview",
+    vi: "Xem trước"
   },
   productName: {
-    vi: 'Tên sản phẩm',
-    en: 'Product Name',
-    fr: 'Nom du produit',
-    es: 'Nombre del producto',
-    th: 'ชื่อสินค้า',
+    en: "Product Name",
+    vi: "Tên sản phẩm"
   },
   price: {
-    vi: 'Giá',
-    en: 'Price',
-    fr: 'Prix',
-    es: 'Precio',
-    th: 'ราคา',
+    en: "Price",
+    vi: "Giá"
   },
   description: {
-    vi: 'Mô tả',
-    en: 'Description',
-    fr: 'Description',
-    es: 'Descripción',
-    th: 'คำอธิบาย',
+    en: "Description",
+    vi: "Mô tả"
   },
   features: {
-    vi: 'Tính năng',
-    en: 'Features',
-    fr: 'Fonctionnalités',
-    es: 'Características',
-    th: 'คุณสมบัติ',
+    en: "Features",
+    vi: "Tính năng"
   },
   benefits: {
-    vi: 'Công dụng',
-    en: 'Benefits',
-    fr: 'Avantages',
-    es: 'Beneficios',
-    th: 'ประโยชน์',
+    en: "Benefits",
+    vi: "Lợi ích"
   },
-  uploadExcel: {
-    vi: 'Tải lên file Excel/CSV',
-    en: 'Upload Excel/CSV File',
-    fr: 'Télécharger un fichier Excel/CSV',
-    es: 'Subir archivo Excel/CSV',
-    th: 'อัปโหลดไฟล์ Excel/CSV',
+  import: {
+    en: "Import",
+    vi: "Nhập"
+  },
+  cancel: {
+    en: "Cancel",
+    vi: "Hủy"
+  },
+  templateDownload: {
+    en: "Download Template",
+    vi: "Tải xuống mẫu"
+  },
+  downloadTemplate: {
+    en: "Download CSV Template",
+    vi: "Tải xuống mẫu CSV"
+  },
+  downloadDescription: {
+    en: "Download a template CSV file to help you format your product data correctly.",
+    vi: "Tải xuống tệp CSV mẫu để giúp bạn định dạng dữ liệu sản phẩm của mình một cách chính xác."
+  },
+  downloadButton: {
+    en: "Download CSV",
+    vi: "Tải xuống CSV"
+  },
+  close: {
+    en: "Close",
+    vi: "Đóng"
+  },
+  filterProducts: {
+    en: "Filter products...",
+    vi: "Lọc sản phẩm..."
+  },
+  noProducts: {
+    en: "No products to display",
+    vi: "Không có sản phẩm nào để hiển thị"
+  },
+  noMatchingProducts: {
+    en: "No products match your filter",
+    vi: "Không có sản phẩm nào khớp với bộ lọc của bạn"
+  },
+  filteredProductsCount: {
+    en: "Showing {count} of {total} products",
+    vi: "Hiển thị {count} trong số {total} sản phẩm"
+  },
+  totalProductsCount: {
+    en: "Total: {count} products",
+    vi: "Tổng cộng: {count} sản phẩm"
   }
 };
