@@ -4,8 +4,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { ProductItem } from './ProductItem';
 import { EmptyProductState } from './EmptyProductState';
 import { ProductActions } from './ProductActions';
-import { ImportProductsDialog } from './ImportProductsDialog';
 import { Product } from './translations';
+import { ImportProductsDialog } from './import/ImportProductsDialog';
 
 interface ProductSelectorProps {
   products: Product[];
