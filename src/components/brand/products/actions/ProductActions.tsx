@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { File, Plus } from 'lucide-react';
+import { Plus, File } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { productTranslations } from '../translations';
-import { Button } from '@/components/ui/button';
 
 interface ProductActionsProps {
   onAddProduct: () => void;
