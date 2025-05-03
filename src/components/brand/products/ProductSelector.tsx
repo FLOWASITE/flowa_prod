@@ -24,7 +24,11 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
     return productTranslations[key][currentLanguage.code] || productTranslations[key].en;
   };
   
-  const addNewProduct = () => {
+  const addNewProduct = (e: React.MouseEvent) => {
+    // Prevent event propagation and default form submission
+    e.preventDefault();
+    e.stopPropagation();
+    
     onProductsChange([
       ...products,
       { name: '', description: '', features: [], pricing: '', benefits: '' }
@@ -97,8 +101,6 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
               {t('importOrAddDirectly')}
             </p>
             
-            {/* Remove the two buttons as requested */}
-            
             <p className="text-center text-sm text-gray-500 mb-4">
               {t('importUsingCSV')}
             </p>
@@ -131,7 +133,8 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
             </div>
             
             <Button 
-              onClick={addNewProduct} // Ensure this function is properly called
+              onClick={addNewProduct}
+              type="button"
               className="mt-4 w-full md:w-auto flex items-center justify-center gap-2 border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
               variant="outline"
             >
