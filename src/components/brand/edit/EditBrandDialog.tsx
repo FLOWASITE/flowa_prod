@@ -62,9 +62,9 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden bg-white dark:bg-gray-950 border-2">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden bg-white/90 dark:bg-gray-950/90 backdrop-blur-md border-2">
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
-          <DialogHeader className="p-6 pb-4 border-b">
+          <DialogHeader className="p-6 pb-4 border-b bg-white/95 dark:bg-gray-950/95">
             <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
               {t('editBrand')}
             </DialogTitle>
@@ -72,7 +72,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
           </DialogHeader>
           
           <Tabs defaultValue="basic" className="flex-1">
-            <div className="flex border-b">
+            <div className="flex border-b bg-white/95 dark:bg-gray-950/95">
               <TabsList className="h-auto p-0 bg-transparent flex-wrap">
                 <TabsTrigger 
                   value="basic" 
@@ -107,7 +107,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
               </TabsList>
             </div>
             
-            <div className="p-6 max-h-[60vh] overflow-y-auto">
+            <div className="p-6 max-h-[60vh] overflow-y-auto bg-white/80 dark:bg-gray-950/80">
               <TabsContent value="basic" className="mt-0 space-y-6">
                 <BasicInfoTab 
                   formData={formData} 
@@ -145,7 +145,7 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
             </div>
           </Tabs>
           
-          <DialogFooter className="p-6 bg-muted/30 border-t">
+          <DialogFooter className="p-6 bg-white/95 dark:bg-gray-950/95 border-t">
             <Button 
               type="button" 
               variant="outline" 

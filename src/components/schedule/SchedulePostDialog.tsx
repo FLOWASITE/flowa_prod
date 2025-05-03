@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { format } from 'date-fns';
@@ -98,7 +99,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white/90 dark:bg-gray-950/90 backdrop-blur-md">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Chỉnh sửa bài viết' : 'Tạo bài viết mới'}
@@ -115,7 +116,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                   <FormLabel>Nền tảng</FormLabel>
                   <FormControl>
                     <select
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                      className="flex h-10 w-full rounded-md border border-input bg-background/90 px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       {...field}
                     >
                       <option value="facebook">Facebook</option>
@@ -141,7 +142,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                   <FormControl>
                     <Textarea
                       placeholder="Nhập nội dung bài viết..."
-                      className="resize-none"
+                      className="resize-none bg-background/90"
                       rows={5}
                       {...field}
                     />
@@ -164,7 +165,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-full pl-3 text-left font-normal",
+                              "w-full pl-3 text-left font-normal bg-background/90",
                               !field.value && "text-muted-foreground"
                             )}
                           >
@@ -202,6 +203,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                     <FormControl>
                       <Input
                         type="time"
+                        className="bg-background/90"
                         {...field}
                       />
                     </FormControl>

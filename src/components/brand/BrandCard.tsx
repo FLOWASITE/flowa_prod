@@ -57,10 +57,10 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
 
   return (
     <>
-      <Card className="group bg-white dark:bg-gray-800 transition-all duration-200 hover:shadow-md">
+      <Card className="group bg-white/90 dark:bg-gray-800/90 transition-all duration-200 hover:shadow-md backdrop-blur-sm">
         <div className="p-6 space-y-4">
           <div className="flex items-start justify-between">
-            <div className="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+            <div className="h-12 w-12 rounded-lg bg-gray-100/80 dark:bg-gray-700/80 flex items-center justify-center">
               {currentBrand.logo ? (
                 <img src={currentBrand.logo} alt={currentBrand.name} className="w-8 h-8 object-contain" />
               ) : (
@@ -76,7 +76,7 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-48 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md">
                 <DropdownMenuItem className="cursor-pointer" onClick={() => setShowEditDialog(true)}>
                   {t('edit')}
                 </DropdownMenuItem>

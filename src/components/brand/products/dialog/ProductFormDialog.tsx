@@ -77,7 +77,7 @@ export function ProductFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white/90 dark:bg-gray-950/90 backdrop-blur-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold flex items-center">
             {isEdit ? t('editProduct') : t('addProduct')}

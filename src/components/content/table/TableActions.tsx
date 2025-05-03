@@ -20,7 +20,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
 }) => {
   return (
     <div className="flex space-x-1">
-      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100 hover:text-primary rounded-full transition-colors">
+      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100/90 hover:text-primary rounded-full transition-colors backdrop-blur-sm">
         <span className="sr-only">Chỉnh sửa</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
           <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
@@ -31,7 +31,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-8 w-8 p-0 text-green-500 hover:bg-green-50 rounded-full transition-colors"
+          className="h-8 w-8 p-0 text-green-500 hover:bg-green-50/90 rounded-full transition-colors backdrop-blur-sm"
           onClick={() => onApprove(item)}
         >
           <span className="sr-only">Phê duyệt</span>
@@ -43,7 +43,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
       <Button 
         variant="ghost" 
         size="sm" 
-        className="h-8 w-8 p-0 text-blue-500 hover:bg-blue-50 rounded-full transition-colors"
+        className="h-8 w-8 p-0 text-blue-500 hover:bg-blue-50/90 rounded-full transition-colors backdrop-blur-sm"
         onClick={() => onView(item)}
       >
         <span className="sr-only">Xem</span>
@@ -55,7 +55,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
       <Button 
         variant="ghost" 
         size="sm" 
-        className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+        className="h-8 w-8 p-0 text-red-500 hover:bg-red-50/90 rounded-full transition-colors backdrop-blur-sm"
         onClick={() => onDelete(item.id)}
       >
         <span className="sr-only">Xóa</span>
