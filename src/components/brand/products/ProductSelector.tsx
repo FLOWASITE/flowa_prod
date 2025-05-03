@@ -131,11 +131,11 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
             </div>
             
             <Button 
-              onClick={addNewProduct}
-              className="mt-4 border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
+              onClick={addNewProduct} // Ensure this function is properly called
+              className="mt-4 w-full md:w-auto flex items-center justify-center gap-2 border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
               variant="outline"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-4 w-4" />
               {t('addProduct')}
             </Button>
           </div>
