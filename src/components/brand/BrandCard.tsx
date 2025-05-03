@@ -9,6 +9,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Brand } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -28,6 +38,7 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [currentBrand, setCurrentBrand] = useState<Brand>(brand);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   const translations = {
     viewDetails: {
@@ -41,6 +52,30 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
     delete: {
       en: 'Delete',
       vi: 'Xóa'
+    },
+    deleteConfirmTitle: {
+      en: 'Are you sure?',
+      vi: 'Bạn có chắc chắn?'
+    },
+    deleteConfirmDesc: {
+      en: 'This action cannot be undone. This will permanently delete the brand and all of its data.',
+      vi: 'Hành động này không thể hoàn tác. Điều này sẽ xóa vĩnh viễn thương hiệu và tất cả dữ liệu của nó.'
+    },
+    cancel: {
+      en: 'Cancel',
+      vi: 'Hủy'
+    },
+    confirmDelete: {
+      en: 'Delete',
+      vi: 'Xóa'
+    },
+    deleteSuccess: {
+      en: 'Brand has been deleted',
+      vi: 'Thương hiệu đã được xóa'
+    },
+    deleteError: {
+      en: 'Error deleting brand',
+      vi: 'Lỗi khi xóa thương hiệu'
     }
   };
 
@@ -52,6 +87,44 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
     setCurrentBrand(updatedBrand);
     if (onBrandUpdated) {
       onBrandUpdated(updatedBrand);
+    }
+  };
+
+  const handleDeleteBrand = async () => {
+    try {
+      setIsDeleting(true);
+      
+      const { error } = await supabase
+        .from('brands')
+        .delete()
+        .eq('id', currentBrand.id);
+      
+      if (error) {
+        throw error;
+      }
+      
+      toast({
+        title: t('deleteSuccess'),
+        variant: 'default',
+      });
+      
+      // Remove the brand from parent component
+      if (onBrandUpdated) {
+        // We use onBrandUpdated to signal the parent to remove this brand
+        // This is a bit of a hack, but it works
+        const dummyDeletedBrand = { ...currentBrand, id: `deleted-${currentBrand.id}` };
+        onBrandUpdated(dummyDeletedBrand);
+      }
+    } catch (error) {
+      console.error('Error deleting brand:', error);
+      toast({
+        title: t('deleteError'),
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirmation(false);
     }
   };
 
@@ -84,7 +157,10 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
                 <DropdownMenuItem className="cursor-pointer" onClick={() => setShowEditDialog(true)}>
                   {t('edit')}
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer text-destructive">
+                <DropdownMenuItem 
+                  className="cursor-pointer text-destructive"
+                  onClick={() => setShowDeleteConfirmation(true)}
+                >
                   {t('delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -114,6 +190,35 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
         onOpenChange={setShowEditDialog} 
         onBrandUpdated={handleBrandUpdated} 
       />
+
+      <AlertDialog open={showDeleteConfirmation} onOpenChange={setShowDeleteConfirmation}>
+        <AlertDialogContent className="bg-white/95 dark:bg-gray-950/95 backdrop-blur-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('deleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('deleteConfirmDesc')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteBrand}
+              className="bg-red-600 hover:bg-red-700"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {t('confirmDelete')}
+                </span>
+              ) : t('confirmDelete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
