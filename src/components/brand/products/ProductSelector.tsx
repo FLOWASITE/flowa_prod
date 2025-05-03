@@ -1,15 +1,13 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ProductItem } from './item/ProductItem';
 import { EmptyProductState } from './EmptyProductState';
 import { ProductActions } from './actions/ProductActions';
-import { Product } from './translations';
+import { Product, productTranslations } from './translations';
 import { ImportProductsDialog } from './import/ImportProductsDialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Plus, FileText, Import } from 'lucide-react';
-import { translations } from './translations';
 
 interface ProductSelectorProps {
   products: Product[];
@@ -21,8 +19,8 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
   const [showProductForm, setShowProductForm] = useState(false);
   const { currentLanguage } = useLanguage();
   
-  const t = (key: keyof typeof translations) => {
-    return translations[key][currentLanguage.code] || translations[key].en;
+  const t = (key: keyof typeof productTranslations) => {
+    return productTranslations[key][currentLanguage.code] || productTranslations[key].en;
   };
   
   const addNewProduct = () => {

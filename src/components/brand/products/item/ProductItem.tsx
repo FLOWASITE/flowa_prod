@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Product } from '../translations';
-import { translations } from '../translations';
+import { Product, productTranslations } from '../translations';
 import { ProductHeader } from './ProductHeader';
 import { ProductField } from './ProductField';
 
@@ -16,8 +15,8 @@ interface ProductItemProps {
 export function ProductItem({ product, index, onUpdate, onRemove }: ProductItemProps) {
   const { currentLanguage } = useLanguage();
   
-  const t = (key: keyof typeof translations) => {
-    return translations[key][currentLanguage.code] || translations[key].en;
+  const t = (key: keyof typeof productTranslations) => {
+    return productTranslations[key][currentLanguage.code] || productTranslations[key].en;
   };
 
   const handleUpdate = (field: keyof Product, value: string) => {

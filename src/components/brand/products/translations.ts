@@ -111,4 +111,77 @@ export const productTranslations = {
     es: 'Importar de Excel',
     th: 'นำเข้าจาก Excel',
   },
+  productName: {
+    en: 'Product Name',
+    vi: 'Tên sản phẩm',
+    fr: 'Nom du produit',
+    es: 'Nombre del producto',
+    th: 'ชื่อสินค้า',
+  },
+  productDescription: {
+    en: 'Product Description',
+    vi: 'Mô tả sản phẩm',
+    fr: 'Description du produit',
+    es: 'Descripción del producto',
+    th: 'รายละเอียดสินค้า',
+  },
+  price: {
+    en: 'Price',
+    vi: 'Giá',
+    fr: 'Prix',
+    es: 'Precio',
+    th: 'ราคา',
+  },
+  totalProducts: {
+    en: 'Total Products',
+    vi: 'Tổng số sản phẩm',
+    fr: 'Total des produits',
+    es: 'Total de productos',
+    th: 'จำนวนสินค้าทั้งหมด',
+  },
+  back: {
+    en: 'Back',
+    vi: 'Quay lại',
+    fr: 'Retour',
+    es: 'Volver',
+    th: 'กลับ',
+  },
+  importCSV: {
+    en: 'Import CSV',
+    vi: 'Nhập CSV',
+    fr: 'Importer CSV',
+    es: 'Importar CSV',
+    th: 'นำเข้า CSV',
+  },
+  importProducts: {
+    en: 'Import Products',
+    vi: 'Nhập sản phẩm',
+    fr: 'Importer des produits',
+    es: 'Importar productos',
+    th: 'นำเข้าสินค้า',
+  },
+  previewCSV: {
+    en: 'Preview CSV',
+    vi: 'Xem trước CSV',
+    fr: 'Aperçu CSV',
+    es: 'Vista previa CSV',
+    th: 'ดูตัวอย่าง CSV',
+  },
+  importSuccess: {
+    en: 'Import Success',
+    vi: 'Nhập thành công',
+    fr: 'Importation réussie',
+    es: 'Importación exitosa',
+    th: 'นำเข้าสำเร็จ',
+  },
+  importUsingCSV: {
+    en: 'You can import products using CSV',
+    vi: 'Bạn có thể nhập sản phẩm bằng CSV',
+    fr: 'Vous pouvez importer des produits en utilisant CSV',
+    es: 'Puede importar productos usando CSV',
+    th: 'คุณสามารถนำเข้าสินค้าโดยใช้ CSV',
+  },
 };
+
+// Alias for backwards compatibility with existing components
+export const translations = productTranslations;

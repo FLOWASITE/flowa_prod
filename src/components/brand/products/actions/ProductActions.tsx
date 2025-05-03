@@ -2,7 +2,7 @@
 import React from 'react';
 import { File, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { translations } from '../translations';
+import { productTranslations } from '../translations';
 import { Button } from '@/components/ui/button';
 
 interface ProductActionsProps {
@@ -13,8 +13,8 @@ interface ProductActionsProps {
 export function ProductActions({ onAddProduct, onOpenImportDialog }: ProductActionsProps) {
   const { currentLanguage } = useLanguage();
   
-  const t = (key: keyof typeof translations) => {
-    return translations[key][currentLanguage.code] || translations[key].en;
+  const t = (key: keyof typeof productTranslations) => {
+    return productTranslations[key][currentLanguage.code] || productTranslations[key].en;
   };
 
   return (
