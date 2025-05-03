@@ -3,7 +3,7 @@ import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
-import { importTranslations } from './importTranslations';
+import { productTranslations } from '../translations';
 
 interface ImportDialogFooterProps {
   onCancel: () => void;
@@ -18,8 +18,8 @@ export function ImportDialogFooter({
 }: ImportDialogFooterProps) {
   const { currentLanguage } = useLanguage();
   
-  const t = (key: keyof typeof importTranslations) => {
-    return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
+  const t = (key: string) => {
+    return productTranslations[key]?.[currentLanguage.code] || productTranslations[key]?.en || key;
   };
 
   return (

@@ -11,7 +11,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { importTranslations } from './importTranslations';
+import { productTranslations } from '../translations';
 import { generateTemplateFile } from './csvUtils';
 
 interface TemplateDownloadDialogProps {
@@ -22,8 +22,8 @@ interface TemplateDownloadDialogProps {
 export function TemplateDownloadDialog({ open, onOpenChange }: TemplateDownloadDialogProps) {
   const { currentLanguage } = useLanguage();
   
-  const t = (key: keyof typeof importTranslations) => {
-    return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
+  const t = (key: string) => {
+    return productTranslations[key]?.[currentLanguage.code] || productTranslations[key]?.en || key;
   };
 
   const handleDownload = () => {

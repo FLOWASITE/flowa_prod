@@ -5,7 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Upload, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { importTranslations } from '../importTranslations';
+import { productTranslations } from '../../translations';
 import { Product } from '../../translations';
 import { ProductPreviewTable } from '../ProductPreviewTable';
 import { parseCsvToProducts, ValidationError } from '../csvUtils';
@@ -28,8 +28,8 @@ export function CsvImportTab({
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   
-  const t = (key: keyof typeof importTranslations) => {
-    return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
+  const t = (key: string) => {
+    return productTranslations[key]?.[currentLanguage.code] || productTranslations[key]?.en || key;
   };
   
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +89,7 @@ export function CsvImportTab({
           className="w-full md:w-auto"
         >
           <FileText className="h-4 w-4 mr-2" />
-          {t('downloadTemplate')}
+          {t('templateDownload')}
         </Button>
       </div>
 

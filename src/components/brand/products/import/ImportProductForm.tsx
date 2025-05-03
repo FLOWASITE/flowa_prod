@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { importTranslations } from './importTranslations';
+import { productTranslations } from '../translations';
 import {
   Table,
   TableBody,
@@ -24,8 +24,8 @@ interface ImportProductFormProps {
 export function ImportProductForm({ products, onProductsChange }: ImportProductFormProps) {
   const { currentLanguage } = useLanguage();
   
-  const t = (key: keyof typeof importTranslations) => {
-    return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
+  const t = (key: string) => {
+    return productTranslations[key]?.[currentLanguage.code] || productTranslations[key]?.en || key;
   };
 
   const updateProduct = (index: number, field: keyof Product, value: string) => {

@@ -16,12 +16,12 @@ import {
   TabsTrigger
 } from "@/components/ui/tabs";
 import { Product } from '../translations';
-import { importTranslations } from './importTranslations';
 import { ValidationError } from './csvUtils';
 import { ImportProductForm } from './ImportProductForm';
 import { TemplateDownloadDialog } from './TemplateDownloadDialog';
 import { CsvImportTab } from './tabs/CsvImportTab';
 import { ImportDialogFooter } from './ImportDialogFooter';
+import { productTranslations } from '../translations';
 
 interface ImportProductsDialogProps {
   open: boolean;
@@ -38,8 +38,8 @@ export function ImportProductsDialog({ open, onOpenChange, onImportProducts }: I
   const [activeTab, setActiveTab] = useState<string>("csv");
   const [manualProducts, setManualProducts] = useState<Product[]>([]);
 
-  const t = (key: keyof typeof importTranslations) => {
-    return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
+  const t = (key: string) => {
+    return productTranslations[key]?.[currentLanguage.code] || productTranslations[key]?.en || key;
   };
 
   const handleImport = () => {
@@ -102,7 +102,7 @@ export function ImportProductsDialog({ open, onOpenChange, onImportProducts }: I
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>{t('importProducts')}</DialogTitle>
-            <DialogDescription>{t('importDescription')}</DialogDescription>
+            <DialogDescription>{t('importOrAddDirectly')}</DialogDescription>
           </DialogHeader>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

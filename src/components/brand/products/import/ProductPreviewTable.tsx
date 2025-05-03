@@ -4,7 +4,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 import { Input } from '@/components/ui/input';
 import { Product } from '../translations';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { importTranslations } from './importTranslations';
+import { productTranslations } from '../translations';
 import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ValidationError } from './csvUtils';
@@ -23,8 +23,8 @@ export function ProductPreviewTable({ products, validationErrors = [] }: Product
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   
-  const t = (key: keyof typeof importTranslations) => {
-    return importTranslations[key][currentLanguage.code] || importTranslations[key].en;
+  const t = (key: string) => {
+    return productTranslations[key]?.[currentLanguage.code] || productTranslations[key]?.en || key;
   };
 
   // Create a map of validation errors for easier lookup
