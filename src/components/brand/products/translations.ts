@@ -1,3 +1,4 @@
+
 export interface Product {
   id?: string;
   brandId?: string;
@@ -88,6 +89,34 @@ export const productTranslations = {
     fr: 'Ajouter un produit',
     es: 'Añadir producto',
     th: 'เพิ่มผลิตภัณฑ์',
+  },
+  editProduct: {
+    en: 'Edit Product',
+    vi: 'Chỉnh sửa sản phẩm',
+    fr: 'Modifier le produit',
+    es: 'Editar producto',
+    th: 'แก้ไขผลิตภัณฑ์',
+  },
+  addProductDescription: {
+    en: 'Add information about your product or service',
+    vi: 'Thêm thông tin về sản phẩm hoặc dịch vụ của bạn',
+    fr: 'Ajouter des informations sur votre produit ou service',
+    es: 'Añadir información sobre su producto o servicio',
+    th: 'เพิ่มข้อมูลเกี่ยวกับผลิตภัณฑ์หรือบริการของคุณ',
+  },
+  editProductDescription: {
+    en: 'Edit information about your product or service',
+    vi: 'Chỉnh sửa thông tin về sản phẩm hoặc dịch vụ của bạn',
+    fr: 'Modifier les informations sur votre produit ou service',
+    es: 'Editar información sobre su producto o servicio',
+    th: 'แก้ไขข้อมูลเกี่ยวกับผลิตภัณฑ์หรือบริการของคุณ',
+  },
+  edit: {
+    en: 'Edit',
+    vi: 'Chỉnh sửa',
+    fr: 'Modifier',
+    es: 'Editar',
+    th: 'แก้ไข',
   },
   cancel: {
     en: 'Cancel',
