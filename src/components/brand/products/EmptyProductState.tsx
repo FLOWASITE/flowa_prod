@@ -1,10 +1,15 @@
 
 import React from 'react';
-import { Package } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { productTranslations } from './translations';
+import { Button } from '@/components/ui/button';
+import { ShoppingBag } from 'lucide-react';
 
-export function EmptyProductState() {
+interface EmptyProductStateProps {
+  onAddProduct: (e: React.MouseEvent) => void;
+}
+
+export function EmptyProductState({ onAddProduct }: EmptyProductStateProps) {
   const { currentLanguage } = useLanguage();
   
   const t = (key: keyof typeof productTranslations) => {
@@ -12,9 +17,21 @@ export function EmptyProductState() {
   };
 
   return (
-    <div className="text-center p-6 bg-gray-200 rounded-md">
-      <Package className="h-12 w-12 mx-auto text-gray-600 mb-2" />
-      <p className="text-gray-600">{t('noProducts')}</p>
+    <div className="text-center py-10 px-4">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+        <ShoppingBag className="h-8 w-8 text-[#ea384c]" />
+      </div>
+      <h3 className="text-lg font-medium mb-2">{t('noProductsYet')}</h3>
+      <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+        {t('addProductDescription')}
+      </p>
+      <Button
+        onClick={onAddProduct}
+        variant="outline"
+        className="border-[#ea384c] text-[#ea384c] hover:bg-[#ea384c]/10"
+      >
+        {t('addFirstProduct')}
+      </Button>
     </div>
   );
 }
