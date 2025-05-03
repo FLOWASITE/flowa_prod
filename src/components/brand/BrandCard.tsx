@@ -25,6 +25,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { EditBrandDialog } from '@/components/brand/edit/EditBrandDialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { toast as sonnerToast } from 'sonner';
 
 interface BrandCardProps {
   brand: Brand;
@@ -93,7 +94,43 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
   const handleDeleteBrand = async () => {
     try {
       setIsDeleting(true);
+      console.log("Deleting brand with ID:", currentBrand.id);
       
+      // First, delete any related data in other tables
+      // Delete brand_knowledge
+      const { error: knowledgeError } = await supabase
+        .from('brand_knowledge')
+        .delete()
+        .eq('brand_id', currentBrand.id);
+      
+      if (knowledgeError) {
+        console.log("Error deleting brand knowledge:", knowledgeError);
+        // Continue with deletion even if this fails
+      }
+      
+      // Delete QA pairs
+      const { error: qaPairsError } = await supabase
+        .from('qa_pairs')
+        .delete()
+        .eq('brand_id', currentBrand.id);
+      
+      if (qaPairsError) {
+        console.log("Error deleting QA pairs:", qaPairsError);
+        // Continue with deletion even if this fails
+      }
+      
+      // Delete products
+      const { error: productsError } = await supabase
+        .from('products')
+        .delete()
+        .eq('brand_id', currentBrand.id);
+      
+      if (productsError) {
+        console.log("Error deleting products:", productsError);
+        // Continue with deletion even if this fails
+      }
+      
+      // Finally delete the brand
       const { error } = await supabase
         .from('brands')
         .delete()
@@ -103,15 +140,11 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
         throw error;
       }
       
-      toast({
-        title: t('deleteSuccess'),
-        variant: 'default',
-      });
+      sonnerToast.success(t('deleteSuccess'));
       
       // Remove the brand from parent component
       if (onBrandUpdated) {
         // We use onBrandUpdated to signal the parent to remove this brand
-        // This is a bit of a hack, but it works
         const dummyDeletedBrand = { ...currentBrand, id: `deleted-${currentBrand.id}` };
         onBrandUpdated(dummyDeletedBrand);
       }

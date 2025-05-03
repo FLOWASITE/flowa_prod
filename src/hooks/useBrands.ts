@@ -188,6 +188,7 @@ export const useBrands = () => {
     // Check if this is a deletion signal (we used a hack with id starting with "deleted-")
     if (updatedBrand.id.startsWith('deleted-')) {
       const originalId = updatedBrand.id.replace('deleted-', '');
+      console.log("Removing brand with ID from state:", originalId);
       setBrands(prev => prev.filter(b => b.id !== originalId));
       return;
     }
