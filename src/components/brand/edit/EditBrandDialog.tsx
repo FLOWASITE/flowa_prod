@@ -44,7 +44,11 @@ export function EditBrandDialog({ brand, open, onOpenChange, onBrandUpdated }: E
     setProducts,
     setBrandKnowledge,
     handleSubmit
-  } = useEditBrandForm(brand, onBrandUpdated, onOpenChange);
+  } = useEditBrandForm({
+    brand,
+    onBrandUpdated,
+    onOpenChange
+  });
   
   const t = (key: keyof typeof editDialogTranslations) => {
     return editDialogTranslations[key][currentLanguage.code] || editDialogTranslations[key].en;
