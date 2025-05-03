@@ -1,138 +1,114 @@
 
-// If this file already exists, add the new translations to it
 export interface Product {
+  id?: string;
+  brandId?: string;
   name: string;
   description: string;
   features: string[];
-  pricing: string;
-  benefits: string;
+  pricing?: string;
+  benefits?: string;
+  image?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export const translations = {
-  manageProducts: {
-    vi: 'Quản lý sản phẩm',
-    en: 'Manage Products',
-    fr: 'Gérer les produits',
-    es: 'Gestionar productos',
-    th: 'จัดการผลิตภัณฑ์',
-  },
-  addProduct: {
-    vi: 'Thêm sản phẩm',
-    en: 'Add Product',
-    fr: 'Ajouter un produit',
-    es: 'Añadir producto',
-    th: 'เพิ่มผลิตภัณฑ์',
-  },
-  importProducts: {
-    vi: 'Nhập sản phẩm',
-    en: 'Import Products',
-    fr: 'Importer des produits',
-    es: 'Importar productos',
-    th: 'นำเข้าผลิตภัณฑ์',
-  },
-  productName: {
+export const productTranslations = {
+  name: {
+    en: 'Name',
     vi: 'Tên sản phẩm',
-    en: 'Product Name',
-    fr: 'Nom du produit',
-    es: 'Nombre del producto',
-    th: 'ชื่อสินค้า',
+    fr: 'Nom',
+    es: 'Nombre',
+    th: 'ชื่อ',
   },
-  productDescription: {
-    vi: 'Mô tả sản phẩm',
-    en: 'Product Description',
-    fr: 'Description du produit',
-    es: 'Descripción del producto',
-    th: 'รายละเอียดสินค้า',
+  description: {
+    en: 'Description',
+    vi: 'Mô tả',
+    fr: 'Description',
+    es: 'Descripción',
+    th: 'คำอธิบาย',
   },
   features: {
-    vi: 'Tính năng',
     en: 'Features',
+    vi: 'Tính năng',
     fr: 'Caractéristiques',
     es: 'Características',
     th: 'คุณสมบัติ',
   },
   pricing: {
-    vi: 'Giá',
-    en: 'Price',
-    fr: 'Prix',
-    es: 'Precio',
+    en: 'Pricing',
+    vi: 'Giá cả',
+    fr: 'Tarification',
+    es: 'Precios',
     th: 'ราคา',
   },
   benefits: {
-    vi: 'Công dụng sản phẩm',
     en: 'Benefits',
+    vi: 'Lợi ích',
     fr: 'Avantages',
     es: 'Beneficios',
     th: 'ประโยชน์',
   },
+  featuresList: {
+    en: 'Features List',
+    vi: 'Danh sách tính năng',
+    fr: 'Liste des caractéristiques',
+    es: 'Lista de características',
+    th: 'รายการคุณสมบัติ',
+  },
+  addFeature: {
+    en: 'Add Feature',
+    vi: 'Thêm tính năng',
+    fr: 'Ajouter une caractéristique',
+    es: 'Añadir característica',
+    th: 'เพิ่มคุณสมบัติ',
+  },
+  removeFeature: {
+    en: 'Remove',
+    vi: 'Xóa',
+    fr: 'Supprimer',
+    es: 'Eliminar',
+    th: 'ลบ',
+  },
+  manageProducts: {
+    en: 'Manage Products',
+    vi: 'Quản lý sản phẩm',
+    fr: 'Gérer les produits',
+    es: 'Gestionar productos',
+    th: 'จัดการผลิตภัณฑ์',
+  },
   noProducts: {
-    vi: 'Không có sản phẩm nào để hiển thị',
-    en: 'No products to display',
-    fr: 'Aucun produit à afficher',
-    es: 'No hay productos para mostrar',
-    th: 'ไม่มีสินค้าที่จะแสดง',
+    en: 'No products added yet. Add your first product!',
+    vi: 'Chưa có sản phẩm nào. Thêm sản phẩm đầu tiên của bạn!',
+    fr: 'Aucun produit ajouté pour l\'instant. Ajoutez votre premier produit !',
+    es: 'No hay productos añadidos todavía. ¡Añada su primer producto!',
+    th: 'ยังไม่มีผลิตภัณฑ์ เพิ่มผลิตภัณฑ์แรกของคุณ!',
   },
-  totalProducts: {
-    vi: 'Tổng số sản phẩm',
-    en: 'Total Products',
-    fr: 'Total des produits',
-    es: 'Total de productos',
-    th: 'ผลิตภัณฑ์ทั้งหมด',
+  addProduct: {
+    en: 'Add Product',
+    vi: 'Thêm sản phẩm',
+    fr: 'Ajouter un produit',
+    es: 'Añadir producto',
+    th: 'เพิ่มผลิตภัณฑ์',
   },
-  back: {
-    vi: 'Quay lại',
-    en: 'Back',
-    fr: 'Retour',
-    es: 'Volver',
-    th: 'กลับ',
+  cancel: {
+    en: 'Cancel',
+    vi: 'Hủy',
+    fr: 'Annuler',
+    es: 'Cancelar',
+    th: 'ยกเลิก',
   },
-  importCSV: {
-    vi: 'Nhập từ excel',
+  save: {
+    en: 'Save',
+    vi: 'Lưu',
+    fr: 'Enregistrer',
+    es: 'Guardar',
+    th: 'บันทึก',
+  },
+  importExcel: {
     en: 'Import from Excel',
-    fr: 'Importer depuis Excel',
-    es: 'Importar desde Excel',
+    vi: 'Nhập từ Excel',
+    fr: 'Importer d\'Excel',
+    es: 'Importar de Excel',
     th: 'นำเข้าจาก Excel',
   },
-  previewCSV: {
-    vi: 'Xem trước CSV',
-    en: 'Preview CSV',
-    fr: 'Aperçu CSV',
-    es: 'Vista previa CSV',
-    th: 'ดูตัวอย่าง CSV',
-  },
-  importSuccess: {
-    vi: 'Nhập thủ công',
-    en: 'Manual Import',
-    fr: 'Importation manuelle',
-    es: 'Importación manual',
-    th: 'นำเข้าด้วยตนเอง',
-  },
-  importOrAddDirectly: {
-    vi: 'Nhập sản phẩm từ tệp CSV hoặc thêm trực tiếp bên dưới.',
-    en: 'Import products from a CSV file or add directly below.',
-    fr: 'Importez des produits à partir d\'un fichier CSV ou ajoutez-les directement ci-dessous.',
-    es: 'Importe productos desde un archivo CSV o agregue directamente a continuación.',
-    th: 'นำเข้าผลิตภัณฑ์จากไฟล์ CSV หรือเพิ่มโดยตรงด้านล่าง',
-  },
-  importUsingCSV: {
-    vi: 'Bạn có thể nhập sản phẩm qua CSV hoặc thêm thủ công',
-    en: 'You can import products via CSV or add them manually',
-    fr: 'Vous pouvez importer des produits via CSV ou les ajouter manuellement',
-    es: 'Puede importar productos a través de CSV o agregarlos manualmente',
-    th: 'คุณสามารถนำเข้าผลิตภัณฑ์ผ่าน CSV หรือเพิ่มด้วยตนเอง',
-  },
-  price: {
-    vi: 'Giá',
-    en: 'Price',
-    fr: 'Prix',
-    es: 'Precio',
-    th: 'ราคา',
-  },
-  description: {
-    vi: 'Mô tả',
-    en: 'Description',
-    fr: 'Description',
-    es: 'Descripción',
-    th: 'คำอธิบาย',
-  }
 };
