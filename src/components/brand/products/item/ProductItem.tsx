@@ -32,6 +32,7 @@ export function ProductItem({ product, index, onUpdate, onRemove }: ProductItemP
         onRemove={() => onRemove(index)}
       />
       
+      {/* Main product fields: Name, Price, Description */}
       <ProductField
         id={`product-name-${index}`}
         label={t('productName')}
@@ -41,38 +42,19 @@ export function ProductItem({ product, index, onUpdate, onRemove }: ProductItemP
       />
       
       <ProductField
+        id={`product-pricing-${index}`}
+        label={t('pricing')}
+        value={product.pricing}
+        onChange={(value) => handleUpdate('pricing', value)}
+        placeholder="e.g. 200.000đ/month"
+      />
+      
+      <ProductField
         id={`product-desc-${index}`}
         label={t('productDescription')}
         value={product.description}
         onChange={(value) => handleUpdate('description', value)}
         placeholder="Describe your product or service..."
-        multiline
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ProductField
-          id={`product-pricing-${index}`}
-          label={t('pricing')}
-          value={product.pricing}
-          onChange={(value) => handleUpdate('pricing', value)}
-          placeholder="e.g. 200.000đ/month"
-        />
-        
-        <ProductField
-          id={`product-benefits-${index}`}
-          label={t('benefits')}
-          value={product.benefits}
-          onChange={(value) => handleUpdate('benefits', value)}
-          placeholder="e.g. Increases productivity by 30%"
-        />
-      </div>
-
-      <ProductField
-        id={`product-features-${index}`}
-        label={t('features')}
-        value={product.features.join('\n')}
-        onChange={(value) => handleUpdate('features', value)}
-        placeholder="Responsive design\nSEO optimization\n24/7 support"
         multiline
         rows={3}
       />

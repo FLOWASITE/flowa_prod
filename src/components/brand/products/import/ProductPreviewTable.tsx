@@ -14,7 +14,7 @@ interface ProductPreviewTableProps {
   validationErrors?: ValidationError[];
 }
 
-type SortField = 'name' | 'pricing' | 'description' | 'features' | 'benefits';
+type SortField = 'name' | 'pricing' | 'description';
 type SortDirection = 'asc' | 'desc';
 
 export function ProductPreviewTable({ products, validationErrors = [] }: ProductPreviewTableProps) {
@@ -51,8 +51,7 @@ export function ProductPreviewTable({ products, validationErrors = [] }: Product
       result = products.filter(product => 
         product.name.toLowerCase().includes(lowerFilter) || 
         product.description.toLowerCase().includes(lowerFilter) || 
-        product.features.some(feature => feature.toLowerCase().includes(lowerFilter)) ||
-        (product.benefits && product.benefits.toLowerCase().includes(lowerFilter))
+        product.pricing.toLowerCase().includes(lowerFilter)
       );
     }
     
@@ -60,12 +59,6 @@ export function ProductPreviewTable({ products, validationErrors = [] }: Product
     return [...result].sort((a, b) => {
       let aValue = a[sortField];
       let bValue = b[sortField];
-      
-      // Handle special cases for features which is an array
-      if (sortField === 'features') {
-        aValue = a.features.join(', ');
-        bValue = b.features.join(', ');
-      }
       
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return sortDirection === 'asc' 
@@ -143,24 +136,12 @@ export function ProductPreviewTable({ products, validationErrors = [] }: Product
               >
                 {t('description')} <SortIndicator field="description" />
               </TableHead>
-              <TableHead 
-                className={cn("cursor-pointer hover:bg-muted/50", sortField === 'features' && "bg-muted/30")}
-                onClick={() => handleSort('features')}
-              >
-                {t('features')} <SortIndicator field="features" />
-              </TableHead>
-              <TableHead 
-                className={cn("cursor-pointer hover:bg-muted/50", sortField === 'benefits' && "bg-muted/30")}
-                onClick={() => handleSort('benefits')}
-              >
-                {t('benefits')} <SortIndicator field="benefits" />
-              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredAndSortedProducts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={3} className="text-center py-6 text-muted-foreground">
                   {filterText ? t('noMatchingProducts') : t('noProducts')}
                 </TableCell>
               </TableRow>
@@ -190,22 +171,6 @@ export function ProductPreviewTable({ products, validationErrors = [] }: Product
                     )}
                   >
                     {product.description}
-                  </TableCell>
-                  <TableCell 
-                    className={cn(
-                      "", 
-                      hasError(index, 'features') && "bg-red-50 text-red-800 border-b border-red-200"
-                    )}
-                  >
-                    {product.features.join(', ')}
-                  </TableCell>
-                  <TableCell 
-                    className={cn(
-                      "", 
-                      hasError(index, 'benefits') && "bg-red-50 text-red-800 border-b border-red-200"
-                    )}
-                  >
-                    {product.benefits}
                   </TableCell>
                 </TableRow>
               ))

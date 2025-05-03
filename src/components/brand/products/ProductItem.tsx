@@ -49,47 +49,23 @@ export function ProductItem({ product, index, onUpdate, onRemove }: ProductItemP
       </div>
       
       <div>
+        <Label htmlFor={`product-pricing-${index}`}>{t('pricing')}</Label>
+        <Input
+          id={`product-pricing-${index}`}
+          value={product.pricing}
+          onChange={(e) => onUpdate(index, 'pricing', e.target.value)}
+          placeholder="e.g. 200.000đ/month"
+          className="mt-1.5"
+        />
+      </div>
+      
+      <div>
         <Label htmlFor={`product-desc-${index}`}>{t('productDescription')}</Label>
         <Textarea
           id={`product-desc-${index}`}
           value={product.description}
           onChange={(e) => onUpdate(index, 'description', e.target.value)}
           placeholder="Describe your product or service..."
-          className="mt-1.5"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor={`product-pricing-${index}`}>{t('pricing')}</Label>
-          <Input
-            id={`product-pricing-${index}`}
-            value={product.pricing}
-            onChange={(e) => onUpdate(index, 'pricing', e.target.value)}
-            placeholder="e.g. 200.000đ/month"
-            className="mt-1.5"
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor={`product-benefits-${index}`}>{t('benefits')}</Label>
-          <Input
-            id={`product-benefits-${index}`}
-            value={product.benefits}
-            onChange={(e) => onUpdate(index, 'benefits', e.target.value)}
-            placeholder="e.g. Increases productivity by 30%"
-            className="mt-1.5"
-          />
-        </div>
-      </div>
-
-      <div>
-        <Label htmlFor={`product-features-${index}`}>{t('features')}</Label>
-        <Textarea
-          id={`product-features-${index}`}
-          value={product.features.join('\n')}
-          onChange={(e) => onUpdate(index, 'features', e.target.value)}
-          placeholder="Responsive design\nSEO optimization\n24/7 support"
           className="mt-1.5"
           rows={3}
         />

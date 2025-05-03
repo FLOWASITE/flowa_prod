@@ -49,7 +49,7 @@ export function ImportProductForm({ products, onProductsChange }: ImportProductF
   const addEmptyRow = () => {
     onProductsChange([
       ...products,
-      { name: '', pricing: '', description: '', features: [], benefits: '' }
+      { name: '', pricing: '', description: '', features: [] }
     ]);
   };
 
@@ -68,14 +68,13 @@ export function ImportProductForm({ products, onProductsChange }: ImportProductF
               <TableHead>{t('productName')}</TableHead>
               <TableHead>{t('price')}</TableHead>
               <TableHead>{t('description')}</TableHead>
-              <TableHead>{t('features')}</TableHead>
               <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
                   {t('noProducts')}
                 </TableCell>
               </TableRow>
@@ -103,14 +102,6 @@ export function ImportProductForm({ products, onProductsChange }: ImportProductF
                       value={product.description} 
                       onChange={(e) => updateProduct(index, 'description', e.target.value)}
                       placeholder={t('description')}
-                      className="w-full"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input 
-                      value={product.features.join('; ')} 
-                      onChange={(e) => updateProduct(index, 'features', e.target.value)}
-                      placeholder={t('featuresPlaceholder')}
                       className="w-full"
                     />
                   </TableCell>

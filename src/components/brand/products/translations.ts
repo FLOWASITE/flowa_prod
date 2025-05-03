@@ -1,12 +1,11 @@
-
 export interface Product {
   id?: string;
   brandId?: string;
-  name: string;
-  description: string;
-  features: string[];
-  pricing?: string;
-  benefits?: string;
+  name: string;           // Product name
+  pricing: string;        // Price
+  description: string;    // Description
+  features: string[];     // We'll keep this but de-emphasize in UI
+  benefits?: string;      // We'll keep this but de-emphasize in UI
   image?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -192,4 +191,3 @@ export const productTranslations = {
 
 // Alias for backwards compatibility with existing components
 export const translations = productTranslations;
-

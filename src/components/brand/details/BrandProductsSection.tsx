@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Package2, DollarSign, Sparkles } from 'lucide-react';
+import { Package2, DollarSign } from 'lucide-react';
 import { ProductType } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -9,17 +9,9 @@ const translations = {
     en: 'Products & Services',
     vi: 'Sản phẩm & Dịch vụ',
   },
-  features: {
-    en: 'Features',
-    vi: 'Tính năng',
-  },
   pricing: {
     en: 'Pricing',
     vi: 'Giá sản phẩm',
-  },
-  benefits: {
-    en: 'Benefits',
-    vi: 'Công dụng sản phẩm',
   },
   noProducts: {
     en: 'No products or services added',
@@ -52,38 +44,15 @@ export function BrandProductsSection({ products }: BrandProductsSectionProps) {
               <h3 className="font-medium mb-2">{product.name}</h3>
               <p className="text-muted-foreground mb-4">{product.description}</p>
               
-              <div className="space-y-4">
-                {product.pricing && (
-                  <div className="flex items-start gap-2">
-                    <DollarSign className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-medium text-sm">{t('pricing')}</h4>
-                      <p className="text-sm text-muted-foreground">{product.pricing}</p>
-                    </div>
-                  </div>
-                )}
-                
-                {product.benefits && (
-                  <div className="flex items-start gap-2">
-                    <Sparkles className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-medium text-sm">{t('benefits')}</h4>
-                      <p className="text-sm text-muted-foreground">{product.benefits}</p>
-                    </div>
-                  </div>
-                )}
-                
-                {product.features && product.features.length > 0 && (
+              {product.pricing && (
+                <div className="flex items-start gap-2">
+                  <DollarSign className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="font-medium mb-1 text-sm">{t('features')}</h4>
-                    <ul className="list-disc list-inside text-sm text-muted-foreground">
-                      {product.features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
-                      ))}
-                    </ul>
+                    <h4 className="font-medium text-sm">{t('pricing')}</h4>
+                    <p className="text-sm text-muted-foreground">{product.pricing}</p>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
