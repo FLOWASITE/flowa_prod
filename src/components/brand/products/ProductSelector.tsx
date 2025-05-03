@@ -97,21 +97,7 @@ export function ProductSelector({ products, onProductsChange }: ProductSelectorP
               {t('importOrAddDirectly')}
             </p>
             
-            <div className="flex mb-4">
-              <Button 
-                variant="outline" 
-                className="flex-1 border-gray-300 bg-gray-200 text-gray-700 hover:bg-gray-300"
-                onClick={() => setIsImportDialogOpen(true)}
-              >
-                {t('previewCSV')}
-              </Button>
-              <Button 
-                variant="default" 
-                className="flex-1 bg-white border border-l-0 border-gray-300 text-[#ea384c] hover:bg-gray-100"
-              >
-                {t('importSuccess')}
-              </Button>
-            </div>
+            {/* Remove the two buttons as requested */}
             
             <p className="text-center text-sm text-gray-500 mb-4">
               {t('importUsingCSV')}
