@@ -18,9 +18,12 @@ interface BasicInfoTabProps {
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   translations: Record<string, Record<string, string>>;
+  error?: {
+    name?: string;
+  };
 }
 
-export function BasicInfoTab({ formData, handleChange, translations }: BasicInfoTabProps) {
+export function BasicInfoTab({ formData, handleChange, translations, error }: BasicInfoTabProps) {
   const { currentLanguage } = useLanguage();
   
   const t = (key: string) => {
@@ -38,8 +41,13 @@ export function BasicInfoTab({ formData, handleChange, translations }: BasicInfo
             value={formData.name}
             onChange={handleChange}
             required
-            className="transition-all duration-200 hover:border-primary/50 focus:border-primary"
+            className={`transition-all duration-200 hover:border-primary/50 focus:border-primary ${
+              error?.name ? 'border-red-500 focus:border-red-500 ring-1 ring-red-500' : ''
+            }`}
           />
+          {error?.name && (
+            <p className="text-sm text-red-500 mt-1">{error.name}</p>
+          )}
         </div>
         
         <div className="space-y-2">

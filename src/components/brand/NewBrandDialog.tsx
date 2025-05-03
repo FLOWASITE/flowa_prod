@@ -21,6 +21,7 @@ import { ThemesTab } from './edit/ThemesTab';
 import { BrandKnowledgeTab } from './edit/BrandKnowledgeTab';
 import { SocialConnectionsTab } from './edit/SocialConnectionsTab';
 import { newBrandDialogTranslations } from './new/translations';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface NewBrandDialogProps {
   onBrandCreated: (newBrand: Brand) => void;
@@ -33,6 +34,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   
   const {
     formData,
+    formError,
     selectedThemes,
     selectedTones,
     products,
@@ -125,9 +127,17 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             
             <div className="p-6 max-h-[60vh] overflow-y-auto">
               <TabsContent value="basic" className="mt-0 space-y-6">
+                {formError.name && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertDescription>
+                      {formError.name}
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <BasicInfoTab 
                   formData={formData}
                   handleChange={handleChange}
+                  error={formError}
                   translations={newBrandDialogTranslations}
                 />
               </TabsContent>
