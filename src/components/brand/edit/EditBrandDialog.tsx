@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,6 @@ import { TonesTab } from './TonesTab';
 import { ThemesTab } from './ThemesTab';
 import { BrandKnowledgeTab } from './BrandKnowledgeTab';
 import { SocialConnectionsTab } from './SocialConnectionsTab';
-import { Product } from '../products/translations';
 
 interface EditBrandDialogProps {
   brand: Brand;
