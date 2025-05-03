@@ -72,7 +72,11 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="bg-white/60 dark:bg-gray-700/60 hover:bg-gray-100/90 dark:hover:bg-gray-600/90 rounded-full shadow-sm backdrop-blur-sm"
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
