@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Brand } from '@/types';
-import { useEditBrandForm } from './useEditBrandForm';
+import { useEditBrandForm } from '@/hooks/useEditBrandForm';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { editDialogTranslations } from './translations';
