@@ -16,6 +16,14 @@ const translations = {
   noProducts: {
     en: 'No products or services added',
     vi: 'Chưa có sản phẩm hoặc dịch vụ',
+  },
+  priceUnit: {
+    en: 'Unit',
+    vi: 'Đơn vị',
+  },
+  priceCurrency: {
+    en: 'Currency', 
+    vi: 'Loại tiền tệ',
   }
 };
 

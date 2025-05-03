@@ -26,6 +26,14 @@ export function ProductItem({ product, index, onUpdate, onRemove, onEdit }: Prod
     onUpdate(index, field, value);
   };
 
+  // Format the price display
+  const formatPrice = () => {
+    if (product.priceAmount !== undefined && product.priceUnit && product.priceCurrency) {
+      return `${product.priceAmount} ${product.priceCurrency}/${product.priceUnit}`;
+    }
+    return product.pricing || "-";
+  };
+
   return (
     <div className="space-y-4 p-4 border rounded-lg bg-background">
       <div className="flex justify-between items-center">
@@ -54,7 +62,7 @@ export function ProductItem({ product, index, onUpdate, onRemove, onEdit }: Prod
         </div>
         <div>
           <p className="text-sm font-medium text-muted-foreground">{t('pricing')}</p>
-          <p className="mt-1">{product.pricing || "-"}</p>
+          <p className="mt-1">{formatPrice()}</p>
         </div>
         <div>
           <p className="text-sm font-medium text-muted-foreground">{t('description')}</p>

@@ -12,7 +12,15 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 interface ProductFormDialogProps {
   open: boolean;
@@ -34,6 +42,9 @@ export function ProductFormDialog({
     name: '',
     description: '',
     pricing: '',
+    priceAmount: undefined,
+    priceUnit: '',
+    priceCurrency: 'VND',
     features: [],
   });
 
@@ -46,6 +57,9 @@ export function ProductFormDialog({
         name: '',
         description: '',
         pricing: '',
+        priceAmount: undefined,
+        priceUnit: '',
+        priceCurrency: 'VND',
         features: [],
       });
     }
@@ -55,14 +69,26 @@ export function ProductFormDialog({
     return productTranslations[key][currentLanguage.code] || productTranslations[key].en;
   };
 
-  const handleChange = (field: keyof Product, value: string) => {
+  const handleChange = (field: keyof Product, value: string | number) => {
     setProduct(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSave = () => {
-    onSave(product);
+    // Create the pricing string from structured price fields
+    const updatedProduct = { ...product };
+    if (updatedProduct.priceAmount !== undefined && updatedProduct.priceUnit && updatedProduct.priceCurrency) {
+      updatedProduct.pricing = `${updatedProduct.priceAmount} ${updatedProduct.priceCurrency}/${updatedProduct.priceUnit}`;
+    }
+    
+    onSave(updatedProduct);
     onOpenChange(false);
   };
+
+  // Units of measurement options
+  const units = ['kg', 'cái', 'mét', 'gói', 'hộp', 'lít'];
+  
+  // Currency options
+  const currencies = ['VND', 'USD', 'IDR', 'SGD'];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -85,13 +111,67 @@ export function ProductFormDialog({
             placeholder="e.g. Web Design Service"
           />
           
-          <ProductField
-            id="product-pricing-dialog"
-            label={t('pricing')}
-            value={product.pricing}
-            onChange={(value) => handleChange('pricing', value)}
-            placeholder="e.g. 200.000đ/month"
-          />
+          {/* Pricing fields */}
+          <div>
+            <Label className="mb-2 block">{t('pricing')}</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="price-amount" className="text-sm text-muted-foreground mb-1">
+                  {t('priceAmount')}
+                </Label>
+                <Input
+                  id="price-amount"
+                  type="number"
+                  value={product.priceAmount || ''}
+                  onChange={(e) => handleChange('priceAmount', parseFloat(e.target.value) || 0)}
+                  placeholder="0"
+                  min="0"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="price-currency" className="text-sm text-muted-foreground mb-1">
+                  {t('priceCurrency')}
+                </Label>
+                <Select
+                  value={product.priceCurrency || 'VND'}
+                  onValueChange={(value) => handleChange('priceCurrency', value)}
+                >
+                  <SelectTrigger id="price-currency">
+                    <SelectValue placeholder="VND" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies.map((currency) => (
+                      <SelectItem key={currency} value={currency}>
+                        {currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="col-span-2">
+                <Label htmlFor="price-unit" className="text-sm text-muted-foreground mb-1">
+                  {t('priceUnit')}
+                </Label>
+                <Select 
+                  value={product.priceUnit || ''}
+                  onValueChange={(value) => handleChange('priceUnit', value)}
+                >
+                  <SelectTrigger id="price-unit">
+                    <SelectValue placeholder="Select unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {units.map((unit) => (
+                      <SelectItem key={unit} value={unit}>
+                        {unit}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
           
           <ProductField
             id="product-desc-dialog"
