@@ -181,7 +181,15 @@ export const productTranslations = {
     es: 'Puede importar productos usando CSV',
     th: 'คุณสามารถนำเข้าสินค้าโดยใช้ CSV',
   },
+  importOrAddDirectly: {
+    en: 'Import products from a CSV file or add them directly below',
+    vi: 'Nhập sản phẩm từ tệp CSV hoặc thêm trực tiếp bên dưới',
+    fr: 'Importer des produits à partir d\'un fichier CSV ou les ajouter directement ci-dessous',
+    es: 'Importar productos desde un archivo CSV o añadirlos directamente a continuación',
+    th: 'นำเข้าสินค้าจากไฟล์ CSV หรือเพิ่มโดยตรงด้านล่าง',
+  },
 };
 
 // Alias for backwards compatibility with existing components
 export const translations = productTranslations;
+
