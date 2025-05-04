@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
   CardDescription
