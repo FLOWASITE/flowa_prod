@@ -19,6 +19,7 @@ import { mockProductTypes } from '@/data/mock/products';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { topicTranslations } from './topicTranslations';
+import { TopicStatusBadge } from './TopicStatusBadge';
 
 interface TopicsTableProps {
   topics: Topic[];
