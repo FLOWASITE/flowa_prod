@@ -42,10 +42,9 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
   };
 
   const handleDeleteConfirm = async () => {
-    const result = await handleDeleteBrand();
-    // No need to manually close the dialog here anymore
-    // The dialog will be closed by the DeleteConfirmDialog component if result is true
-    return result;
+    // Call deletion function, but don't wait for result
+    // Dialog will be closed immediately by the DeleteConfirmDialog component
+    handleDeleteBrand();
   };
 
   return (

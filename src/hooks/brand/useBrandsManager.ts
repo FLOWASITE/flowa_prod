@@ -37,8 +37,11 @@ export const useBrandsManager = () => {
       const originalId = updatedBrand.id.replace('deleted-', '');
       console.log("Removing brand with ID from state:", originalId);
       
-      // Update UI immediately by removing the brand from state
-      setBrands(prev => prev.filter(b => b.id !== originalId));
+      // Critical: Update UI immediately to give feedback of deletion
+      // This prevents UI frozen feeling
+      setTimeout(() => {
+        setBrands(prev => prev.filter(b => b.id !== originalId));
+      }, 0);
       return;
     }
     
