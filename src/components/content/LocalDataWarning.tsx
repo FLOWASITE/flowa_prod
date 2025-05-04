@@ -11,7 +11,7 @@ export const LocalDataWarning: React.FC<LocalDataWarningProps> = ({ useLocalData
   if (!useLocalData) return null;
   
   return (
-    <Alert variant="warning" className="my-4">
+    <Alert variant="default" className="my-4 border-amber-500 bg-amber-50 text-amber-800">
       <Database className="h-4 w-4" />
       <AlertTitle>Dữ liệu mẫu</AlertTitle>
       <AlertDescription>
