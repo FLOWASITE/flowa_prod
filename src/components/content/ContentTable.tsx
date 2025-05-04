@@ -1,19 +1,17 @@
 
 import React from 'react';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { Table, TableBody } from '@/components/ui/table';
 import { Content } from '@/types';
 import { format } from 'date-fns';
 import { platformIcons } from '../chat/PlatformIcons';
-import { Checkbox } from '@/components/ui/checkbox';
 
-// Import our new components
-import { StatusBadge } from './table/StatusBadge';
+// Import our components
 import { TableFilters } from './table/TableFilters';
 import { TablePagination } from './table/TablePagination';
-import { TableActions } from './table/TableActions';
 import { TableEmptyState } from './table/TableEmptyState';
 import { TableLoadingState } from './table/TableLoadingState';
-import { PlatformIcon } from './table/PlatformIcon';
+import { TableHeader } from './table/TableHeader';
+import { TableRow } from './table/TableRow';
 
 interface ContentTableProps {
   items: Content[];
@@ -107,33 +105,13 @@ export const ContentTable: React.FC<ContentTableProps> = ({
         <div className="w-full overflow-auto custom-scrollbar">
           <div className="min-w-[1200px]">
             <Table>
-              <TableHeader className="sticky top-0 z-10">
-                <TableRow className="bg-gradient-to-r from-primary to-accent border-none">
-                  {showBatchSelection && (
-                    <TableHead className="w-10 text-center text-white font-bold py-4">
-                      <Checkbox 
-                        className="bg-white/20 border-white/50"
-                        onCheckedChange={handleSelectAllChange}
-                        checked={items.length > 0 && selectedItems.length === items.length}
-                      />
-                    </TableHead>
-                  )}
-                  <TableHead className="w-10 text-center text-white font-bold py-4">#</TableHead>
-                  <TableHead className="w-[120%] text-white font-bold py-4">Chủ đề gốc</TableHead>
-                  <TableHead className="w-16 text-center text-white font-bold py-4">Nền tảng</TableHead>
-                  <TableHead className="max-w-[10%] text-white font-bold py-4">Nội dung (Preview)</TableHead>
-                  <TableHead className="w-28 text-white font-bold py-4">Hình ảnh</TableHead>
-                  <TableHead className="w-28 text-white font-bold py-4">Ngày tạo</TableHead>
-                  {showApprovalColumns && (
-                    <>
-                      <TableHead className="w-28 text-white font-bold py-4">Người duyệt</TableHead>
-                      <TableHead className="w-28 text-white font-bold py-4">Ngày duyệt</TableHead>
-                    </>
-                  )}
-                  <TableHead className="w-28 text-white font-bold py-4">Trạng thái</TableHead>
-                  <TableHead className="w-28 text-white font-bold py-4">Hành động</TableHead>
-                </TableRow>
-              </TableHeader>
+              <TableHeader 
+                showBatchSelection={showBatchSelection}
+                showApprovalColumns={showApprovalColumns}
+                allSelected={items.length > 0 && selectedItems.length === items.length}
+                onSelectAllChange={handleSelectAllChange}
+                hasItems={items.length > 0}
+              />
               <TableBody>
                 {isLoading ? (
                   <TableLoadingState colSpan={columnsCount} />
@@ -142,59 +120,24 @@ export const ContentTable: React.FC<ContentTableProps> = ({
                 ) : (
                   items.map((item, index) => {
                     const topic = topics.find(t => t.id === item.topicId);
-                    const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
                     return (
-                      <TableRow key={item.id} className="hover:bg-gray-50 transition-colors border-b border-gray-100">
-                        {showBatchSelection && (
-                          <TableCell>
-                            <Checkbox 
-                              checked={selectedItems.includes(item.id)}
-                              onCheckedChange={() => onToggleSelection && onToggleSelection(item.id)}
-                              disabled={item.status !== 'draft'}
-                            />
-                          </TableCell>
-                        )}
-                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
-                        <TableCell className="font-medium">{topic?.title || 'Không có chủ đề'}</TableCell>
-                        <TableCell className="text-center">
-                          <PlatformIcon platform={item.platform} />
-                        </TableCell>
-                        <TableCell>
-                          <div className="truncate max-w-xs" title={item.text}>
-                            {item.text.substring(0, 40)}...
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          {item.imageUrl && (
-                            <div className="h-12 w-12 relative rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105">
-                              <img 
-                                src={item.imageUrl} 
-                                alt="Nội dung" 
-                                className="h-full w-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell>{formatDate(item.createdAt)}</TableCell>
-                        {showApprovalColumns && (
-                          <>
-                            <TableCell>AI Assistant</TableCell>
-                            <TableCell>{formatDate(item.approvedAt)}</TableCell>
-                          </>
-                        )}
-                        <TableCell>
-                          <StatusBadge status={item.status} />
-                        </TableCell>
-                        <TableCell>
-                          <TableActions
-                            item={item}
-                            onApprove={onApprove}
-                            onView={onView}
-                            onDelete={onDelete}
-                            showApproveColumn={showApproveColumn}
-                          />
-                        </TableCell>
-                      </TableRow>
+                      <TableRow
+                        key={item.id}
+                        item={item}
+                        index={index}
+                        currentPage={currentPage}
+                        rowsPerPage={rowsPerPage}
+                        topic={topic}
+                        formatDate={formatDate}
+                        showApprovalColumns={showApprovalColumns}
+                        showApproveColumn={showApproveColumn}
+                        showBatchSelection={showBatchSelection}
+                        isSelected={selectedItems.includes(item.id)}
+                        onToggleSelection={onToggleSelection}
+                        onApprove={onApprove}
+                        onView={onView}
+                        onDelete={onDelete}
+                      />
                     );
                   })
                 )}
