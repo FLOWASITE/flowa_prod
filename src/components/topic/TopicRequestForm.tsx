@@ -22,7 +22,7 @@ export function TopicRequestForm() {
   
   const getTranslation = (key: string) => {
     const lang = currentLanguage.code;
-    return topicTranslations[key][lang] || topicTranslations[key]['en'];
+    return topicTranslations[key]?.[lang] || topicTranslations[key]?.['en'];
   };
   
   const handlePromptChange = (text: string) => {
@@ -57,7 +57,6 @@ export function TopicRequestForm() {
           onPromptChange={handlePromptChange}
           onSubmit={handleSubmit}
           productExamples={productExamples}
-          translations={topicTranslations}
         />
       </CardContent>
     </Card>

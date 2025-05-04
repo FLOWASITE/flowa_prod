@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { format } from 'date-fns';
 import { Check, Eye, Pencil, X } from 'lucide-react';
@@ -97,24 +96,15 @@ export function TopicsTable({
   // Get translated status text
   const getStatusTranslation = (status: string) => {
     const lang = currentLanguage.code;
-    return topicTranslations.topicStatus[status]?.[lang] || status;
+    if (topicTranslations.topicStatus?.[status]?.[lang]) {
+      return topicTranslations.topicStatus[status][lang];
+    }
+    return status;
   };
 
   // Status badge for visualizing topic status
   const statusBadge = (status: string) => {
-    const statusClasses = {
-      draft: "bg-gray-100 text-gray-800",
-      approved: "bg-green-100 text-green-800",
-      rejected: "bg-red-100 text-red-800",
-      generating: "bg-blue-100 text-blue-800",
-      completed: "bg-purple-100 text-purple-800",
-    };
-    
-    return (
-      <Badge variant="outline" className={statusClasses[status]}>
-        {getStatusTranslation(status)}
-      </Badge>
-    );
+    return <TopicStatusBadge status={status} />;
   };
 
   // Get product icon (placeholder function)

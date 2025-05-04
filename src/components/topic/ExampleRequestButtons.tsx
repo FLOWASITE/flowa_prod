@@ -3,23 +3,22 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Tag } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { topicTranslations } from './topicTranslations';
 
 interface ExampleRequestButtonsProps {
   productExamples: Array<{ id: string; name: string }>;
   onSelectExample: (text: string) => void;
-  translations: Record<string, Record<string, string>>;
 }
 
 export function ExampleRequestButtons({
   productExamples,
-  onSelectExample,
-  translations
+  onSelectExample
 }: ExampleRequestButtonsProps) {
   const { currentLanguage } = useLanguage();
 
   const getTranslation = (key: string) => {
     const lang = currentLanguage.code;
-    return translations[key][lang] || translations[key]['en'];
+    return topicTranslations[key]?.[lang] || topicTranslations[key]?.['en'];
   };
   
   // Generate example requests for each product type

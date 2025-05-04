@@ -1,6 +1,23 @@
 
+// Topic translations interface to define the nested structure
+interface TopicTranslationsType {
+  cardTitle: Record<string, string>;
+  cardDescription: Record<string, string>;
+  placeholder: Record<string, string>;
+  submitButton: Record<string, string>;
+  examplesLabel: Record<string, string>;
+  sending: Record<string, string>;
+  topicStatus: {
+    draft: Record<string, string>;
+    approved: Record<string, string>;
+    rejected: Record<string, string>;
+    generating: Record<string, string>;
+    completed: Record<string, string>;
+  };
+}
+
 // Topic translations for multiple languages
-export const topicTranslations = {
+export const topicTranslations: TopicTranslationsType = {
   cardTitle: {
     vi: 'Tạo chủ đề nội dung',
     en: 'Create Content Topic',

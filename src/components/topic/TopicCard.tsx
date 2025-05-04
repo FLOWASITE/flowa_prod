@@ -7,6 +7,7 @@ import { Topic } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { topicTranslations } from './topicTranslations';
+import { TopicStatusBadge } from './TopicStatusBadge';
 
 interface TopicCardProps {
   topic: Topic;
@@ -18,19 +19,6 @@ interface TopicCardProps {
 
 export function TopicCard({ topic, onApprove, onReject, onView, onEdit }: TopicCardProps) {
   const { currentLanguage } = useLanguage();
-
-  const getStatusTranslation = (status: string) => {
-    const lang = currentLanguage.code;
-    return topicTranslations.topicStatus[status]?.[lang] || status;
-  };
-
-  const statusColors = {
-    draft: "bg-gray-200 text-gray-800",
-    approved: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-    generating: "bg-blue-100 text-blue-800",
-    completed: "bg-purple-100 text-purple-800",
-  };
 
   const renderActionButtons = () => {
     if (topic.status === 'draft') {
@@ -82,9 +70,7 @@ export function TopicCard({ topic, onApprove, onReject, onView, onEdit }: TopicC
     <Card>
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <Badge variant="outline" className={statusColors[topic.status]}>
-            {getStatusTranslation(topic.status)}
-          </Badge>
+          <TopicStatusBadge status={topic.status} />
           <div className="text-sm text-muted-foreground">
             {formatDistanceToNow(topic.createdAt, { addSuffix: true })}
           </div>

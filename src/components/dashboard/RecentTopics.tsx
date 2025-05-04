@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Topic } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { TopicStatusBadge } from '@/components/topic/TopicStatusBadge';
 
 interface RecentTopicsProps {
   topics: Topic[];
@@ -19,14 +20,6 @@ interface RecentTopicsProps {
 
 export function RecentTopics({ topics }: RecentTopicsProps) {
   const { currentLanguage } = useLanguage();
-  
-  const statusColors = {
-    draft: "bg-gray-200 text-gray-800",
-    approved: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-    generating: "bg-blue-100 text-blue-800",
-    completed: "bg-purple-100 text-purple-800",
-  };
   
   const translations = {
     recentTopics: {
@@ -112,12 +105,7 @@ export function RecentTopics({ topics }: RecentTopicsProps) {
               <TableRow key={topic.id} className="hover:bg-muted/50">
                 <TableCell className="font-medium">{topic.title}</TableCell>
                 <TableCell>
-                  <Badge 
-                    variant="outline" 
-                    className={statusColors[topic.status]}
-                  >
-                    {topic.status}
-                  </Badge>
+                  <TopicStatusBadge status={topic.status} />
                 </TableCell>
                 <TableCell>
                   {formatDistanceToNow(topic.createdAt, { addSuffix: true })}

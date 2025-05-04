@@ -14,7 +14,10 @@ export const TopicStatusBadge: React.FC<TopicStatusBadgeProps> = ({ status, clas
   
   const getStatusTranslation = (status: string) => {
     const lang = currentLanguage.code;
-    return topicTranslations.topicStatus[status]?.[lang] || status;
+    if (topicTranslations.topicStatus?.[status]?.[lang]) {
+      return topicTranslations.topicStatus[status][lang];
+    }
+    return status;
   };
   
   const statusClasses = {
