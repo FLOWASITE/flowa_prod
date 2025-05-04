@@ -8,11 +8,13 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface TopicCardProps {
   topic: Topic;
-  onApprove?: (id: string) => void;
-  onReject?: (id: string) => void;
+  onApprove?: (topic: Topic) => void;
+  onReject?: (topic: Topic) => void;
+  onView?: (topic: Topic) => void;
+  onEdit?: (topic: Topic) => void;
 }
 
-export function TopicCard({ topic, onApprove, onReject }: TopicCardProps) {
+export function TopicCard({ topic, onApprove, onReject, onView, onEdit }: TopicCardProps) {
   const statusColors = {
     draft: "bg-gray-200 text-gray-800",
     approved: "bg-green-100 text-green-800",
@@ -29,17 +31,17 @@ export function TopicCard({ topic, onApprove, onReject }: TopicCardProps) {
             variant="destructive" 
             size="sm" 
             className="flex-1"
-            onClick={() => onReject && onReject(topic.id)}
+            onClick={() => onReject && onReject(topic)}
           >
-            Reject
+            Từ chối
           </Button>
           <Button 
             variant="default" 
             size="sm" 
             className="flex-1"
-            onClick={() => onApprove && onApprove(topic.id)}
+            onClick={() => onApprove && onApprove(topic)}
           >
-            Approve
+            Duyệt
           </Button>
         </>
       );
@@ -47,12 +49,23 @@ export function TopicCard({ topic, onApprove, onReject }: TopicCardProps) {
     
     if (topic.status === 'completed') {
       return (
-        <Button className="w-full">View Content</Button>
+        <Button 
+          className="w-full"
+          onClick={() => onView && onView(topic)}
+        >
+          Xem nội dung
+        </Button>
       );
     }
     
     return (
-      <Button variant="outline" className="w-full">View Details</Button>
+      <Button 
+        variant="outline" 
+        className="w-full"
+        onClick={() => onView && onView(topic)}
+      >
+        Xem chi tiết
+      </Button>
     );
   };
 
@@ -61,7 +74,11 @@ export function TopicCard({ topic, onApprove, onReject }: TopicCardProps) {
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <Badge variant="outline" className={statusColors[topic.status]}>
-            {topic.status}
+            {topic.status === 'draft' && 'Chờ duyệt'}
+            {topic.status === 'approved' && 'Đã duyệt'}
+            {topic.status === 'rejected' && 'Từ chối'}
+            {topic.status === 'generating' && 'Đang tạo'}
+            {topic.status === 'completed' && 'Hoàn thành'}
           </Badge>
           <div className="text-sm text-muted-foreground">
             {formatDistanceToNow(topic.createdAt, { addSuffix: true })}

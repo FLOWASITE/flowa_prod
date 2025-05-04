@@ -3,6 +3,7 @@ import { mockTopics } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Topic } from '@/types';
 import { toast } from 'sonner';
+import { useTopicStatusUpdate } from './useTopicStatusUpdate';
 
 export const useTopicsPage = () => {
   const { currentLanguage } = useLanguage();
@@ -39,25 +40,31 @@ export const useTopicsPage = () => {
     return [...new Set(mockTopics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
   }, []);
   
+  const { approveTopic, rejectTopic, isLoading: statusUpdateLoading } = useTopicStatusUpdate();
+  
   // Add new action handlers for topic actions
   const handleViewTopic = (topic: Topic) => {
-    toast.info(`Viewing topic: ${topic.title}`);
-    console.log('View topic:', topic);
+    // Navigate to topic details or open a modal
+    toast.info(`Xem chi tiết: ${topic.title}`);
   };
 
-  const handleApproveTopic = (topic: Topic) => {
-    toast.success(`Topic approved: ${topic.title}`);
-    console.log('Approve topic:', topic);
+  const handleApproveTopic = async (topic: Topic) => {
+    const result = await approveTopic(topic);
+    if (result) {
+      // Refresh topics if needed
+    }
   };
 
   const handleEditTopic = (topic: Topic) => {
-    toast.info(`Editing topic: ${topic.title}`);
-    console.log('Edit topic:', topic);
+    // Open edit modal or navigate to edit page
+    toast.info(`Chỉnh sửa: ${topic.title}`);
   };
 
-  const handleRejectTopic = (topic: Topic) => {
-    toast.error(`Topic rejected: ${topic.title}`);
-    console.log('Reject topic:', topic);
+  const handleRejectTopic = async (topic: Topic) => {
+    const result = await rejectTopic(topic);
+    if (result) {
+      // Refresh topics if needed
+    }
   };
   
   const translations = {
@@ -196,6 +203,7 @@ export const useTopicsPage = () => {
     handleViewTopic,
     handleApproveTopic,
     handleEditTopic,
-    handleRejectTopic
+    handleRejectTopic,
+    statusUpdateLoading
   };
 };

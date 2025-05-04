@@ -127,4 +127,72 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Approve topic
+router.post('/:id/approve', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const approvalDate = new Date().toISOString();
+    
+    const { data, error } = await supabase
+      .from('content_topics')
+      .update({
+        status: 'approved',
+      })
+      .eq('id', id)
+      .select();
+    
+    if (error) throw error;
+    
+    if (data.length === 0) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Topic not found'
+      });
+    }
+    
+    return res.status(200).json(data[0]);
+  } catch (error: any) {
+    console.error('Error approving topic:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// Reject topic
+router.post('/:id/reject', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    
+    const { data, error } = await supabase
+      .from('content_topics')
+      .update({
+        status: 'rejected'
+      })
+      .eq('id', id)
+      .select();
+    
+    if (error) throw error;
+    
+    if (data.length === 0) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Topic not found'
+      });
+    }
+    
+    // TODO: Save rejection reason to history if needed
+    
+    return res.status(200).json(data[0]);
+  } catch (error: any) {
+    console.error('Error rejecting topic:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
 export default router;

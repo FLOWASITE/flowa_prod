@@ -109,7 +109,7 @@ export const useContentApproval = () => {
     }
   };
 
-  // Thêm hàm mới để từ chối nội dung
+  // Function to reject content
   const rejectContent = async (contentId: string, reason?: string) => {
     if (!contentId) {
       toast.error('ID nội dung không hợp lệ');
