@@ -6,9 +6,6 @@ import { useTopicsFetch } from './useTopicsFetch';
 import { useContentActions } from './useContentActions';
 import { useContentPagination } from './useContentPagination';
 import { mockContents, mockTopics } from '@/data/mockData';
-import { Content } from '@/types';
-import { toast } from 'sonner';
-import { apiClient } from '@/api/apiClient';
 
 export const useContentData = () => {
   // Get Supabase connection status
@@ -32,10 +29,9 @@ export const useContentData = () => {
     handleViewModeChange
   } = useContentPagination();
   
-  // Get content actions with the selected content state
+  // Get content actions
   const {
     selectedContent,
-    setSelectedContent,
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
@@ -45,40 +41,9 @@ export const useContentData = () => {
     handleCreateNew
   } = useContentActions(useLocalData, topics);
 
-  // Editor dialog state
-  const [isEditorDialogOpen, setIsEditorDialogOpen] = useState(false);
-
-  // Handle content edit
-  const handleEdit = (content: Content) => {
-    setSelectedContent(content);
-    setIsEditorDialogOpen(true);
-  };
-
-  // Handle content save after editing
-  const handleSaveContent = (updatedContent: Content) => {
-    if (useLocalData) {
-      toast.success('Nội dung đã được lưu (Chế độ mẫu)');
-      return;
-    }
-
-    toast.promise(
-      async () => {
-        await apiClient.put(`/content/${updatedContent.id}`, updatedContent);
-        return updatedContent;
-      },
-      {
-        loading: 'Đang lưu nội dung...',
-        success: 'Đã lưu nội dung thành công',
-        error: (err) => `Lỗi: ${err.message || 'Không thể lưu nội dung'}`
-      }
-    );
-  };
-
   // Batch selection state
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isBatchApprovalDialogOpen, setIsBatchApprovalDialogOpen] = useState(false);
-  
-  // Removed duplicate declaration of selectedContent
 
   // Handle batch selection
   const toggleItemSelection = (contentId: string) => {
@@ -126,8 +91,6 @@ export const useContentData = () => {
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
-    isEditorDialogOpen,
-    setIsEditorDialogOpen,
     currentPage,
     rowsPerPage,
     selectedPlatform,
@@ -139,8 +102,6 @@ export const useContentData = () => {
     handleApprove,
     handleDelete,
     handleView,
-    handleEdit,
-    handleSaveContent,
     handleCreateNew,
     handlePageChange,
     handleRowsPerPageChange,

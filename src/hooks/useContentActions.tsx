@@ -50,7 +50,6 @@ export const useContentActions = (useLocalData: boolean, topics: Topic[]) => {
 
   return {
     selectedContent,
-    setSelectedContent,  // Exporting this to be used in useContentData
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,

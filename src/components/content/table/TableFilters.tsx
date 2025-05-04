@@ -10,12 +10,12 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TableFiltersProps {
-  rowsPerPage?: number;
+  rowsPerPage: number;
   selectedPlatform: string;
-  handleRowsPerPageChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onPlatformChange: (platform: string) => void;
-  uniquePlatforms?: string[];
-  getPlatformIcon?: (platform: string) => React.ReactNode;
+  uniquePlatforms: string[];
+  getPlatformIcon: (platform: string) => React.ReactNode;
 }
 
 export const TableFilters: React.FC<TableFiltersProps> = ({
@@ -23,36 +23,27 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
   selectedPlatform,
   handleRowsPerPageChange,
   onPlatformChange,
-  uniquePlatforms = ['facebook', 'instagram', 'twitter', 'threads', 'linkedin', 'tiktok', 'youtube'],
+  uniquePlatforms,
   getPlatformIcon,
 }) => {
   const isMobile = useIsMobile();
 
-  // Default platform icon if none provided
-  const defaultPlatformIcon = (platform: string) => {
-    return <span className="text-lg">{platform.charAt(0).toUpperCase()}</span>;
-  };
-
-  const renderPlatformIcon = getPlatformIcon || defaultPlatformIcon;
-
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center p-3 sm:p-5 justify-between bg-gradient-to-r from-gray-50 to-white border-b backdrop-blur-sm gap-3">
       <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 w-full">
-        {rowsPerPage !== undefined && handleRowsPerPageChange && (
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium whitespace-nowrap">{isMobile ? 'Dòng:' : 'Số dòng/trang:'}</label>
-            <select 
-              className="px-2 sm:px-3 py-1 border rounded-full text-sm bg-white shadow-sm hover:border-primary transition-colors"
-              value={rowsPerPage}
-              onChange={handleRowsPerPageChange}
-            >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
-          </div>
-        )}
+        <div className="flex items-center space-x-2">
+          <label className="text-sm font-medium whitespace-nowrap">{isMobile ? 'Dòng:' : 'Số dòng/trang:'}</label>
+          <select 
+            className="px-2 sm:px-3 py-1 border rounded-full text-sm bg-white shadow-sm hover:border-primary transition-colors"
+            value={rowsPerPage}
+            onChange={handleRowsPerPageChange}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
         
         <div className="flex items-center space-x-2 w-full sm:w-auto">
           <label className="text-sm font-medium whitespace-nowrap">{isMobile ? 'Nền tảng:' : 'Nền tảng:'}</label>
@@ -65,7 +56,7 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
               {uniquePlatforms.map(platform => (
                 <SelectItem key={platform} value={platform}>
                   <div className="flex items-center">
-                    <span className="mr-2">{renderPlatformIcon(platform)}</span>
+                    <span className="mr-2">{getPlatformIcon(platform)}</span>
                     <span className="capitalize">{platform}</span>
                   </div>
                 </SelectItem>

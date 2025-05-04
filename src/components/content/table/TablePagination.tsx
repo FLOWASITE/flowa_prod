@@ -8,25 +8,18 @@ interface TablePaginationProps {
   currentPage: number;
   rowsPerPage: number;
   totalItems: number;
-  onPageChange?: (page: number) => void;
-  handlePageChange?: (page: number) => void; // For backwards compatibility
-  onRowsPerPageChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  handlePageChange: (page: number) => void;
 }
 
 export const TablePagination: React.FC<TablePaginationProps> = ({
   currentPage,
   rowsPerPage,
   totalItems,
-  onPageChange,
-  handlePageChange,
-  onRowsPerPageChange
+  handlePageChange
 }) => {
   const isMobile = useIsMobile();
   const totalPages = Math.ceil(totalItems / rowsPerPage);
   const displayPageCount = isMobile ? 3 : 5;
-  
-  // Use either onPageChange or handlePageChange (for backward compatibility)
-  const handleChange = onPageChange || handlePageChange;
   
   // Calculate the range of page numbers to display
   const getPageRange = () => {
@@ -58,7 +51,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         <Button
           variant="outline"
           size="icon"
-          onClick={() => handleChange(Math.max(1, currentPage - 1))}
+          onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
           className="h-8 w-8 p-0"
         >
@@ -70,7 +63,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Button
               variant={currentPage === 1 ? "default" : "outline"}
               size="icon"
-              onClick={() => handleChange(1)}
+              onClick={() => handlePageChange(1)}
               className="h-8 w-8 p-0"
             >
               1
@@ -87,7 +80,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             key={page}
             variant={currentPage === page ? "default" : "outline"}
             size="icon"
-            onClick={() => handleChange(page)}
+            onClick={() => handlePageChange(page)}
             className="h-8 w-8 p-0"
           >
             {page}
@@ -103,7 +96,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             <Button
               variant={currentPage === totalPages ? "default" : "outline"}
               size="icon"
-              onClick={() => handleChange(totalPages)}
+              onClick={() => handlePageChange(totalPages)}
               className="h-8 w-8 p-0"
             >
               {totalPages}
@@ -114,7 +107,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         <Button
           variant="outline"
           size="icon"
-          onClick={() => handleChange(Math.min(totalPages, currentPage + 1))}
+          onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
           className="h-8 w-8 p-0"
         >

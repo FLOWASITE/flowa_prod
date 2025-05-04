@@ -1,41 +1,37 @@
 
-import React, { useState, useMemo } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import React from 'react';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { Content } from '@/types';
+import { format } from 'date-fns';
+import { platformIcons } from '../chat/PlatformIcons';
 import { Checkbox } from '@/components/ui/checkbox';
-import { PlatformIcon } from './table/PlatformIcon';
+
+// Import our new components
 import { StatusBadge } from './table/StatusBadge';
-import { TableActions } from './table/TableActions';
 import { TableFilters } from './table/TableFilters';
 import { TablePagination } from './table/TablePagination';
+import { TableActions } from './table/TableActions';
 import { TableEmptyState } from './table/TableEmptyState';
 import { TableLoadingState } from './table/TableLoadingState';
-import { format } from 'date-fns';
-import { Content, Topic } from '@/types';
+import { PlatformIcon } from './table/PlatformIcon';
 
 interface ContentTableProps {
   items: Content[];
   allItems: Content[];
   isLoading: boolean;
-  topics: Topic[];
+  topics: any[];
   onApprove: (content: Content) => void;
   onDelete: (contentId: string) => void;
   onView: (content: Content) => void;
-  onEdit?: (content: Content) => void;
   currentPage: number;
   rowsPerPage: number;
   handlePageChange: (page: number) => void;
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  showApproveColumn?: boolean;
   showApprovalColumns?: boolean;
+  showApproveColumn?: boolean;
   selectedPlatform: string;
   onPlatformChange: (platform: string) => void;
+  // Batch selection props
   selectedItems?: string[];
   onToggleSelection?: (contentId: string) => void;
   onSelectAll?: (contentIds: string[]) => void;
@@ -50,153 +46,175 @@ export const ContentTable: React.FC<ContentTableProps> = ({
   onApprove,
   onDelete,
   onView,
-  onEdit,
   currentPage,
   rowsPerPage,
   handlePageChange,
   handleRowsPerPageChange,
+  showApprovalColumns = true,
   showApproveColumn = true,
-  showApprovalColumns = false,
   selectedPlatform,
   onPlatformChange,
+  // Batch selection props
   selectedItems = [],
   onToggleSelection,
   onSelectAll,
-  showBatchSelection = false,
+  showBatchSelection = false
 }) => {
-  // Get topic titles for easier lookup
-  const topicMap = new Map(topics.map(topic => [topic.id, topic.title]));
-  
-  // Memoize the content IDs of the current page
-  const currentPageContentIds = items.map(item => item.id);
-  
-  // Check if all items on the current page are selected
-  const allSelected = items.length > 0 && currentPageContentIds.every(id => selectedItems.includes(id));
-  
-  // Handle select all checkbox change
-  const handleSelectAllChange = (checked: boolean) => {
-    if (onSelectAll) {
-      if (checked) {
-        onSelectAll(currentPageContentIds);
-      } else {
-        onSelectAll([]); // Clear selection
+  // Helper functions
+  const formatDate = (date: Date | undefined) => {
+    return date ? format(date, 'dd/MM/yyyy') : '-';
+  };
+
+  const getPlatformIcon = (platform: string) => {
+    return platformIcons[platform as keyof typeof platformIcons] || null;
+  };
+
+  // Get unique platforms for filter
+  const getUniquePlatforms = () => {
+    const platforms = new Set<string>();
+    allItems.forEach(item => {
+      if (item.platform) {
+        platforms.add(item.platform);
       }
+    });
+    return Array.from(platforms);
+  };
+
+  // Handle select all checkbox
+  const handleSelectAllChange = (checked: boolean) => {
+    if (checked && onSelectAll) {
+      onSelectAll(items.map(item => item.id));
+    } else if (!checked && onSelectAll) {
+      onSelectAll([]);
     }
   };
 
-  // Get all unique platforms for the filter
-  const uniquePlatforms = useMemo(() => {
-    const platforms = new Set<string>();
-    allItems.forEach(item => platforms.add(item.platform));
-    return Array.from(platforms);
-  }, [allItems]);
-
-  // Helper function to render platform icons
-  const getPlatformIcon = (platform: string) => {
-    return <PlatformIcon platform={platform as Content['platform']} />;
-  };
+  const uniquePlatforms = getUniquePlatforms();
+  const columnsCount = showApprovalColumns ? (showBatchSelection ? 11 : 10) : (showBatchSelection ? 9 : 8);
 
   return (
-    <div className="w-full">
-      <TableFilters 
-        selectedPlatform={selectedPlatform}
-        onPlatformChange={onPlatformChange}
+    <div className="rounded-xl shadow-lg overflow-hidden border border-border bg-white">
+      <TableFilters
         rowsPerPage={rowsPerPage}
+        selectedPlatform={selectedPlatform}
         handleRowsPerPageChange={handleRowsPerPageChange}
+        onPlatformChange={onPlatformChange}
         uniquePlatforms={uniquePlatforms}
         getPlatformIcon={getPlatformIcon}
       />
       
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/50">
-              {showBatchSelection && onToggleSelection && onSelectAll && (
-                <TableHead className="w-12">
-                  <Checkbox
-                    checked={allSelected}
-                    onCheckedChange={handleSelectAllChange}
-                    aria-label="Select all"
-                  />
-                </TableHead>
-              )}
-              <TableHead className="w-12">Platform</TableHead>
-              <TableHead className="w-48">Chủ đề</TableHead>
-              <TableHead>Nội dung</TableHead>
-              <TableHead className="w-24">Trạng thái</TableHead>
-              {showApproveColumn && (
-                <TableHead className="w-32">Ngày duyệt</TableHead>
-              )}
-              <TableHead className="w-32">Ngày tạo</TableHead>
-              <TableHead className="w-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableLoadingState colSpan={showBatchSelection ? 8 : 7} />
-            ) : items.length === 0 ? (
-              <TableEmptyState colSpan={showBatchSelection ? 8 : 7} />
-            ) : (
-              items.map((content) => (
-                <TableRow key={content.id}>
-                  {showBatchSelection && onToggleSelection && (
-                    <TableCell className="w-12">
-                      <Checkbox
-                        checked={selectedItems.includes(content.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked !== 'indeterminate') {
-                            onToggleSelection(content.id);
-                          }
-                        }}
-                        aria-label={`Select ${content.id}`}
-                        disabled={content.status !== 'draft'}
+      <div className="relative">
+        <div className="w-full overflow-auto custom-scrollbar">
+          <div className="min-w-[1200px]">
+            <Table>
+              <TableHeader className="sticky top-0 z-10">
+                <TableRow className="bg-gradient-to-r from-primary to-accent border-none">
+                  {showBatchSelection && (
+                    <TableHead className="w-10 text-center text-white font-bold py-4">
+                      <Checkbox 
+                        className="bg-white/20 border-white/50"
+                        onCheckedChange={handleSelectAllChange}
+                        checked={items.length > 0 && selectedItems.length === items.length}
                       />
-                    </TableCell>
+                    </TableHead>
                   )}
-                  <TableCell className="w-12">
-                    <PlatformIcon platform={content.platform} />
-                  </TableCell>
-                  <TableCell className="w-48 font-medium">
-                    {content.topicTitle || topicMap.get(content.topicId) || 'Không có chủ đề'}
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-w-md truncate">{content.text}</div>
-                  </TableCell>
-                  <TableCell className="w-24">
-                    <StatusBadge status={content.status} />
-                  </TableCell>
-                  {showApproveColumn && (
-                    <TableCell className="w-32">
-                      {content.approvedAt 
-                        ? format(new Date(content.approvedAt), 'dd/MM/yyyy')
-                        : '-'}
-                    </TableCell>
+                  <TableHead className="w-10 text-center text-white font-bold py-4">#</TableHead>
+                  <TableHead className="w-[120%] text-white font-bold py-4">Chủ đề gốc</TableHead>
+                  <TableHead className="w-16 text-center text-white font-bold py-4">Nền tảng</TableHead>
+                  <TableHead className="max-w-[10%] text-white font-bold py-4">Nội dung (Preview)</TableHead>
+                  <TableHead className="w-28 text-white font-bold py-4">Hình ảnh</TableHead>
+                  <TableHead className="w-28 text-white font-bold py-4">Ngày tạo</TableHead>
+                  {showApprovalColumns && (
+                    <>
+                      <TableHead className="w-28 text-white font-bold py-4">Người duyệt</TableHead>
+                      <TableHead className="w-28 text-white font-bold py-4">Ngày duyệt</TableHead>
+                    </>
                   )}
-                  <TableCell className="w-32">
-                    {format(new Date(content.createdAt), 'dd/MM/yyyy')}
-                  </TableCell>
-                  <TableCell className="w-12">
-                    <TableActions 
-                      onApprove={content.status === 'draft' ? () => onApprove(content) : undefined}
-                      onDelete={() => onDelete(content.id)}
-                      onView={() => onView(content)}
-                      onEdit={onEdit ? () => onEdit(content) : undefined}
-                      showApprove={showApprovalColumns}
-                    />
-                  </TableCell>
+                  <TableHead className="w-28 text-white font-bold py-4">Trạng thái</TableHead>
+                  <TableHead className="w-28 text-white font-bold py-4">Hành động</TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableLoadingState colSpan={columnsCount} />
+                ) : items.length === 0 ? (
+                  <TableEmptyState colSpan={columnsCount} />
+                ) : (
+                  items.map((item, index) => {
+                    const topic = topics.find(t => t.id === item.topicId);
+                    const displayIndex = (currentPage - 1) * rowsPerPage + index + 1;
+                    return (
+                      <TableRow key={item.id} className="hover:bg-gray-50 transition-colors border-b border-gray-100">
+                        {showBatchSelection && (
+                          <TableCell>
+                            <Checkbox 
+                              checked={selectedItems.includes(item.id)}
+                              onCheckedChange={() => onToggleSelection && onToggleSelection(item.id)}
+                              disabled={item.status !== 'draft'}
+                            />
+                          </TableCell>
+                        )}
+                        <TableCell className="font-medium text-center">{displayIndex}</TableCell>
+                        <TableCell className="font-medium">{topic?.title || 'Không có chủ đề'}</TableCell>
+                        <TableCell className="text-center">
+                          <PlatformIcon platform={item.platform} />
+                        </TableCell>
+                        <TableCell>
+                          <div className="truncate max-w-xs" title={item.text}>
+                            {item.text.substring(0, 40)}...
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {item.imageUrl && (
+                            <div className="h-12 w-12 relative rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all transform hover:scale-105">
+                              <img 
+                                src={item.imageUrl} 
+                                alt="Nội dung" 
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>{formatDate(item.createdAt)}</TableCell>
+                        {showApprovalColumns && (
+                          <>
+                            <TableCell>AI Assistant</TableCell>
+                            <TableCell>{formatDate(item.approvedAt)}</TableCell>
+                          </>
+                        )}
+                        <TableCell>
+                          <StatusBadge status={item.status} />
+                        </TableCell>
+                        <TableCell>
+                          <TableActions
+                            item={item}
+                            onApprove={onApprove}
+                            onView={onView}
+                            onDelete={onDelete}
+                            showApproveColumn={showApproveColumn}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
       
-      <TablePagination 
-        currentPage={currentPage}
-        rowsPerPage={rowsPerPage}
-        totalItems={allItems.length}
-        onPageChange={handlePageChange}
-      />
+      <div className="flex items-center justify-between p-5 border-t bg-gradient-to-r from-gray-50 to-white">
+        <div className="text-sm text-muted-foreground">
+          Trang {currentPage} - Hiển thị {items.length} / {allItems.length} nội dung
+        </div>
+        <TablePagination
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          totalItems={allItems.length}
+          handlePageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };
