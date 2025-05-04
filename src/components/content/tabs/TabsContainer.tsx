@@ -52,15 +52,9 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
   selectAll,
   viewMode
 }) => {
-  // Determine if batch selection should be shown
-  const showBatchSelection = activeTab === 'all' || activeTab === 'draft';
-  
-  // Common props that determine if approval actions should be shown
-  const showApproveActions = activeTab !== 'approved' && activeTab !== 'scheduled' && activeTab !== 'published';
-  
-  // Get currently visible items based on the active tab, pagination, and filtering
-  const currentItems = (() => {
-    switch (activeTab) {
+  // Use helper function to get the current items based on the active tab
+  const getCurrentItems = (tab: string) => {
+    switch (tab) {
       case 'draft':
         return getPaginatedContent(draftContent, currentPage, rowsPerPage);
       case 'approved':
@@ -75,11 +69,11 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
       default:
         return getPaginatedContent(allContent, currentPage, rowsPerPage);
     }
-  })();
+  };
 
-  // Get total items for the active tab
-  const totalItems = (() => {
-    switch (activeTab) {
+  // Get total items for pagination based on the active tab
+  const getTotalItems = (tab: string) => {
+    switch (tab) {
       case 'draft':
         return draftContent;
       case 'approved':
@@ -94,7 +88,15 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
       default:
         return allContent;
     }
-  })();
+  };
+
+  // Determine if batch selection should be shown
+  const showBatchSelection = activeTab === 'all' || activeTab === 'draft';
+  
+  // Determine if approve actions should be shown
+  const showApproveActions = (tab: string) => {
+    return tab !== 'approved' && tab !== 'scheduled' && tab !== 'published';
+  };
 
   // Count draft items for batch approval
   const draftItemCount = countDraftItems(activeTab, allContent, draftContent);
@@ -104,7 +106,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
     <>
       <TabContent
         value="all"
-        items={activeTab === 'all' ? currentItems : []}
+        items={activeTab === 'all' ? getCurrentItems('all') : []}
         allItems={allContent}
         isLoading={isLoading}
         topics={topics}
@@ -122,12 +124,12 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
         onSelectAll={selectAll}
         viewMode={viewMode}
         showBatchSelection={showBatchSelectionAndDraftItemCount}
-        showApproveActions={showApproveActions}
+        showApproveActions={showApproveActions('all')}
       />
 
       <TabContent
         value="draft"
-        items={activeTab === 'draft' ? currentItems : []}
+        items={activeTab === 'draft' ? getCurrentItems('draft') : []}
         allItems={draftContent}
         isLoading={isLoading}
         topics={topics}
@@ -150,7 +152,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="approved"
-        items={activeTab === 'approved' ? currentItems : []}
+        items={activeTab === 'approved' ? getCurrentItems('approved') : []}
         allItems={approvedContent}
         isLoading={isLoading}
         topics={topics}
@@ -173,7 +175,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="scheduled"
-        items={activeTab === 'scheduled' ? currentItems : []}
+        items={activeTab === 'scheduled' ? getCurrentItems('scheduled') : []}
         allItems={scheduledContent}
         isLoading={isLoading}
         topics={topics}
@@ -196,7 +198,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="rejected"
-        items={activeTab === 'rejected' ? currentItems : []}
+        items={activeTab === 'rejected' ? getCurrentItems('rejected') : []}
         allItems={rejectedContent}
         isLoading={isLoading}
         topics={topics}
@@ -219,7 +221,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="published"
-        items={activeTab === 'published' ? currentItems : []}
+        items={activeTab === 'published' ? getCurrentItems('published') : []}
         allItems={publishedContent}
         isLoading={isLoading}
         topics={topics}

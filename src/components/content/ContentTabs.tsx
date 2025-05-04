@@ -1,10 +1,10 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Tabs } from '@/components/ui/tabs';
 import { Content } from '@/types';
-import { filterByPlatform } from './utils/contentFilters';
 import { TabsHeaderSection } from './tabs/TabsHeaderSection';
 import { TabsContainer } from './tabs/TabsContainer';
+import { useContentTabsData } from '@/hooks/useContentTabsData';
 
 interface ContentTabsProps {
   content: Content[];
@@ -56,34 +56,22 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue>('all');
 
-  // Filter content based on status for each tab
-  const allContent = useMemo(() => {
-    return filterByPlatform(content, selectedPlatform);
-  }, [content, selectedPlatform]);
-  
-  const draftContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'draft'), selectedPlatform);
-  }, [content, selectedPlatform]);
-  
-  const approvedContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'approved'), selectedPlatform);
-  }, [content, selectedPlatform]);
-
-  const scheduledContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'scheduled'), selectedPlatform);
-  }, [content, selectedPlatform]);
-
-  // Add states for rejected and published content
-  const rejectedContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'rejected'), selectedPlatform);
-  }, [content, selectedPlatform]);
-  
-  const publishedContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'published'), selectedPlatform);
-  }, [content, selectedPlatform]);
-
-  // Determine if batch selection should be shown
-  const showBatchSelection = activeTab === 'all' || activeTab === 'draft';
+  // Use our new custom hook to handle all data filtering
+  const {
+    allContent,
+    draftContent,
+    approvedContent,
+    scheduledContent,
+    rejectedContent,
+    publishedContent,
+    showBatchSelection
+  } = useContentTabsData({
+    content,
+    selectedPlatform,
+    currentPage,
+    rowsPerPage,
+    activeTab
+  });
 
   return (
     <div>
