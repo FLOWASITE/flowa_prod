@@ -33,22 +33,28 @@ export const useDeleteBrand = (
       }
       
       // Execute the actual deletion in the background
-      deleteFromDatabase(brand.id).then(() => {
-        sonnerToast.success(t('deleteSuccess'));
-      }).catch(error => {
-        console.error('Background deletion error:', error);
-        toast({
-          title: t('deleteError'),
-          description: error instanceof Error ? error.message : 'Unknown error',
-          variant: 'destructive',
-        });
+      Promise.resolve().then(async () => {
+        try {
+          await deleteFromDatabase(brand.id);
+          sonnerToast.success(t('deleteSuccess'));
+        } catch (error) {
+          console.error('Background deletion error:', error);
+          toast({
+            title: t('deleteError'),
+            description: error instanceof Error ? error.message : 'Unknown error',
+            variant: 'destructive',
+          });
+        } finally {
+          setIsDeleting(false); // Ensure this gets set to false no matter what
+        }
       });
       
-      // Return false to close the delete confirmation dialog
-      return false;
+      // Return true to close the delete confirmation dialog immediately
+      // This is important to unblock the UI
+      return true;
     } catch (error) {
       console.error('Error initiating brand deletion:', error);
-      setIsDeleting(false);
+      setIsDeleting(false); // Ensure this gets set to false no matter what
       toast({
         title: t('deleteError'),
         description: error instanceof Error ? error.message : 'Unknown error',
@@ -89,10 +95,7 @@ export const useDeleteBrand = (
       if (error) {
         throw error;
       }
-      
-      setIsDeleting(false);
     } catch (error) {
-      setIsDeleting(false);
       throw error;
     }
   };

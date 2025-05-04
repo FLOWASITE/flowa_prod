@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   AlertDialog,
@@ -14,7 +15,7 @@ import { brandCardTranslations } from './cardTranslations';
 interface DeleteConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => Promise<void> | boolean;
+  onConfirm: () => Promise<void | boolean>;
   isDeleting: boolean;
   languageCode: string;
 }
@@ -31,11 +32,16 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   };
 
   // Handle confirmation with optimistic UI update
-  const handleConfirm = async () => {
-    const result = await onConfirm();
-    // If onConfirm returns false explicitly, we keep the dialog open
-    if (result !== false) {
-      onOpenChange(false);
+  const handleConfirm = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const result = await onConfirm();
+      // If onConfirm returns true explicitly, we close the dialog
+      if (result === true) {
+        onOpenChange(false);
+      }
+    } catch (error) {
+      console.error("Error during confirmation:", error);
     }
   };
 
@@ -49,7 +55,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction 
             onClick={handleConfirm}
             className="bg-red-600 hover:bg-red-700"
