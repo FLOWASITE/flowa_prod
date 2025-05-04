@@ -5,7 +5,7 @@ export const useContentPagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedPlatform, setSelectedPlatform] = useState('all');
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [viewMode, setViewMode] = useState<'table' | 'grid' | 'accordion'>('table');
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -13,15 +13,15 @@ export const useContentPagination = () => {
 
   const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when changing rows per page
+    setCurrentPage(1); // Reset to first page
   };
 
   const handlePlatformChange = (platform: string) => {
     setSelectedPlatform(platform);
-    setCurrentPage(1); // Reset to first page when changing platform filter
+    setCurrentPage(1); // Reset to first page
   };
 
-  const handleViewModeChange = (mode: 'table' | 'grid') => {
+  const handleViewModeChange = (mode: 'table' | 'grid' | 'accordion') => {
     setViewMode(mode);
   };
 

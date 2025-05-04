@@ -1,10 +1,10 @@
-
 import React, { useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ContentTable } from './ContentTable';
 import { ContentGridView } from './ContentGridView';
+import { ContentAccordionView } from './ContentAccordionView';
 import { Button } from '@/components/ui/button';
-import { LayoutGrid, List, Check, Package } from 'lucide-react';
+import { LayoutGrid, List, Check, Package, AlignLeft } from 'lucide-react';
 import { Content } from '@/types';
 
 interface ContentTabsProps {
@@ -20,8 +20,8 @@ interface ContentTabsProps {
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   selectedPlatform: string;
   onPlatformChange: (platform: string) => void;
-  viewMode: 'table' | 'grid';
-  handleViewModeChange: (mode: 'table' | 'grid') => void;
+  viewMode: 'table' | 'grid' | 'accordion';
+  handleViewModeChange: (mode: 'table' | 'grid' | 'accordion') => void;
   // Batch selection props
   selectedItems?: string[];
   toggleItemSelection?: (contentId: string) => void;
@@ -130,6 +130,79 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
     }
   }, [activeTab, allContent, draftContent, approvedContent, scheduledContent]);
 
+  // Render the appropriate view based on viewMode
+  const renderContentView = (items: Content[], allItems: Content[]) => {
+    switch (viewMode) {
+      case 'grid':
+        return (
+          <ContentGridView
+            items={items}
+            allItems={allItems}
+            isLoading={isLoading}
+            topics={topics}
+            onApprove={onApprove}
+            onDelete={onDelete}
+            onView={onView}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            handlePageChange={handlePageChange}
+            handleRowsPerPageChange={handleRowsPerPageChange}
+            selectedPlatform={selectedPlatform}
+            onPlatformChange={onPlatformChange}
+            selectedItems={selectedItems}
+            onToggleSelection={toggleItemSelection}
+            onSelectAll={selectAll}
+            showBatchSelection={showBatchSelection && draftItemCount > 0 && activeTab !== 'approved' && activeTab !== 'scheduled'}
+            showApproveActions={activeTab !== 'approved' && activeTab !== 'scheduled'}
+          />
+        );
+      case 'accordion':
+        return (
+          <ContentAccordionView
+            items={items}
+            allItems={allItems}
+            isLoading={isLoading}
+            topics={topics}
+            onApprove={onApprove}
+            onDelete={onDelete}
+            onView={onView}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            handlePageChange={handlePageChange}
+            handleRowsPerPageChange={handleRowsPerPageChange}
+            selectedPlatform={selectedPlatform}
+            onPlatformChange={onPlatformChange}
+            showApproveColumn={activeTab !== 'approved' && activeTab !== 'scheduled'}
+          />
+        );
+      case 'table':
+      default:
+        return (
+          <ContentTable
+            items={items}
+            allItems={allItems}
+            isLoading={isLoading}
+            topics={topics}
+            onApprove={onApprove}
+            onDelete={onDelete}
+            onView={onView}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            handlePageChange={handlePageChange}
+            handleRowsPerPageChange={handleRowsPerPageChange}
+            showApprovalColumns={true}
+            selectedPlatform={selectedPlatform}
+            onPlatformChange={onPlatformChange}
+            selectedItems={selectedItems}
+            onToggleSelection={toggleItemSelection}
+            onSelectAll={selectAll}
+            showBatchSelection={showBatchSelection && draftItemCount > 0 && activeTab !== 'approved' && activeTab !== 'scheduled'}
+            showApproveColumn={activeTab !== 'approved' && activeTab !== 'scheduled'}
+          />
+        );
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center px-6 pt-4">
@@ -189,179 +262,38 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => handleViewModeChange('grid')}
-                  className="rounded-r-md rounded-l-none px-3"
+                  className="rounded-none border-l-0 border-r-0 px-3"
                   title="Chế độ lưới"
                 >
                   <LayoutGrid size={16} />
+                </Button>
+                <Button
+                  variant={viewMode === 'accordion' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleViewModeChange('accordion')}
+                  className="rounded-r-md rounded-l-none px-3"
+                  title="Chế độ phân cấp"
+                >
+                  <AlignLeft size={16} />
                 </Button>
               </div>
             </div>
           </div>
 
           <TabsContent value="all">
-            {viewMode === 'table' ? (
-              <ContentTable
-                items={currentItems}
-                allItems={allContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                showApprovalColumns={true}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-                selectedItems={selectedItems}
-                onToggleSelection={toggleItemSelection}
-                onSelectAll={selectAll}
-                showBatchSelection={showBatchSelection && draftItemCount > 0}
-              />
-            ) : (
-              <ContentGridView
-                items={currentItems}
-                allItems={allContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-                selectedItems={selectedItems}
-                onToggleSelection={toggleItemSelection}
-                onSelectAll={selectAll}
-                showBatchSelection={showBatchSelection && draftItemCount > 0}
-              />
-            )}
+            {renderContentView(currentItems, allContent)}
           </TabsContent>
 
           <TabsContent value="draft">
-            {viewMode === 'table' ? (
-              <ContentTable
-                items={currentItems}
-                allItems={draftContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                showApprovalColumns={true}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-                selectedItems={selectedItems}
-                onToggleSelection={toggleItemSelection}
-                onSelectAll={selectAll}
-                showBatchSelection={showBatchSelection}
-              />
-            ) : (
-              <ContentGridView
-                items={currentItems}
-                allItems={draftContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-                selectedItems={selectedItems}
-                onToggleSelection={toggleItemSelection}
-                onSelectAll={selectAll}
-                showBatchSelection={showBatchSelection}
-              />
-            )}
+            {renderContentView(currentItems, draftContent)}
           </TabsContent>
 
           <TabsContent value="approved">
-            {viewMode === 'table' ? (
-              <ContentTable
-                items={currentItems}
-                allItems={approvedContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                showApproveColumn={false}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-              />
-            ) : (
-              <ContentGridView
-                items={currentItems}
-                allItems={approvedContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-                showApproveActions={false}
-              />
-            )}
+            {renderContentView(currentItems, approvedContent)}
           </TabsContent>
 
           <TabsContent value="scheduled">
-            {viewMode === 'table' ? (
-              <ContentTable
-                items={currentItems}
-                allItems={scheduledContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                showApproveColumn={false}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-              />
-            ) : (
-              <ContentGridView
-                items={currentItems}
-                allItems={scheduledContent}
-                isLoading={isLoading}
-                topics={topics}
-                onApprove={onApprove}
-                onDelete={onDelete}
-                onView={onView}
-                currentPage={currentPage}
-                rowsPerPage={rowsPerPage}
-                handlePageChange={handlePageChange}
-                handleRowsPerPageChange={handleRowsPerPageChange}
-                selectedPlatform={selectedPlatform}
-                onPlatformChange={onPlatformChange}
-                showApproveActions={false}
-              />
-            )}
+            {renderContentView(currentItems, scheduledContent)}
           </TabsContent>
         </Tabs>
       </div>
