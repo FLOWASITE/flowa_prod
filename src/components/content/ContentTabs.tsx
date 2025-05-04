@@ -13,6 +13,7 @@ interface ContentTabsProps {
   onApprove: (content: Content) => void;
   onDelete: (contentId: string) => void;
   onView: (content: Content) => void;
+  onEdit?: (content: Content) => void;
   topics: any[];
   currentPage: number;
   rowsPerPage: number;
@@ -36,6 +37,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   onApprove,
   onDelete,
   onView,
+  onEdit,
   topics,
   currentPage,
   rowsPerPage,
@@ -208,6 +210,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -229,6 +232,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -253,6 +257,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -274,6 +279,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -298,6 +304,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -315,6 +322,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -336,6 +344,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}
@@ -353,6 +362,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
                 onApprove={onApprove}
                 onDelete={onDelete}
                 onView={onView}
+                onEdit={onEdit}
                 currentPage={currentPage}
                 rowsPerPage={rowsPerPage}
                 handlePageChange={handlePageChange}

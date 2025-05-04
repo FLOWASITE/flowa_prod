@@ -1,192 +1,90 @@
+
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Content } from '@/types';
+import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
+import { PlatformIcon } from './table/PlatformIcon';
+import { StatusBadge } from './table/StatusBadge';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Content, Topic } from '@/types';
+import { Check, Eye, Trash2, Edit } from 'lucide-react';
 import { format } from 'date-fns';
-import { 
-  Calendar, 
-  CheckCircle2, 
-  Clock, 
-  Edit, 
-  Eye, 
-  Share2, 
-  Trash2 
-} from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { platformIcons } from '../chat/PlatformIcons';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface ContentCardProps {
   content: Content;
-  topic?: Topic;
+  topicTitle?: string;
+  onDelete: () => void;
+  onView: () => void;
   onApprove?: () => void;
-  onDelete?: () => void;
-  onView?: () => void;
   onEdit?: () => void;
-  compact?: boolean;
+  isSelected?: boolean;
+  onToggleSelection?: () => void;
+  selectionDisabled?: boolean;
 }
 
 export const ContentCard: React.FC<ContentCardProps> = ({ 
   content, 
-  topic, 
-  onApprove, 
+  topicTitle,
   onDelete, 
   onView,
+  onApprove,
   onEdit,
-  compact = false 
+  isSelected,
+  onToggleSelection,
+  selectionDisabled = false
 }) => {
-  const getPlatformIcon = (platform: string) => {
-    return platformIcons[platform as keyof typeof platformIcons] || null;
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'draft':
-        return <Badge variant="outline">Bản nháp</Badge>;
-      case 'approved':
-        return <Badge variant="secondary">Đã duyệt</Badge>;
-      case 'scheduled':
-        return <Badge variant="default">Đã lên lịch</Badge>;
-      case 'published':
-        return <Badge className="bg-green-500 text-white">Đã đăng</Badge>;
-      default:
-        return null;
-    }
-  };
-
-  const getFormattedDate = (date: Date | undefined) => {
-    if (!date) return null;
-    return format(date, 'dd/MM/yyyy HH:mm');
-  };
-
   return (
-    <Card className={`h-full flex flex-col ${compact ? 'shadow-sm' : 'shadow'}`}>
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            {getPlatformIcon(content.platform)}
-            <span className="font-medium capitalize">{content.platform}</span>
-          </div>
-          {getStatusBadge(content.status)}
-        </div>
-      </CardHeader>
-      
-      <CardContent className="flex-grow pt-0">
-        <div className="mb-2">
-          <p className="text-sm text-muted-foreground">
-            {topic ? topic.title : 'Không có chủ đề'}
-          </p>
-        </div>
-        
-        <p className={`text-sm ${compact ? 'line-clamp-2' : 'line-clamp-3'} mb-2`}>{content.text}</p>
-        
-        {content.imageUrl && (
-          <div className={`mb-2 aspect-video relative overflow-hidden rounded-md ${compact ? 'h-20' : ''}`}>
-            <img 
-              src={content.imageUrl} 
-              alt="Content" 
-              className="w-full h-full object-cover"
+    <Card className="overflow-hidden bg-white/70 backdrop-blur-sm border-gray-100">
+      <CardHeader className="p-3 pb-0 flex flex-row justify-between items-start">
+        <div className="flex items-center">
+          {onToggleSelection && (
+            <Checkbox 
+              className="mr-2"
+              checked={isSelected} 
+              onCheckedChange={() => onToggleSelection()} 
+              disabled={selectionDisabled}
             />
-          </div>
-        )}
-        
-        <div className="text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            <span>Tạo: {getFormattedDate(content.createdAt)}</span>
-          </div>
-          
-          {content.approvedAt && (
-            <div className="flex items-center gap-1 mt-1">
-              <CheckCircle2 className="h-3 w-3 text-blue-600" />
-              <span>Duyệt: {getFormattedDate(content.approvedAt)}</span>
-            </div>
           )}
-          
-          {content.scheduledAt && (
-            <div className="flex items-center gap-1 mt-1">
-              <Calendar className="h-3 w-3" />
-              <span>Dự kiến: {getFormattedDate(content.scheduledAt)}</span>
-            </div>
-          )}
-          
-          {content.publishedAt && (
-            <div className="flex items-center gap-1 mt-1">
-              <CheckCircle2 className="h-3 w-3 text-green-600" />
-              <span>Đăng: {getFormattedDate(content.publishedAt)}</span>
-            </div>
-          )}
+          <PlatformIcon platform={content.platform} />
+          <h3 className="text-sm font-medium ml-2">{topicTitle || 'No topic'}</h3>
+        </div>
+        <StatusBadge status={content.status} />
+      </CardHeader>
+      <CardContent className="p-3">
+        <div className="text-sm line-clamp-3 min-h-[3rem]">
+          {content.text}
         </div>
       </CardContent>
-      
-      <CardFooter className="pt-2 border-t flex justify-between">
-        <div className="flex gap-1">
-          {onEdit && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={onEdit}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Chỉnh sửa</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          
-          {onView && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={onView}>
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Xem chi tiết</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          
-          {content.status === 'approved' || content.status === 'scheduled' ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Chia sẻ</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : null}
-          
-          {onDelete && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-red-500" onClick={onDelete}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Xóa</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+      <CardFooter className="p-3 pt-0 flex flex-col gap-2">
+        <div className="flex items-center justify-between w-full text-xs text-gray-500">
+          <div>Created: {format(new Date(content.createdAt), 'dd/MM/yy')}</div>
+          {content.approvedAt && (
+            <div>Approved: {format(new Date(content.approvedAt), 'dd/MM/yy')}</div>
           )}
         </div>
-        
-        {content.status === 'draft' && onApprove && (
-          <Button variant="default" size="sm" onClick={onApprove}>
-            <CheckCircle2 className="h-4 w-4 mr-1" /> Duyệt
-          </Button>
-        )}
+        <div className="flex justify-between w-full">
+          <div className="space-x-1">
+            {onApprove && (
+              <Button variant="outline" size="sm" onClick={onApprove}>
+                <Check className="h-3.5 w-3.5 mr-1" />
+                <span>Duyệt</span>
+              </Button>
+            )}
+            {onEdit && (
+              <Button variant="outline" size="sm" onClick={onEdit}>
+                <Edit className="h-3.5 w-3.5 mr-1" />
+                <span>Sửa</span>
+              </Button>
+            )}
+          </div>
+          <div className="space-x-1">
+            <Button variant="ghost" size="sm" onClick={onView}>
+              <Eye className="h-3.5 w-3.5" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={onDelete} className="text-red-500">
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
       </CardFooter>
     </Card>
   );

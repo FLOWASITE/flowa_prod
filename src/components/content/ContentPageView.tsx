@@ -5,6 +5,7 @@ import { ContentHeader } from '@/components/content/ContentHeader';
 import { ContentTabs } from '@/components/content/ContentTabs';
 import { LocalDataWarning } from '@/components/content/LocalDataWarning';
 import { BatchApprovalDialog } from '@/components/content/BatchApprovalDialog';
+import { ContentEditorDialog } from '@/components/content/ContentEditorDialog';
 import { useContentDataContext } from './ContentPageProvider';
 
 export const ContentPageView: React.FC = () => {
@@ -15,6 +16,8 @@ export const ContentPageView: React.FC = () => {
     setIsApprovalDialogOpen,
     isBatchApprovalDialogOpen,
     setIsBatchApprovalDialogOpen,
+    isEditorDialogOpen,
+    setIsEditorDialogOpen,
     currentPage,
     rowsPerPage,
     selectedPlatform,
@@ -26,6 +29,8 @@ export const ContentPageView: React.FC = () => {
     handleApprove,
     handleDelete,
     handleView,
+    handleEdit,
+    handleSaveContent,
     handleCreateNew,
     handlePageChange,
     handleRowsPerPageChange,
@@ -59,6 +64,7 @@ export const ContentPageView: React.FC = () => {
           onApprove={handleApprove}
           onDelete={handleDelete}
           onView={handleView}
+          onEdit={handleEdit}
           topics={topicsData}
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
@@ -89,6 +95,13 @@ export const ContentPageView: React.FC = () => {
         selectedContents={selectedContentItems}
         topics={topicsData}
         onSuccess={clearSelection}
+      />
+
+      <ContentEditorDialog
+        open={isEditorDialogOpen}
+        onOpenChange={setIsEditorDialogOpen}
+        content={selectedContent}
+        onSave={handleSaveContent}
       />
     </div>
   );
