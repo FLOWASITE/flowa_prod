@@ -8,6 +8,7 @@ import { TableEmptyState } from './table/TableEmptyState';
 import { Content, Topic } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
+import { PlatformIcon } from './table/PlatformIcon';
 
 interface ContentGridViewProps {
   items: Content[];
@@ -57,11 +58,27 @@ export const ContentGridView: React.FC<ContentGridViewProps> = ({
     return new Map(topics.map(topic => [topic.id, topic]));
   }, [topics]);
 
+  // Get all unique platforms for the filter
+  const uniquePlatforms = useMemo(() => {
+    const platforms = new Set<string>();
+    allItems.forEach(item => platforms.add(item.platform));
+    return Array.from(platforms);
+  }, [allItems]);
+
+  // Helper function to render platform icons
+  const getPlatformIcon = (platform: string) => {
+    return <PlatformIcon platform={platform as Content['platform']} />;
+  };
+
   return (
     <div className="w-full">
       <TableFilters 
         selectedPlatform={selectedPlatform}
         onPlatformChange={onPlatformChange}
+        rowsPerPage={rowsPerPage}
+        handleRowsPerPageChange={handleRowsPerPageChange}
+        uniquePlatforms={uniquePlatforms}
+        getPlatformIcon={getPlatformIcon}
       />
 
       {isLoading ? (
@@ -101,7 +118,6 @@ export const ContentGridView: React.FC<ContentGridViewProps> = ({
           rowsPerPage={rowsPerPage}
           totalItems={allItems.length}
           onPageChange={handlePageChange}
-          onRowsPerPageChange={handleRowsPerPageChange}
         />
       </div>
     </div>

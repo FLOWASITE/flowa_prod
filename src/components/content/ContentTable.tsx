@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -84,11 +84,27 @@ export const ContentTable: React.FC<ContentTableProps> = ({
     }
   };
 
+  // Get all unique platforms for the filter
+  const uniquePlatforms = useMemo(() => {
+    const platforms = new Set<string>();
+    allItems.forEach(item => platforms.add(item.platform));
+    return Array.from(platforms);
+  }, [allItems]);
+
+  // Helper function to render platform icons
+  const getPlatformIcon = (platform: string) => {
+    return <PlatformIcon platform={platform as Content['platform']} />;
+  };
+
   return (
     <div className="w-full">
       <TableFilters 
         selectedPlatform={selectedPlatform}
         onPlatformChange={onPlatformChange}
+        rowsPerPage={rowsPerPage}
+        handleRowsPerPageChange={handleRowsPerPageChange}
+        uniquePlatforms={uniquePlatforms}
+        getPlatformIcon={getPlatformIcon}
       />
       
       <div className="rounded-md border">
@@ -180,7 +196,6 @@ export const ContentTable: React.FC<ContentTableProps> = ({
         rowsPerPage={rowsPerPage}
         totalItems={allItems.length}
         onPageChange={handlePageChange}
-        onRowsPerPageChange={handleRowsPerPageChange}
       />
     </div>
   );

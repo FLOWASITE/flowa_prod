@@ -32,9 +32,10 @@ export const useContentData = () => {
     handleViewModeChange
   } = useContentPagination();
   
-  // Get content actions
+  // Get content actions with the selected content state
   const {
     selectedContent,
+    setSelectedContent,
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
@@ -76,7 +77,8 @@ export const useContentData = () => {
   // Batch selection state
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isBatchApprovalDialogOpen, setIsBatchApprovalDialogOpen] = useState(false);
-  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
+  
+  // Removed duplicate declaration of selectedContent
 
   // Handle batch selection
   const toggleItemSelection = (contentId: string) => {
