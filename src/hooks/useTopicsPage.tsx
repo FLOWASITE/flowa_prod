@@ -1,186 +1,156 @@
-import { useState, useMemo } from 'react';
-import { mockTopics } from '@/data/mockData';
-import { useLanguage } from '@/contexts/LanguageContext';
+
+import { useState, useEffect, useCallback } from 'react';
 import { Topic } from '@/types';
-import { toast } from 'sonner';
+import { useTopicsData } from './useTopicsData';
+import { useSupabaseConnection } from './useSupabaseConnection';
 import { useTopicStatusUpdate } from './useTopicStatusUpdate';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useTopicsPage = () => {
-  const { currentLanguage } = useLanguage();
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedPlatform, setSelectedPlatform] = useState('all');
+  const { topics, filteredTopics, isLoading, refetchTopics } = useTopicsData();
+  const { useLocalData } = useSupabaseConnection();
+  const { approveTopic, rejectTopic } = useTopicStatusUpdate();
+  const queryClient = useQueryClient();
   
   // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  
+  // Filtering
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
+  
+  // Selection
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  
+  // Calculate paginated data
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const paginatedTopics = filteredTopics.slice(startIndex, startIndex + rowsPerPage);
+  
+  // Get unique product IDs for filtering
+  const uniqueProductIds = [...new Set(topics.map(topic => topic.productTypeId).filter(Boolean))] as string[];
+  
+  // Selection handlers
+  const handleSelectTopic = (topicId: string) => {
+    setSelectedTopics(prev => 
+      prev.includes(topicId) 
+        ? prev.filter(id => id !== topicId) 
+        : [...prev, topicId]
+    );
+  };
+
+  const handleSelectAll = useCallback(() => {
+    if (selectedTopics.length === paginatedTopics.length) {
+      setSelectedTopics([]);
+    } else {
+      setSelectedTopics(paginatedTopics.map(topic => topic.id));
+    }
+  }, [paginatedTopics, selectedTopics.length]);
+  
+  // Pagination handlers
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1);
   };
-
-  // Filter topics by product type
-  const filteredTopics = useMemo(() => {
-    return selectedPlatform === 'all' 
-      ? mockTopics 
-      : mockTopics.filter(topic => topic.productTypeId === selectedPlatform);
-  }, [selectedPlatform]);
-
-  // Get paginated topics
-  const paginatedTopics = useMemo(() => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    return filteredTopics.slice(startIndex, startIndex + rowsPerPage);
-  }, [filteredTopics, currentPage, rowsPerPage]);
-
-  // Get unique product types for filtering
-  const uniqueProductIds = useMemo(() => {
-    return [...new Set(mockTopics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
-  }, []);
   
-  const { approveTopic, rejectTopic, isLoading: statusUpdateLoading } = useTopicStatusUpdate();
+  // Bulk actions
+  const handleBulkApprove = async () => {
+    if (selectedTopics.length === 0) return;
+    
+    const success = await Promise.all(
+      selectedTopics.map(async (topicId) => {
+        const topic = topics.find(t => t.id === topicId);
+        if (topic && topic.status === 'draft') {
+          return await approveTopic(topic);
+        }
+        return false;
+      })
+    );
+    
+    if (success.every(Boolean)) {
+      toast.success(`${selectedTopics.length} chủ đề đã được duyệt`);
+      setSelectedTopics([]);
+      refetchTopics();
+    }
+  };
   
-  // Add new action handlers for topic actions
+  // Create new topic
+  const handleCreateNew = () => {
+    // This would open a modal to create a new topic
+    // For now just show a toast message
+    toast.info('Tính năng đang phát triển');
+  };
+  
+  // Individual topic actions
   const handleViewTopic = (topic: Topic) => {
-    // Navigate to topic details or open a modal
+    // This would navigate to topic detail view
+    // For now just show a toast message
     toast.info(`Xem chi tiết: ${topic.title}`);
   };
-
+  
   const handleApproveTopic = async (topic: Topic) => {
-    const result = await approveTopic(topic);
-    if (result) {
-      // Refresh topics if needed
+    if (topic.status !== 'draft') {
+      toast.info('Chỉ có thể duyệt các chủ đề đang ở trạng thái chờ duyệt');
+      return;
     }
-  };
-
-  const handleEditTopic = (topic: Topic) => {
-    // Open edit modal or navigate to edit page
-    toast.info(`Chỉnh sửa: ${topic.title}`);
-  };
-
-  const handleRejectTopic = async (topic: Topic) => {
-    const result = await rejectTopic(topic);
-    if (result) {
-      // Refresh topics if needed
+    
+    const success = await approveTopic(topic);
+    if (success) {
+      // If the topic is in the selected topics list, remove it
+      if (selectedTopics.includes(topic.id)) {
+        setSelectedTopics(prev => prev.filter(id => id !== topic.id));
+      }
+      
+      // Refresh both topics and content data
+      refetchTopics();
+      queryClient.invalidateQueries({ queryKey: ['content'] });
     }
   };
   
-  const translations = {
-    title: {
-      vi: 'Chủ đề',
-      en: 'Topics',
-      fr: 'Sujets',
-      es: 'Temas',
-      th: 'หัวข้อ',
-      id: 'Topik'
-    },
-    subtitle: {
-      vi: 'Tạo và quản lý chủ đề nội dung',
-      en: 'Create and manage content topics',
-      fr: 'Créer et gérer des sujets de contenu',
-      es: 'Crear y gestionar temas de contenido',
-      th: 'สร้างและจัดการหัวข้อเนื้อหา',
-      id: 'Buat dan kelola topik konten'
-    },
-    product: {
-      vi: 'Sản phẩm',
-      en: 'Product',
-      fr: 'Produit',
-      es: 'Producto',
-      th: 'สินค้า',
-      id: 'Produk'
-    },
-    drafts: {
-      vi: 'Bản nháp',
-      en: 'Drafts',
-      fr: 'Brouillons',
-      es: 'Borradores',
-      th: 'ฉบับร่าง',
-      id: 'Draf'
-    },
-    approved: {
-      vi: 'Đã phê duyệt',
-      en: 'Approved',
-      fr: 'Approuvé',
-      es: 'Aprobado',
-      th: 'ได้รับการอนุมัติ',
-      id: 'Disetujui'
-    },
-    completed: {
-      vi: 'Đã hoàn thành',
-      en: 'Completed',
-      fr: 'Terminé',
-      es: 'Completado',
-      th: 'เสร็จสมบูรณ์',
-      id: 'Selesai'
-    },
-    noDrafts: {
-      vi: 'Không tìm thấy chủ đề bản nháp',
-      en: 'No draft topics found',
-      fr: 'Aucun sujet en brouillon trouvé',
-      es: 'No se encontraron temas en borrador',
-      th: 'ไม่พบหัวข้อฉบับร่าง',
-      id: 'Tidak ada topik draf ditemukan'
-    },
-    noApproved: {
-      vi: 'Không tìm thấy chủ đề đã phê duyệt',
-      en: 'No approved topics found',
-      fr: 'Aucun sujet approuvé trouvé',
-      es: 'No se encontraron temas aprobados',
-      th: 'ไม่พบหัวข้อที่ได้รับการอนุมัติ',
-      id: 'Tidak ada topik yang disetujui ditemukan'
-    },
-    noCompleted: {
-      vi: 'Không tìm thấy chủ đề đã hoàn thành',
-      en: 'No completed topics found',
-      fr: 'Aucun sujet terminé trouvé',
-      es: 'No se encontraron temas completados',
-      th: 'ไม่พบหัวข้อที่เสร็จสมบูรณ์',
-      id: 'Tidak ada topik yang selesai ditemukan'
-    },
-    noProduct: {
-      vi: 'Không có sản phẩm',
-      en: 'No product',
-      fr: 'Aucun produit',
-      es: 'No hay producto',
-      th: 'ไม่มีสินค้า',
-      id: 'Tidak ada produk'
+  const handleEditTopic = (topic: Topic) => {
+    // This would open a modal to edit the topic
+    // For now just show a toast message
+    toast.info(`Sửa chủ đề: ${topic.title}`);
+  };
+  
+  const handleRejectTopic = async (topic: Topic) => {
+    if (topic.status !== 'draft') {
+      toast.info('Chỉ có thể từ chối các chủ đề đang ở trạng thái chờ duyệt');
+      return;
     }
-  };
-
-  const getTranslation = (key: string) => {
-    const lang = currentLanguage.code;
-    return translations[key][lang] || translations[key]['en'];
-  };
-
-  const handleSelectTopic = (topicId: string) => {
-    setSelectedTopics(prev => {
-      if (prev.includes(topicId)) {
-        return prev.filter(id => id !== topicId);
+    
+    const success = await rejectTopic(topic);
+    if (success) {
+      // If the topic is in the selected topics list, remove it
+      if (selectedTopics.includes(topic.id)) {
+        setSelectedTopics(prev => prev.filter(id => id !== topic.id));
       }
-      return [...prev, topicId];
-    });
-  };
-
-  const handleSelectAll = () => {
-    if (selectedTopics.length === paginatedTopics.length) {
-      setSelectedTopics([]);
-    } else {
-      setSelectedTopics(paginatedTopics.map(topic => topic.id));
+      refetchTopics();
     }
   };
-
-  const handleBulkApprove = () => {
-    console.log('Bulk approving topics:', selectedTopics);
-    toast.success(`Approved ${selectedTopics.length} topics`);
+  
+  // Reset selected topics when filtered topics change
+  useEffect(() => {
     setSelectedTopics([]);
-  };
-
-  const handleCreateNew = () => {
-    console.log('Create new topic');
-    toast.info('Creating new topic');
+  }, [filteredTopics.length]);
+  
+  // Translation
+  const getTranslation = (key: string) => {
+    const translations = {
+      title: 'Quản lý chủ đề',
+      subtitle: 'Quản lý và duyệt các chủ đề được tạo bởi AI',
+      product: 'Sản phẩm',
+      noProduct: 'Không có',
+      noData: 'Không có dữ liệu',
+      loading: 'Đang tải...',
+      all: 'Tất cả'
+    };
+    
+    return translations[key] || key;
   };
 
   return {
@@ -188,9 +158,11 @@ export const useTopicsPage = () => {
     currentPage,
     rowsPerPage,
     selectedPlatform,
+    topics,
     filteredTopics,
     paginatedTopics,
     uniqueProductIds,
+    isLoading,
     getTranslation,
     handleSelectTopic,
     handleSelectAll,
@@ -199,11 +171,9 @@ export const useTopicsPage = () => {
     handlePageChange,
     handleRowsPerPageChange,
     setSelectedPlatform,
-    // New action handlers
     handleViewTopic,
     handleApproveTopic,
     handleEditTopic,
-    handleRejectTopic,
-    statusUpdateLoading
+    handleRejectTopic
   };
 };

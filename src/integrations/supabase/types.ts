@@ -800,12 +800,21 @@ export type Database = {
       }
     }
     Enums: {
+      content_status:
+        | "draft"
+        | "approved"
+        | "rejected"
+        | "scheduled"
+        | "published"
+        | "generating"
+        | "completed"
       content_status_type:
         | "draft"
         | "approved"
         | "scheduled"
         | "published"
         | "rejected"
+      content_topic_status: "draft" | "approved" | "rejected"
       platform_type:
         | "facebook"
         | "instagram"
@@ -934,6 +943,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      content_status: [
+        "draft",
+        "approved",
+        "rejected",
+        "scheduled",
+        "published",
+        "generating",
+        "completed",
+      ],
       content_status_type: [
         "draft",
         "approved",
@@ -941,6 +959,7 @@ export const Constants = {
         "published",
         "rejected",
       ],
+      content_topic_status: ["draft", "approved", "rejected"],
       platform_type: ["facebook", "instagram", "tiktok", "threads", "linkedin"],
       topic_status_type: [
         "draft",
