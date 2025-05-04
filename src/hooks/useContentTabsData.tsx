@@ -1,7 +1,8 @@
 
 import { useMemo } from 'react';
 import { Content } from '@/types';
-import { filterByPlatform, getPaginatedContent } from '@/components/content/utils/contentFilters';
+import { useTabFiltering } from '@/components/content/hooks/useTabFiltering';
+import { getPaginatedContent } from '@/components/content/utils/contentFilters';
 
 type TabValue = 'all' | 'draft' | 'approved' | 'scheduled' | 'rejected' | 'published';
 
@@ -20,30 +21,13 @@ export const useContentTabsData = ({
   rowsPerPage,
   activeTab
 }: UseContentTabsDataProps) => {
-  // Filter content based on status for each tab
-  const allContent = useMemo(() => {
-    return filterByPlatform(content, selectedPlatform);
-  }, [content, selectedPlatform]);
-  
-  const draftContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'draft'), selectedPlatform);
-  }, [content, selectedPlatform]);
-  
-  const approvedContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'approved'), selectedPlatform);
-  }, [content, selectedPlatform]);
-
-  const scheduledContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'scheduled'), selectedPlatform);
-  }, [content, selectedPlatform]);
-
-  const rejectedContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'rejected'), selectedPlatform);
-  }, [content, selectedPlatform]);
-  
-  const publishedContent = useMemo(() => {
-    return filterByPlatform(content.filter(item => item.status === 'published'), selectedPlatform);
-  }, [content, selectedPlatform]);
+  // Use our new filtering hook for each tab
+  const allContent = useTabFiltering(content, 'all', selectedPlatform);
+  const draftContent = useTabFiltering(content, 'draft', selectedPlatform);
+  const approvedContent = useTabFiltering(content, 'approved', selectedPlatform);
+  const scheduledContent = useTabFiltering(content, 'scheduled', selectedPlatform);
+  const rejectedContent = useTabFiltering(content, 'rejected', selectedPlatform);
+  const publishedContent = useTabFiltering(content, 'published', selectedPlatform);
 
   // Get the current active content based on the selected tab
   const activeContent = useMemo(() => {

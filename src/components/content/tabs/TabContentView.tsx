@@ -1,11 +1,9 @@
 
 import React from 'react';
 import { Content, Topic } from '@/types';
-import { TabsContent } from '@/components/ui/tabs';
-import { TabContentView } from './TabContentView';
+import { ContentViewRenderer } from './ContentViewRenderer';
 
-interface TabContentProps {
-  value: string;
+interface TabContentViewProps {
   items: Content[];
   allItems: Content[];
   isLoading: boolean;
@@ -27,8 +25,7 @@ interface TabContentProps {
   showBatchSelection: boolean;
 }
 
-export const TabContent: React.FC<TabContentProps> = ({
-  value,
+export const TabContentView: React.FC<TabContentViewProps> = ({
   items,
   allItems,
   isLoading,
@@ -50,28 +47,26 @@ export const TabContent: React.FC<TabContentProps> = ({
   showBatchSelection
 }) => {
   return (
-    <TabsContent value={value}>
-      <TabContentView
-        items={items}
-        allItems={allItems}
-        isLoading={isLoading}
-        topics={topics}
-        onApprove={onApprove}
-        onDelete={onDelete}
-        onView={onView}
-        currentPage={currentPage}
-        rowsPerPage={rowsPerPage}
-        handlePageChange={handlePageChange}
-        handleRowsPerPageChange={handleRowsPerPageChange}
-        selectedPlatform={selectedPlatform}
-        onPlatformChange={onPlatformChange}
-        selectedItems={selectedItems}
-        onToggleSelection={onToggleSelection}
-        onSelectAll={onSelectAll}
-        viewMode={viewMode}
-        showApproveActions={showApproveActions}
-        showBatchSelection={showBatchSelection}
-      />
-    </TabsContent>
+    <ContentViewRenderer
+      viewMode={viewMode}
+      items={items}
+      allItems={allItems}
+      isLoading={isLoading}
+      topics={topics}
+      onApprove={onApprove}
+      onDelete={onDelete}
+      onView={onView}
+      currentPage={currentPage}
+      rowsPerPage={rowsPerPage}
+      handlePageChange={handlePageChange}
+      handleRowsPerPageChange={handleRowsPerPageChange}
+      selectedPlatform={selectedPlatform}
+      onPlatformChange={onPlatformChange}
+      selectedItems={selectedItems}
+      onToggleSelection={onToggleSelection}
+      onSelectAll={onSelectAll}
+      showBatchSelection={showBatchSelection}
+      showApproveActions={showApproveActions}
+    />
   );
 };
