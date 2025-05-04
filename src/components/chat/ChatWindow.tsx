@@ -19,13 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 
 export function ChatWindow() {
-  // Convert mockChatMessages to match the ChatMessage type
-  const initialMessages = mockChatMessages.map(msg => ({
-    ...msg,
-    role: msg.sender === 'customer' ? 'user' : 'assistant' as 'user' | 'assistant'
-  }));
-  
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  // No transformation needed since mockChatMessages already has proper types
+  const [messages, setMessages] = useState<ChatMessage[]>(mockChatMessages);
   const [newMessage, setNewMessage] = useState('');
   const [showAIOptions, setShowAIOptions] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
