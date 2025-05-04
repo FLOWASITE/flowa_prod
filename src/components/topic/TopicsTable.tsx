@@ -16,7 +16,7 @@ import {
 import { TablePagination } from '@/components/content/table/TablePagination';
 import { TableFilters } from '@/components/content/table/TableFilters';
 import { Topic } from '@/types';
-import { mockProductTypes } from '@/data/mockData';
+import { mockProductTypes } from '@/data/mock/products';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TopicsTableProps {

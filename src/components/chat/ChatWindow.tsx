@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ChatBubble } from './ChatBubble';
 import { ChatMessage } from '@/types';
 import { Send, PaperclipIcon, Smile, Bot, Sparkles, Mic, Image, ThumbsUp, MessageCircle } from 'lucide-react';
-import { mockChatMessages } from '@/data/mockData';
+import { mockChatMessages } from '@/data/mock/chat';
 import { 
   DropdownMenu,
   DropdownMenuContent,

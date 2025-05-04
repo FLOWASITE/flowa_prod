@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ChatWindow } from '@/components/chat/ChatWindow';
-import { mockChatConversations } from '@/data/mockData';
+import { mockChatConversations } from '@/data/mock/chat';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 

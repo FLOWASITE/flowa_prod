@@ -9,7 +9,7 @@ import {
   CardDescription
 } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { mockProductTypes } from '@/data/mockData';
+import { mockProductTypes } from '@/data/mock/products';
 import { topicTranslations } from './topicTranslations';
 import { TopicRequestFormContent } from './TopicRequestFormContent';
 

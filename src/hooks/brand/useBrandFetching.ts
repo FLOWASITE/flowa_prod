@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Brand } from '@/types';
-import { mockBrands } from '@/data/mockData';
+import { mockBrands } from '@/data/mock/brands';
 import { supabase, isSupabaseConnected } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { toast as sonnerToast } from 'sonner';
