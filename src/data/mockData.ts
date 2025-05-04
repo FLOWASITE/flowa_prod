@@ -210,3 +210,151 @@ export const mockTopics: Topic[] = [
     updatedAt: new Date('2023-04-07')
   }
 ];
+
+// Add mockBrands data
+export const mockBrands = [
+  {
+    id: '1',
+    name: 'Brand A',
+    description: 'A sample brand for demo purposes',
+    colors: {
+      primary: '#4f46e5',
+      secondary: '#10b981',
+    },
+    tone: 'Professional',
+    themes: ['Modern', 'Tech'],
+    createdAt: new Date('2023-01-10'),
+    updatedAt: new Date('2023-03-15'),
+  },
+  {
+    id: '2',
+    name: 'Brand B',
+    description: 'Another sample brand for testing',
+    logo: 'https://source.unsplash.com/100x100/?logo',
+    website: 'https://example.com',
+    colors: {
+      primary: '#ef4444',
+      secondary: '#3b82f6',
+    },
+    tone: 'Friendly',
+    themes: ['Vibrant', 'Retail'],
+    createdAt: new Date('2023-02-05'),
+    updatedAt: new Date('2023-04-01'),
+  }
+];
+
+// Add mock chat conversations
+export const mockChatConversations = [
+  {
+    id: '1',
+    customerName: 'Nguyễn Văn A',
+    platform: 'messenger',
+    status: 'active',
+    messages: [
+      {
+        id: '1',
+        sender: 'customer',
+        content: 'Xin chào, tôi cần hỗ trợ về sản phẩm X',
+        timestamp: new Date('2023-05-04T09:30:00')
+      },
+      {
+        id: '2',
+        sender: 'bot',
+        content: 'Chào bạn! Tôi có thể giúp gì cho bạn về sản phẩm X?',
+        timestamp: new Date('2023-05-04T09:31:00')
+      }
+    ]
+  },
+  {
+    id: '2',
+    customerName: 'Trần Thị B',
+    platform: 'zalo',
+    status: 'active',
+    messages: [
+      {
+        id: '3',
+        sender: 'customer',
+        content: 'Làm sao để đặt hàng trực tuyến?',
+        timestamp: new Date('2023-05-04T10:15:00')
+      },
+      {
+        id: '4',
+        sender: 'bot',
+        content: 'Để đặt hàng trực tuyến, bạn có thể truy cập vào website của chúng tôi tại example.com và làm theo các bước sau...',
+        timestamp: new Date('2023-05-04T10:16:00')
+      }
+    ]
+  },
+  {
+    id: '3',
+    customerName: 'Phạm Văn C',
+    platform: 'linkedin',
+    status: 'inactive',
+    messages: [
+      {
+        id: '5',
+        sender: 'customer',
+        content: 'Tôi muốn tìm hiểu thêm về dịch vụ tư vấn của công ty',
+        timestamp: new Date('2023-05-03T14:20:00')
+      },
+      {
+        id: '6',
+        sender: 'bot',
+        content: 'Xin chào! Dịch vụ tư vấn của chúng tôi bao gồm nhiều lĩnh vực khác nhau...',
+        timestamp: new Date('2023-05-03T14:22:00')
+      }
+    ]
+  }
+];
+
+// Add mock chat messages for ChatWindow component
+export const mockChatMessages = [
+  {
+    id: '1',
+    sender: 'customer',
+    content: 'Xin chào, tôi cần hỗ trợ về sản phẩm X',
+    timestamp: new Date('2023-05-04T09:30:00')
+  },
+  {
+    id: '2',
+    sender: 'bot',
+    content: 'Chào bạn! Tôi có thể giúp gì cho bạn về sản phẩm X?',
+    timestamp: new Date('2023-05-04T09:31:00')
+  },
+  {
+    id: '3',
+    sender: 'customer',
+    content: 'Tôi không thể kích hoạt tính năng Y',
+    timestamp: new Date('2023-05-04T09:33:00')
+  },
+  {
+    id: '4',
+    sender: 'bot',
+    content: 'Tôi hiểu rồi. Để kích hoạt tính năng Y, trước tiên bạn cần phải cập nhật phiên bản mới nhất. Sau đó, vào Cài đặt > Tính năng > Kích hoạt Y.',
+    timestamp: new Date('2023-05-04T09:34:00')
+  },
+  {
+    id: '5',
+    sender: 'customer',
+    content: 'Tôi đã thử nhưng vẫn không được',
+    timestamp: new Date('2023-05-04T09:36:00')
+  },
+  {
+    id: '6',
+    sender: 'bot',
+    content: 'Trong trường hợp đó, có thể bạn cần khởi động lại thiết bị. Nếu vẫn không được, vui lòng cho tôi biết thông báo lỗi bạn nhận được.',
+    timestamp: new Date('2023-05-04T09:37:00')
+  },
+  {
+    id: '7',
+    sender: 'customer',
+    content: 'Để tôi thử và phản hồi lại sau.',
+    timestamp: new Date('2023-05-04T09:38:00')
+  },
+  {
+    id: '8',
+    sender: 'bot',
+    content: 'Vâng, không vấn đề gì. Tôi sẽ ở đây để hỗ trợ bạn khi cần thiết.',
+    timestamp: new Date('2023-05-04T09:39:00')
+  }
+];

@@ -21,7 +21,7 @@ export interface Content {
   imageUrl?: string;
   videoUrl?: string; // Added field from database update
   videoThumbnail?: string; // Added field from database update
-  status: 'draft' | 'approved' | 'rejected' | 'scheduled' | 'published';
+  status: 'draft' | 'approved' | 'rejected' | 'scheduled' | 'published' | 'generating' | 'completed';
   scheduledAt?: Date;
   publishedAt?: Date;
   approvedAt?: Date;
