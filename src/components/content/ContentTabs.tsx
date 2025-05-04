@@ -1,12 +1,10 @@
 
 import React, { useState, useMemo } from 'react';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Tabs } from '@/components/ui/tabs';
 import { Content } from '@/types';
-import { ContentTabHeader } from './tabs/ContentTabHeader';
-import { ViewModeSwitcher } from './tabs/ViewModeSwitcher';
-import { BatchActions } from './tabs/BatchActions';
-import { ContentViewRenderer } from './tabs/ContentViewRenderer';
-import { filterByPlatform, getPaginatedContent, countDraftItems } from './utils/contentFilters';
+import { filterByPlatform } from './utils/contentFilters';
+import { TabsHeaderSection } from './tabs/TabsHeaderSection';
+import { TabsContainer } from './tabs/TabsContainer';
 
 interface ContentTabsProps {
   content: Content[];
@@ -75,7 +73,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
     return filterByPlatform(content.filter(item => item.status === 'scheduled'), selectedPlatform);
   }, [content, selectedPlatform]);
 
-  // Add new states for rejected and published content
+  // Add states for rejected and published content
   const rejectedContent = useMemo(() => {
     return filterByPlatform(content.filter(item => item.status === 'rejected'), selectedPlatform);
   }, [content, selectedPlatform]);
@@ -84,228 +82,51 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
     return filterByPlatform(content.filter(item => item.status === 'published'), selectedPlatform);
   }, [content, selectedPlatform]);
 
-  // Count draft items for batch approval
-  const draftItemCount = useMemo(() => {
-    return countDraftItems(activeTab, allContent, draftContent);
-  }, [activeTab, allContent, draftContent]);
-
   // Determine if batch selection should be shown
   const showBatchSelection = activeTab === 'all' || activeTab === 'draft';
-  
-  // Get currently visible items based on the active tab, pagination, and filtering
-  const currentItems = useMemo(() => {
-    switch (activeTab) {
-      case 'draft':
-        return getPaginatedContent(draftContent, currentPage, rowsPerPage);
-      case 'approved':
-        return getPaginatedContent(approvedContent, currentPage, rowsPerPage);
-      case 'scheduled':
-        return getPaginatedContent(scheduledContent, currentPage, rowsPerPage);
-      case 'rejected':
-        return getPaginatedContent(rejectedContent, currentPage, rowsPerPage);
-      case 'published':
-        return getPaginatedContent(publishedContent, currentPage, rowsPerPage);
-      case 'all':
-      default:
-        return getPaginatedContent(allContent, currentPage, rowsPerPage);
-    }
-  }, [activeTab, currentPage, rowsPerPage, allContent, draftContent, approvedContent, scheduledContent, rejectedContent, publishedContent]);
-
-  // Get total items for the active tab
-  const totalItems = useMemo(() => {
-    switch (activeTab) {
-      case 'draft':
-        return draftContent;
-      case 'approved':
-        return approvedContent;
-      case 'scheduled':
-        return scheduledContent;
-      case 'rejected':
-        return rejectedContent;
-      case 'published':
-        return publishedContent;
-      case 'all':
-      default:
-        return allContent;
-    }
-  }, [activeTab, allContent, draftContent, approvedContent, scheduledContent, rejectedContent, publishedContent]);
-
-  // Common props that determine if approval actions should be shown
-  const showApproveActions = activeTab !== 'approved' && activeTab !== 'scheduled' && activeTab !== 'published';
-  const showBatchSelectionAndDraftItemCount = showBatchSelection && draftItemCount > 0;
 
   return (
     <div>
       <div className="flex justify-between items-center px-6 pt-4">
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabValue)} className="w-full">
-          <div className="flex justify-between items-center mb-6">
-            <ContentTabHeader 
-              allCount={content.length}
-              draftCount={draftContent.length}
-              approvedCount={approvedContent.length}
-              scheduledCount={scheduledContent.length}
-              rejectedCount={rejectedContent.length}
-              publishedCount={publishedContent.length}
-            />
-
-            <div className="flex gap-4 items-center">
-              {showBatchSelection && selectedItems && selectedItems.length > 0 && (
-                <BatchActions 
-                  selectedItemsCount={selectedItems.length}
-                  onBatchApprove={handleBatchApprove || (() => {})}
-                />
-              )}
-              
-              <ViewModeSwitcher 
-                viewMode={viewMode} 
-                handleViewModeChange={handleViewModeChange} 
-              />
-            </div>
-          </div>
-
-          <TabsContent value="all">
-            <ContentViewRenderer
-              viewMode={viewMode}
-              items={currentItems}
-              allItems={allContent}
-              isLoading={isLoading}
-              topics={topics}
-              onApprove={onApprove}
-              onDelete={onDelete}
-              onView={onView}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              handlePageChange={handlePageChange}
-              handleRowsPerPageChange={handleRowsPerPageChange}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={onPlatformChange}
-              selectedItems={selectedItems}
-              onToggleSelection={toggleItemSelection}
-              onSelectAll={selectAll}
-              showBatchSelection={showBatchSelectionAndDraftItemCount}
-              showApproveActions={showApproveActions}
-            />
-          </TabsContent>
-
-          <TabsContent value="draft">
-            <ContentViewRenderer
-              viewMode={viewMode}
-              items={currentItems}
-              allItems={draftContent}
-              isLoading={isLoading}
-              topics={topics}
-              onApprove={onApprove}
-              onDelete={onDelete}
-              onView={onView}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              handlePageChange={handlePageChange}
-              handleRowsPerPageChange={handleRowsPerPageChange}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={onPlatformChange}
-              selectedItems={selectedItems}
-              onToggleSelection={toggleItemSelection}
-              onSelectAll={selectAll}
-              showBatchSelection={showBatchSelectionAndDraftItemCount}
-              showApproveActions={true}
-            />
-          </TabsContent>
-
-          <TabsContent value="approved">
-            <ContentViewRenderer
-              viewMode={viewMode}
-              items={currentItems}
-              allItems={approvedContent}
-              isLoading={isLoading}
-              topics={topics}
-              onApprove={onApprove}
-              onDelete={onDelete}
-              onView={onView}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              handlePageChange={handlePageChange}
-              handleRowsPerPageChange={handleRowsPerPageChange}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={onPlatformChange}
-              selectedItems={selectedItems}
-              onToggleSelection={toggleItemSelection}
-              onSelectAll={selectAll}
-              showBatchSelection={false}
-              showApproveActions={false}
-            />
-          </TabsContent>
-
-          <TabsContent value="scheduled">
-            <ContentViewRenderer
-              viewMode={viewMode}
-              items={currentItems}
-              allItems={scheduledContent}
-              isLoading={isLoading}
-              topics={topics}
-              onApprove={onApprove}
-              onDelete={onDelete}
-              onView={onView}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              handlePageChange={handlePageChange}
-              handleRowsPerPageChange={handleRowsPerPageChange}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={onPlatformChange}
-              selectedItems={selectedItems}
-              onToggleSelection={toggleItemSelection}
-              onSelectAll={selectAll}
-              showBatchSelection={false}
-              showApproveActions={false}
-            />
-          </TabsContent>
-
-          <TabsContent value="rejected">
-            <ContentViewRenderer
-              viewMode={viewMode}
-              items={currentItems}
-              allItems={rejectedContent}
-              isLoading={isLoading}
-              topics={topics}
-              onApprove={onApprove}
-              onDelete={onDelete}
-              onView={onView}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              handlePageChange={handlePageChange}
-              handleRowsPerPageChange={handleRowsPerPageChange}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={onPlatformChange}
-              selectedItems={selectedItems}
-              onToggleSelection={toggleItemSelection}
-              onSelectAll={selectAll}
-              showBatchSelection={false}
-              showApproveActions={true}
-            />
-          </TabsContent>
-
-          <TabsContent value="published">
-            <ContentViewRenderer
-              viewMode={viewMode}
-              items={currentItems}
-              allItems={publishedContent}
-              isLoading={isLoading}
-              topics={topics}
-              onApprove={onApprove}
-              onDelete={onDelete}
-              onView={onView}
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              handlePageChange={handlePageChange}
-              handleRowsPerPageChange={handleRowsPerPageChange}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={onPlatformChange}
-              selectedItems={selectedItems}
-              onToggleSelection={toggleItemSelection}
-              onSelectAll={selectAll}
-              showBatchSelection={false}
-              showApproveActions={false}
-            />
-          </TabsContent>
+          <TabsHeaderSection
+            contentLength={content.length}
+            draftLength={draftContent.length}
+            approvedLength={approvedContent.length}
+            scheduledLength={scheduledContent.length}
+            rejectedLength={rejectedContent.length}
+            publishedLength={publishedContent.length}
+            viewMode={viewMode}
+            handleViewModeChange={handleViewModeChange}
+            selectedItems={selectedItems}
+            handleBatchApprove={handleBatchApprove}
+            showBatchSelection={showBatchSelection}
+          />
+          
+          <TabsContainer
+            activeTab={activeTab}
+            allContent={allContent}
+            draftContent={draftContent}
+            approvedContent={approvedContent}
+            scheduledContent={scheduledContent}
+            rejectedContent={rejectedContent}
+            publishedContent={publishedContent}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            isLoading={isLoading}
+            topics={topics}
+            onApprove={onApprove}
+            onDelete={onDelete}
+            onView={onView}
+            handlePageChange={handlePageChange}
+            handleRowsPerPageChange={handleRowsPerPageChange}
+            selectedPlatform={selectedPlatform}
+            onPlatformChange={onPlatformChange}
+            selectedItems={selectedItems}
+            toggleItemSelection={toggleItemSelection}
+            selectAll={selectAll}
+            viewMode={viewMode}
+          />
         </Tabs>
       </div>
     </div>
