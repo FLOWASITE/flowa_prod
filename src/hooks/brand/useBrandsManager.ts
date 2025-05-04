@@ -30,6 +30,25 @@ export const useBrandsManager = () => {
     checkSupabaseConnection();
   }, []);
 
+  // Optimized update handler to prevent UI lag
+  const handleBrandUpdate = (updatedBrand: Brand) => {
+    // Handle deletion signal with brand ID starting with "deleted-"
+    if (updatedBrand.id.startsWith('deleted-')) {
+      const originalId = updatedBrand.id.replace('deleted-', '');
+      console.log("Removing brand with ID from state:", originalId);
+      
+      // Update UI immediately by removing the brand from state
+      setBrands(prev => prev.filter(b => b.id !== originalId));
+      return;
+    }
+    
+    // For regular updates, update the brands in state
+    handleUpdateBrand(updatedBrand);
+    setBrands(prev => 
+      prev.map(b => b.id === updatedBrand.id ? updatedBrand : b)
+    );
+  };
+
   return {
     brands: fetchedBrands,
     loading,
@@ -37,18 +56,6 @@ export const useBrandsManager = () => {
     t,
     checkSupabaseConnection,
     handleAddBrand,
-    handleUpdateBrand: (updatedBrand: Brand) => {
-      handleUpdateBrand(updatedBrand);
-      // We also need to update the fetched brands directly 
-      // since useUpdateBrand manages its own state
-      if (updatedBrand.id.startsWith('deleted-')) {
-        const originalId = updatedBrand.id.replace('deleted-', '');
-        setBrands(prev => prev.filter(b => b.id !== originalId));
-      } else {
-        setBrands(prev => 
-          prev.map(b => b.id === updatedBrand.id ? updatedBrand : b)
-        );
-      }
-    }
+    handleUpdateBrand: handleBrandUpdate
   };
 };

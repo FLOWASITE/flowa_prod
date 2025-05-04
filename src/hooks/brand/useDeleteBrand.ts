@@ -19,72 +19,81 @@ export const useDeleteBrand = (
   };
 
   const handleDeleteBrand = async () => {
+    if (isDeleting) return false; // Prevent multiple deletion attempts
+    
     try {
       setIsDeleting(true);
       console.log("Deleting brand with ID:", brand.id);
       
-      // First, delete any related data in other tables
-      // Delete brand_knowledge
-      const { error: knowledgeError } = await supabase
-        .from('brand_knowledge')
-        .delete()
-        .eq('brand_id', brand.id);
-      
-      if (knowledgeError) {
-        console.log("Error deleting brand knowledge:", knowledgeError);
-        // Continue with deletion even if this fails
-      }
-      
-      // Delete QA pairs
-      const { error: qaPairsError } = await supabase
-        .from('qa_pairs')
-        .delete()
-        .eq('brand_id', brand.id);
-      
-      if (qaPairsError) {
-        console.log("Error deleting QA pairs:", qaPairsError);
-        // Continue with deletion even if this fails
-      }
-      
-      // Delete products
-      const { error: productsError } = await supabase
-        .from('products')
-        .delete()
-        .eq('brand_id', brand.id);
-      
-      if (productsError) {
-        console.log("Error deleting products:", productsError);
-        // Continue with deletion even if this fails
-      }
-      
-      // Finally delete the brand
-      const { error } = await supabase
-        .from('brands')
-        .delete()
-        .eq('id', brand.id);
-      
-      if (error) {
-        throw error;
-      }
-      
-      sonnerToast.success(t('deleteSuccess'));
-      
-      // Remove the brand from parent component
+      // Signal to the UI immediately that deletion is in progress
       if (onBrandUpdated) {
-        // We use onBrandUpdated to signal the parent to remove this brand
+        // Create a temporary deleted brand to update the UI right away
         const dummyDeletedBrand = { ...brand, id: `deleted-${brand.id}` };
         onBrandUpdated(dummyDeletedBrand);
       }
+      
+      // Execute the actual deletion in the background
+      deleteFromDatabase(brand.id).then(() => {
+        sonnerToast.success(t('deleteSuccess'));
+      }).catch(error => {
+        console.error('Background deletion error:', error);
+        toast({
+          title: t('deleteError'),
+          description: error instanceof Error ? error.message : 'Unknown error',
+          variant: 'destructive',
+        });
+      });
+      
+      // Return false to close the delete confirmation dialog
+      return false;
     } catch (error) {
-      console.error('Error deleting brand:', error);
+      console.error('Error initiating brand deletion:', error);
+      setIsDeleting(false);
       toast({
         title: t('deleteError'),
         description: error instanceof Error ? error.message : 'Unknown error',
         variant: 'destructive',
       });
-    } finally {
+      return false;
+    }
+  };
+  
+  // Separate function to handle the actual database deletion
+  const deleteFromDatabase = async (brandId: string) => {
+    try {
+      // First, delete any related data in other tables
+      // Delete brand_knowledge
+      await supabase
+        .from('brand_knowledge')
+        .delete()
+        .eq('brand_id', brandId);
+      
+      // Delete QA pairs
+      await supabase
+        .from('qa_pairs')
+        .delete()
+        .eq('brand_id', brandId);
+      
+      // Delete products
+      await supabase
+        .from('products')
+        .delete()
+        .eq('brand_id', brandId);
+      
+      // Finally delete the brand
+      const { error } = await supabase
+        .from('brands')
+        .delete()
+        .eq('id', brandId);
+      
+      if (error) {
+        throw error;
+      }
+      
       setIsDeleting(false);
-      return false; // Return false to close the delete confirmation dialog
+    } catch (error) {
+      setIsDeleting(false);
+      throw error;
     }
   };
 

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   AlertDialog,
@@ -15,7 +14,7 @@ import { brandCardTranslations } from './cardTranslations';
 interface DeleteConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => Promise<void> | boolean;
   isDeleting: boolean;
   languageCode: string;
 }
@@ -31,6 +30,15 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
     return brandCardTranslations[key][languageCode as 'en' | 'vi'] || brandCardTranslations[key].en;
   };
 
+  // Handle confirmation with optimistic UI update
+  const handleConfirm = async () => {
+    const result = await onConfirm();
+    // If onConfirm returns false explicitly, we keep the dialog open
+    if (result !== false) {
+      onOpenChange(false);
+    }
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="bg-white/95 dark:bg-gray-950/95 backdrop-blur-md">
@@ -43,7 +51,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
         <AlertDialogFooter>
           <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction 
-            onClick={onConfirm}
+            onClick={handleConfirm}
             className="bg-red-600 hover:bg-red-700"
             disabled={isDeleting}
           >
