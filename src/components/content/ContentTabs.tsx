@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ContentTable } from './ContentTable';
@@ -30,6 +31,9 @@ interface ContentTabsProps {
   handleBatchApprove?: () => void;
 }
 
+// Define a type for the active tab values to ensure type safety
+type TabValue = 'all' | 'draft' | 'approved' | 'scheduled';
+
 export const ContentTabs: React.FC<ContentTabsProps> = ({
   content,
   isLoading,
@@ -52,7 +56,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   clearSelection,
   handleBatchApprove
 }) => {
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState<TabValue>('all');
 
   // Filter content based on status for each tab
   const allContent = useMemo(() => {
@@ -132,6 +136,10 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
 
   // Render the appropriate view based on viewMode
   const renderContentView = (items: Content[], allItems: Content[]) => {
+    // Common props that determine if approval actions should be shown
+    const showApproveActions = activeTab !== 'approved' && activeTab !== 'scheduled';
+    const showBatchSelectionAndDraftItemCount = showBatchSelection && draftItemCount > 0;
+    
     switch (viewMode) {
       case 'grid':
         return (
@@ -152,8 +160,8 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
             selectedItems={selectedItems}
             onToggleSelection={toggleItemSelection}
             onSelectAll={selectAll}
-            showBatchSelection={showBatchSelection && draftItemCount > 0 && activeTab !== 'approved' && activeTab !== 'scheduled'}
-            showApproveActions={activeTab !== 'approved' && activeTab !== 'scheduled'}
+            showBatchSelection={showBatchSelectionAndDraftItemCount}
+            showApproveActions={showApproveActions}
           />
         );
       case 'accordion':
@@ -172,7 +180,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
             handleRowsPerPageChange={handleRowsPerPageChange}
             selectedPlatform={selectedPlatform}
             onPlatformChange={onPlatformChange}
-            showApproveColumn={activeTab !== 'approved' && activeTab !== 'scheduled'}
+            showApproveColumn={showApproveActions}
           />
         );
       case 'table':
@@ -196,8 +204,8 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
             selectedItems={selectedItems}
             onToggleSelection={toggleItemSelection}
             onSelectAll={selectAll}
-            showBatchSelection={showBatchSelection && draftItemCount > 0 && activeTab !== 'approved' && activeTab !== 'scheduled'}
-            showApproveColumn={activeTab !== 'approved' && activeTab !== 'scheduled'}
+            showBatchSelection={showBatchSelectionAndDraftItemCount}
+            showApproveColumn={showApproveActions}
           />
         );
     }
@@ -206,7 +214,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
   return (
     <div>
       <div className="flex justify-between items-center px-6 pt-4">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabValue)} className="w-full">
           <div className="flex justify-between items-center mb-6">
             <TabsList>
               <TabsTrigger value="all" className="relative">
