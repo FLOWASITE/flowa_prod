@@ -254,12 +254,14 @@ export const mockChatConversations = [
       {
         id: '1',
         sender: 'customer',
+        role: 'user',
         content: 'Xin chào, tôi cần hỗ trợ về sản phẩm X',
         timestamp: new Date('2023-05-04T09:30:00')
       },
       {
         id: '2',
         sender: 'bot',
+        role: 'assistant',
         content: 'Chào bạn! Tôi có thể giúp gì cho bạn về sản phẩm X?',
         timestamp: new Date('2023-05-04T09:31:00')
       }
@@ -274,12 +276,14 @@ export const mockChatConversations = [
       {
         id: '3',
         sender: 'customer',
+        role: 'user',
         content: 'Làm sao để đặt hàng trực tuyến?',
         timestamp: new Date('2023-05-04T10:15:00')
       },
       {
         id: '4',
         sender: 'bot',
+        role: 'assistant',
         content: 'Để đặt hàng trực tuyến, bạn có thể truy cập vào website của chúng tôi tại example.com và làm theo các bước sau...',
         timestamp: new Date('2023-05-04T10:16:00')
       }
@@ -294,12 +298,14 @@ export const mockChatConversations = [
       {
         id: '5',
         sender: 'customer',
+        role: 'user',
         content: 'Tôi muốn tìm hiểu thêm về dịch vụ tư vấn của công ty',
         timestamp: new Date('2023-05-03T14:20:00')
       },
       {
         id: '6',
         sender: 'bot',
+        role: 'assistant',
         content: 'Xin chào! Dịch vụ tư vấn của chúng tôi bao gồm nhiều lĩnh vực khác nhau...',
         timestamp: new Date('2023-05-03T14:22:00')
       }
@@ -312,48 +318,56 @@ export const mockChatMessages = [
   {
     id: '1',
     sender: 'customer',
+    role: 'user',
     content: 'Xin chào, tôi cần hỗ trợ về sản phẩm X',
     timestamp: new Date('2023-05-04T09:30:00')
   },
   {
     id: '2',
     sender: 'bot',
+    role: 'assistant',
     content: 'Chào bạn! Tôi có thể giúp gì cho bạn về sản phẩm X?',
     timestamp: new Date('2023-05-04T09:31:00')
   },
   {
     id: '3',
     sender: 'customer',
+    role: 'user',
     content: 'Tôi không thể kích hoạt tính năng Y',
     timestamp: new Date('2023-05-04T09:33:00')
   },
   {
     id: '4',
     sender: 'bot',
+    role: 'assistant',
     content: 'Tôi hiểu rồi. Để kích hoạt tính năng Y, trước tiên bạn cần phải cập nhật phiên bản mới nhất. Sau đó, vào Cài đặt > Tính năng > Kích hoạt Y.',
     timestamp: new Date('2023-05-04T09:34:00')
   },
   {
     id: '5',
     sender: 'customer',
+    role: 'user',
     content: 'Tôi đã thử nhưng vẫn không được',
     timestamp: new Date('2023-05-04T09:36:00')
   },
   {
     id: '6',
     sender: 'bot',
+    role: 'assistant',
     content: 'Trong trường hợp đó, có thể bạn cần khởi động lại thiết bị. Nếu vẫn không được, vui lòng cho tôi biết thông báo lỗi bạn nhận được.',
     timestamp: new Date('2023-05-04T09:37:00')
   },
   {
     id: '7',
     sender: 'customer',
+    role: 'user',
     content: 'Để tôi thử và phản hồi lại sau.',
     timestamp: new Date('2023-05-04T09:38:00')
   },
   {
     id: '8',
     sender: 'bot',
+    role: 'assistant',
     content: 'Vâng, không vấn đề gì. Tôi sẽ ở đây để hỗ trợ bạn khi cần thiết.',
     timestamp: new Date('2023-05-04T09:39:00')
   }

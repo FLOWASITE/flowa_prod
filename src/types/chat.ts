@@ -2,6 +2,7 @@
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
+  sender?: 'customer' | 'bot'; // Keep for backward compatibility
   content: string;
   timestamp: Date;
 }
