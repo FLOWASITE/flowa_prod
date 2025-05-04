@@ -2,6 +2,7 @@
 import React from 'react';
 import { Content, Topic } from '@/types';
 import { TabContent } from './TabContent';
+import { useContentTabsData } from '@/hooks/useContentTabsData';
 
 interface TabsContainerProps {
   activeTab: 'all' | 'draft' | 'approved' | 'scheduled' | 'rejected' | 'published';
@@ -52,61 +53,24 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
   selectAll,
   viewMode
 }) => {
-  // Use helper function to get the current items based on the active tab
-  const getCurrentItems = (tab: string) => {
-    switch (tab) {
-      case 'draft':
-        return getPaginatedContent(draftContent, currentPage, rowsPerPage);
-      case 'approved':
-        return getPaginatedContent(approvedContent, currentPage, rowsPerPage);
-      case 'scheduled':
-        return getPaginatedContent(scheduledContent, currentPage, rowsPerPage);
-      case 'rejected':
-        return getPaginatedContent(rejectedContent, currentPage, rowsPerPage);
-      case 'published':
-        return getPaginatedContent(publishedContent, currentPage, rowsPerPage);
-      case 'all':
-      default:
-        return getPaginatedContent(allContent, currentPage, rowsPerPage);
-    }
-  };
-
-  // Get total items for pagination based on the active tab
-  const getTotalItems = (tab: string) => {
-    switch (tab) {
-      case 'draft':
-        return draftContent;
-      case 'approved':
-        return approvedContent;
-      case 'scheduled':
-        return scheduledContent;
-      case 'rejected':
-        return rejectedContent;
-      case 'published':
-        return publishedContent;
-      case 'all':
-      default:
-        return allContent;
-    }
-  };
-
-  // Determine if batch selection should be shown
-  const showBatchSelection = activeTab === 'all' || activeTab === 'draft';
-  
-  // Determine if approve actions should be shown
-  const showApproveActions = (tab: string) => {
-    return tab !== 'approved' && tab !== 'scheduled' && tab !== 'published';
-  };
-
-  // Count draft items for batch approval
-  const draftItemCount = countDraftItems(activeTab, allContent, draftContent);
-  const showBatchSelectionAndDraftItemCount = showBatchSelection && draftItemCount > 0;
+  // Use the hook to get paginated content and other tab-related data
+  const {
+    paginatedContent,
+    showBatchSelection,
+    showApproveActions
+  } = useContentTabsData({
+    content: [],  // This is not used in this context since we're passing in pre-filtered content
+    selectedPlatform,
+    currentPage,
+    rowsPerPage,
+    activeTab
+  });
 
   return (
     <>
       <TabContent
         value="all"
-        items={activeTab === 'all' ? getCurrentItems('all') : []}
+        items={activeTab === 'all' ? paginatedContent : []}
         allItems={allContent}
         isLoading={isLoading}
         topics={topics}
@@ -123,13 +87,13 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
         onToggleSelection={toggleItemSelection}
         onSelectAll={selectAll}
         viewMode={viewMode}
-        showBatchSelection={showBatchSelectionAndDraftItemCount}
-        showApproveActions={showApproveActions('all')}
+        showBatchSelection={showBatchSelection && activeTab === 'all'}
+        showApproveActions={showApproveActions}
       />
 
       <TabContent
         value="draft"
-        items={activeTab === 'draft' ? getCurrentItems('draft') : []}
+        items={activeTab === 'draft' ? paginatedContent : []}
         allItems={draftContent}
         isLoading={isLoading}
         topics={topics}
@@ -146,13 +110,13 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
         onToggleSelection={toggleItemSelection}
         onSelectAll={selectAll}
         viewMode={viewMode}
-        showBatchSelection={showBatchSelectionAndDraftItemCount}
+        showBatchSelection={showBatchSelection && activeTab === 'draft'}
         showApproveActions={true}
       />
 
       <TabContent
         value="approved"
-        items={activeTab === 'approved' ? getCurrentItems('approved') : []}
+        items={activeTab === 'approved' ? paginatedContent : []}
         allItems={approvedContent}
         isLoading={isLoading}
         topics={topics}
@@ -175,7 +139,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="scheduled"
-        items={activeTab === 'scheduled' ? getCurrentItems('scheduled') : []}
+        items={activeTab === 'scheduled' ? paginatedContent : []}
         allItems={scheduledContent}
         isLoading={isLoading}
         topics={topics}
@@ -198,7 +162,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="rejected"
-        items={activeTab === 'rejected' ? getCurrentItems('rejected') : []}
+        items={activeTab === 'rejected' ? paginatedContent : []}
         allItems={rejectedContent}
         isLoading={isLoading}
         topics={topics}
@@ -221,7 +185,7 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
 
       <TabContent
         value="published"
-        items={activeTab === 'published' ? getCurrentItems('published') : []}
+        items={activeTab === 'published' ? paginatedContent : []}
         allItems={publishedContent}
         isLoading={isLoading}
         topics={topics}
@@ -244,6 +208,3 @@ export const TabsContainer: React.FC<TabsContainerProps> = ({
     </>
   );
 };
-
-// Import required utility functions
-import { getPaginatedContent, countDraftItems } from '../utils/contentFilters';

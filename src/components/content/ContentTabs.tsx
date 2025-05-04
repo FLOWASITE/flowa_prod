@@ -56,7 +56,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue>('all');
 
-  // Use our new custom hook to handle all data filtering
+  // Use our custom hook to handle all data filtering
   const {
     allContent,
     draftContent,
@@ -64,7 +64,10 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
     scheduledContent,
     rejectedContent,
     publishedContent,
-    showBatchSelection
+    activeContent,
+    paginatedContent,
+    showBatchSelection,
+    showApproveActions
   } = useContentTabsData({
     content,
     selectedPlatform,
