@@ -1,73 +1,230 @@
-# Welcome to your Lovable project
 
-## Project info
+# Content Management System - Documentation
 
-**URL**: https://lovable.dev/projects/ebe30792-28db-4a2d-8c3e-35dc8d22e7fe
+## Overview
 
-## How can I edit this code?
+This is a comprehensive content management system designed to streamline the process of creating, approving, and publishing content across multiple social media platforms. The system follows a structured workflow where topics are first proposed (either by AI or users), then approved by administrators, and finally converted into platform-specific content.
 
-There are several ways of editing your application.
+## Project Architecture
 
-**Use Lovable**
+### Frontend Architecture
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ebe30792-28db-4a2d-8c3e-35dc8d22e7fe) and start prompting.
+The frontend is built using:
+- **React + TypeScript**: For building UI components with type safety
+- **Vite**: As the fast build tool
+- **TailwindCSS**: For utility-first styling
+- **Shadcn/UI**: For consistent, accessible UI components
+- **React Query**: For efficient data fetching and state management
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend Architecture
 
-**Use your preferred IDE**
+The backend is powered by Supabase, which provides:
+- **PostgreSQL Database**: For data storage
+- **Authentication**: For user management
+- **Storage**: For media file management
+- **Row Level Security**: For data access control
+- **Edge Functions**: For serverless operations
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Database Structure
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Key Tables
 
-Follow these steps:
+1. **Content Topics (`content_topics`)**
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   Stores topic ideas that may later be developed into content.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+   ```sql
+   CREATE TABLE content_topics (
+       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+       brand_id TEXT NOT NULL,
+       theme_type_id TEXT NOT NULL,
+       product_type_id TEXT,
+       title TEXT NOT NULL,
+       description TEXT,
+       status content_topic_status NOT NULL DEFAULT 'draft',
+       created_by TEXT NOT NULL,
+       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+   );
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+   - `status` can be: `draft`, `approved`, `rejected`
+   - `created_by` indicates whether the topic was created by a user or AI
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+2. **Content (`content`)**
+
+   Stores the actual content items created for different platforms based on approved topics.
+
+   ```sql
+   CREATE TABLE content (
+       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+       topic_id UUID REFERENCES content_topics(id),
+       topic_title TEXT,
+       platform TEXT NOT NULL,
+       text TEXT NOT NULL,
+       image_url TEXT,
+       video_url TEXT,
+       video_thumbnail TEXT,
+       status content_status NOT NULL DEFAULT 'draft',
+       scheduled_at TIMESTAMPTZ,
+       published_at TIMESTAMPTZ,
+       approved_at TIMESTAMPTZ,
+       engagement_likes INTEGER DEFAULT 0,
+       engagement_comments INTEGER DEFAULT 0,
+       engagement_shares INTEGER DEFAULT 0,
+       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+   );
+   ```
+
+   - `status` can be: `draft`, `approved`, `rejected`, `scheduled`, `published`, `generating`, `completed`
+
+### Database Triggers
+
+The system uses triggers to automate content creation when topics are approved:
+
+```sql
+CREATE OR REPLACE FUNCTION create_content_from_approved_topic()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Only create content when topic is changed to approved
+  IF NEW.status = 'approved' AND (OLD.status IS NULL OR OLD.status <> 'approved') THEN
+    -- Create content for Facebook, Instagram, and LinkedIn
+    INSERT INTO content (topic_id, topic_title, platform, text, status)
+    VALUES (NEW.id, NEW.title, 'facebook', 
+           'Nội dung tự động tạo cho Facebook từ chủ đề: ' || NEW.title, 
+           'draft');
+    -- Similar inserts for other platforms...
+  END IF;
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_create_content_on_topic_approval
+AFTER UPDATE ON content_topics
+FOR EACH ROW
+EXECUTE FUNCTION create_content_from_approved_topic();
 ```
 
-**Edit a file directly in GitHub**
+This trigger automatically generates draft content for Facebook, Instagram, and LinkedIn whenever a topic is approved.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Application Flow & Logic
 
-**Use GitHub Codespaces**
+### 1. Topic Management
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The workflow starts in the Topics page (`/topics`):
 
-## What technologies are used for this project?
+1. **Topic Creation**:
+   - Topics can be created manually by users or generated by AI
+   - New topics are initially in `draft` status and require approval
 
-This project is built with:
+2. **Topic Approval Process**:
+   - Administrators review topics in the Topics page
+   - They can approve topics (changing status to `approved`)
+   - They can reject topics (changing status to `rejected`)
+   - When a topic is approved, content is automatically generated via database trigger
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+3. **Topic filtering and management**:
+   - Topics can be filtered by status, product, and searched by title
+   - Bulk actions can be performed on selected topics
 
-## How can I deploy this project?
+### 2. Content Management
 
-Simply open [Lovable](https://lovable.dev/projects/ebe30792-28db-4a2d-8c3e-35dc8d22e7fe) and click on Share -> Publish.
+After topics are approved, content is managed in the Content page (`/content`):
 
-## Can I connect a custom domain to my Lovable project?
+1. **Content Generation**:
+   - When a topic is approved, draft content is automatically generated for multiple platforms
+   - Each platform gets content tailored to its format requirements
 
-Yes, you can!
+2. **Content Editing & Approval**:
+   - Content editors can modify the generated content
+   - They can approve content for publishing
+   - They can schedule content for later publication
+   - They can reject content that doesn't meet standards
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+3. **Content Publishing**:
+   - Approved content can be published immediately or scheduled
+   - Published content engagement metrics are tracked when available
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### 3. Data Connection
+
+The system handles both online and offline modes:
+
+- **Supabase Connection**: 
+  - When connected to Supabase, data is stored in the database
+  - Full functionality for creating, updating, deleting, and retrieving data
+
+- **Local Data Mode**: 
+  - When offline or Supabase is not configured
+  - Uses mock data from the `src/data/mock` directory
+  - A warning banner appears to inform users they're working with local data
+  - Changes won't persist when refreshing the page
+
+## Key Components & Files
+
+### Topic Management
+
+- `src/pages/Topics.tsx`: Main topics page component
+- `src/hooks/useTopicsPage.tsx`: Hook for topics page logic
+- `src/hooks/useTopicsData.tsx`: Hook for fetching and filtering topics
+- `src/hooks/useTopicStatusUpdate.tsx`: Hook for updating topic status (approve/reject)
+
+### Content Management
+
+- `src/components/content/ContentPageView.tsx`: Main content view component
+- `src/hooks/useContentData.tsx`: Hook for content data handling
+- `src/hooks/useContentFetch.tsx`: Hook for fetching content from API or local storage
+
+### Data Connection
+
+- `src/hooks/useSupabaseConnection.tsx`: Hook to check Supabase connection status
+- `src/components/content/LocalDataWarning.tsx`: Component to warn users when using local data
+
+## How to Extend the Application
+
+### For Non-Technical Users
+
+1. **Adding New Topics**:
+   - Navigate to the Topics page
+   - Use the Topic Request Form to create a new topic
+   - Fill in the title, description, and related fields
+   - Submit for approval
+
+2. **Approving Topics**:
+   - Review the topics list in Topics page
+   - Click the "Approve" action button on topics you want to approve
+   - Content will be automatically generated for approved topics
+
+3. **Managing Content**:
+   - Navigate to the Content page
+   - Filter and search for content you want to manage
+   - Use the action buttons to view, approve, edit, or delete content
+
+### For Technical Users
+
+1. **Adding New Platforms**:
+   - Update the trigger function in the database to include the new platform
+   - Add platform handling in `TopicTableUtils.ts` and related components
+   - Extend content generation logic for the new platform
+
+2. **Modifying Content Generation Logic**:
+   - Update the `create_content_from_approved_topic()` function in the database
+   - Modify the `generateDraftContent` function in `src/components/topic/table/TopicTableUtils.ts` 
+
+3. **Adding New Data Fields**:
+   - Add columns to the relevant database tables
+   - Update TypeScript types in `src/types/content.ts`
+   - Update the UI components to display and interact with new fields
+
+## Deployment & Environment Setup
+
+This project is designed to work with Supabase for the backend. To set up your environment:
+
+1. Create a Supabase project and configure the database tables and triggers
+2. Add Supabase URL and API key to environment variables
+3. Deploy the frontend to your preferred hosting platform
+
+## Conclusion
+
+This content management system provides a streamlined workflow for creating, approving, and publishing content across multiple platforms. By following the topic approval process, content can be systematically created and managed for maximum effectiveness.
