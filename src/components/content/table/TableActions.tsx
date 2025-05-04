@@ -40,6 +40,19 @@ export const TableActions: React.FC<TableActionsProps> = ({
           </svg>
         </Button>
       )}
+      {item.status === 'rejected' && showApproveColumn && (
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 w-8 p-0 bg-green-50/90 dark:bg-green-900/30 text-green-500 hover:bg-green-50/90 rounded-full transition-colors backdrop-blur-sm"
+          onClick={() => onApprove(item)}
+        >
+          <span className="sr-only">Duyệt lại</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+            <path d="M20 6 9 17l-5-5"/>
+          </svg>
+        </Button>
+      )}
       <Button 
         variant="ghost" 
         size="sm" 

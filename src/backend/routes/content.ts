@@ -180,4 +180,114 @@ router.post('/:id/approve', async (req, res) => {
   }
 });
 
+// Reject content 
+router.post('/:id/reject', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    
+    const { data, error } = await supabase
+      .from('content')
+      .update({
+        status: 'rejected'
+      })
+      .eq('id', id)
+      .select();
+    
+    if (error) throw error;
+    
+    if (data.length === 0) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Content not found'
+      });
+    }
+    
+    // TODO: Lưu reason vào bảng lịch sử nếu cần
+    
+    return res.status(200).json(data[0]);
+  } catch (error: any) {
+    console.error('Error rejecting content:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// Schedule content
+router.post('/:id/schedule', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { scheduledAt } = req.body;
+    
+    if (!scheduledAt) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Scheduled date is required'
+      });
+    }
+    
+    const { data, error } = await supabase
+      .from('content')
+      .update({
+        status: 'scheduled',
+        scheduled_at: scheduledAt
+      })
+      .eq('id', id)
+      .select();
+    
+    if (error) throw error;
+    
+    if (data.length === 0) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Content not found'
+      });
+    }
+    
+    return res.status(200).json(data[0]);
+  } catch (error: any) {
+    console.error('Error scheduling content:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
+// Mark content as published
+router.post('/:id/publish', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const publishDate = new Date().toISOString();
+    
+    const { data, error } = await supabase
+      .from('content')
+      .update({
+        status: 'published',
+        published_at: publishDate
+      })
+      .eq('id', id)
+      .select();
+    
+    if (error) throw error;
+    
+    if (data.length === 0) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Content not found'
+      });
+    }
+    
+    return res.status(200).json(data[0]);
+  } catch (error: any) {
+    console.error('Error publishing content:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+    });
+  }
+});
+
 export default router;

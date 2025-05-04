@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Content } from '@/types';
@@ -32,7 +31,7 @@ interface ContentTabsProps {
 }
 
 // Define a type for the active tab values to ensure type safety
-type TabValue = 'all' | 'draft' | 'approved' | 'scheduled';
+type TabValue = 'all' | 'draft' | 'approved' | 'scheduled' | 'rejected' | 'published';
 
 export const ContentTabs: React.FC<ContentTabsProps> = ({
   content,
@@ -75,6 +74,15 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
     return filterByPlatform(content.filter(item => item.status === 'scheduled'), selectedPlatform);
   }, [content, selectedPlatform]);
 
+  // Add new states for rejected and published content
+  const rejectedContent = useMemo(() => {
+    return filterByPlatform(content.filter(item => item.status === 'rejected'), selectedPlatform);
+  }, [content, selectedPlatform]);
+  
+  const publishedContent = useMemo(() => {
+    return filterByPlatform(content.filter(item => item.status === 'published'), selectedPlatform);
+  }, [content, selectedPlatform]);
+
   // Count draft items for batch approval
   const draftItemCount = useMemo(() => {
     return countDraftItems(activeTab, allContent, draftContent);
@@ -92,11 +100,15 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
         return getPaginatedContent(approvedContent, currentPage, rowsPerPage);
       case 'scheduled':
         return getPaginatedContent(scheduledContent, currentPage, rowsPerPage);
+      case 'rejected':
+        return getPaginatedContent(rejectedContent, currentPage, rowsPerPage);
+      case 'published':
+        return getPaginatedContent(publishedContent, currentPage, rowsPerPage);
       case 'all':
       default:
         return getPaginatedContent(allContent, currentPage, rowsPerPage);
     }
-  }, [activeTab, currentPage, rowsPerPage, allContent, draftContent, approvedContent, scheduledContent]);
+  }, [activeTab, currentPage, rowsPerPage, allContent, draftContent, approvedContent, scheduledContent, rejectedContent, publishedContent]);
 
   // Get total items for the active tab
   const totalItems = useMemo(() => {
@@ -107,14 +119,18 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
         return approvedContent;
       case 'scheduled':
         return scheduledContent;
+      case 'rejected':
+        return rejectedContent;
+      case 'published':
+        return publishedContent;
       case 'all':
       default:
         return allContent;
     }
-  }, [activeTab, allContent, draftContent, approvedContent, scheduledContent]);
+  }, [activeTab, allContent, draftContent, approvedContent, scheduledContent, rejectedContent, publishedContent]);
 
   // Common props that determine if approval actions should be shown
-  const showApproveActions = activeTab !== 'approved' && activeTab !== 'scheduled';
+  const showApproveActions = activeTab !== 'approved' && activeTab !== 'scheduled' && activeTab !== 'published';
   const showBatchSelectionAndDraftItemCount = showBatchSelection && draftItemCount > 0;
 
   return (
@@ -127,6 +143,8 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
               draftCount={draftContent.length}
               approvedCount={approvedContent.length}
               scheduledCount={scheduledContent.length}
+              rejectedCount={rejectedContent.length}
+              publishedCount={publishedContent.length}
             />
 
             <div className="flex gap-4 items-center">
@@ -188,7 +206,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
               onToggleSelection={toggleItemSelection}
               onSelectAll={selectAll}
               showBatchSelection={showBatchSelectionAndDraftItemCount}
-              showApproveActions={showApproveActions}
+              showApproveActions={true}
             />
           </TabsContent>
 
@@ -212,7 +230,7 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
               onToggleSelection={toggleItemSelection}
               onSelectAll={selectAll}
               showBatchSelection={false}
-              showApproveActions={showApproveActions}
+              showApproveActions={false}
             />
           </TabsContent>
 
@@ -236,7 +254,55 @@ export const ContentTabs: React.FC<ContentTabsProps> = ({
               onToggleSelection={toggleItemSelection}
               onSelectAll={selectAll}
               showBatchSelection={false}
-              showApproveActions={showApproveActions}
+              showApproveActions={false}
+            />
+          </TabsContent>
+
+          <TabsContent value="rejected">
+            <ContentViewRenderer
+              viewMode={viewMode}
+              items={currentItems}
+              allItems={rejectedContent}
+              isLoading={isLoading}
+              topics={topics}
+              onApprove={onApprove}
+              onDelete={onDelete}
+              onView={onView}
+              currentPage={currentPage}
+              rowsPerPage={rowsPerPage}
+              handlePageChange={handlePageChange}
+              handleRowsPerPageChange={handleRowsPerPageChange}
+              selectedPlatform={selectedPlatform}
+              onPlatformChange={onPlatformChange}
+              selectedItems={selectedItems}
+              onToggleSelection={toggleItemSelection}
+              onSelectAll={selectAll}
+              showBatchSelection={false}
+              showApproveActions={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="published">
+            <ContentViewRenderer
+              viewMode={viewMode}
+              items={currentItems}
+              allItems={publishedContent}
+              isLoading={isLoading}
+              topics={topics}
+              onApprove={onApprove}
+              onDelete={onDelete}
+              onView={onView}
+              currentPage={currentPage}
+              rowsPerPage={rowsPerPage}
+              handlePageChange={handlePageChange}
+              handleRowsPerPageChange={handleRowsPerPageChange}
+              selectedPlatform={selectedPlatform}
+              onPlatformChange={onPlatformChange}
+              selectedItems={selectedItems}
+              onToggleSelection={toggleItemSelection}
+              onSelectAll={selectAll}
+              showBatchSelection={false}
+              showApproveActions={false}
             />
           </TabsContent>
         </Tabs>

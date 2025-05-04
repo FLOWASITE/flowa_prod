@@ -17,13 +17,15 @@ export const ContentCardHeader: React.FC<ContentCardHeaderProps> = ({ content, p
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'draft':
-        return <Badge variant="outline">Bản nháp</Badge>;
+        return <Badge variant="outline">Chờ duyệt</Badge>;
       case 'approved':
         return <Badge variant="secondary">Đã duyệt</Badge>;
       case 'scheduled':
         return <Badge variant="default">Đã lên lịch</Badge>;
       case 'published':
         return <Badge className="bg-green-500 text-white">Đã đăng</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-500 text-white">Từ chối</Badge>;
       default:
         return null;
     }

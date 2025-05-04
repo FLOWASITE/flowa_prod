@@ -109,5 +109,32 @@ export const useContentApproval = () => {
     }
   };
 
-  return { approveContent, isLoading };
+  // Thêm hàm mới để từ chối nội dung
+  const rejectContent = async (contentId: string, reason?: string) => {
+    if (!contentId) {
+      toast.error('ID nội dung không hợp lệ');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Call API to reject content
+      await apiClient.post(`/content/${contentId}/reject`, { reason });
+      
+      // Refresh content data
+      queryClient.invalidateQueries({ queryKey: ['content'] });
+      
+      toast.success('Nội dung đã bị từ chối');
+      return true;
+    } catch (error) {
+      console.error('Error rejecting content:', error);
+      toast.error('Có lỗi xảy ra khi từ chối nội dung');
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { approveContent, rejectContent, isLoading };
 };

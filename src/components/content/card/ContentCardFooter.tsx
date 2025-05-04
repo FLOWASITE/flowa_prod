@@ -54,7 +54,7 @@ export const ContentCardFooter: React.FC<ContentCardFooterProps> = ({
           </TooltipProvider>
         )}
         
-        {(content.status === 'approved' || content.status === 'scheduled') && (
+        {(content.status === 'approved' || content.status === 'scheduled' || content.status === 'published') && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

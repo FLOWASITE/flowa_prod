@@ -217,7 +217,7 @@ export type Database = {
           platform: string
           published_at: string | null
           scheduled_at: string | null
-          status: string
+          status: Database["public"]["Enums"]["content_status_type"]
           text: string
           topic_id: string | null
           topic_title: string | null
@@ -236,7 +236,7 @@ export type Database = {
           platform: string
           published_at?: string | null
           scheduled_at?: string | null
-          status: string
+          status: Database["public"]["Enums"]["content_status_type"]
           text: string
           topic_id?: string | null
           topic_title?: string | null
@@ -255,7 +255,7 @@ export type Database = {
           platform?: string
           published_at?: string | null
           scheduled_at?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["content_status_type"]
           text?: string
           topic_id?: string | null
           topic_title?: string | null
@@ -281,7 +281,7 @@ export type Database = {
           description: string | null
           id: string
           product_type_id: string | null
-          status: string
+          status: Database["public"]["Enums"]["topic_status_type"]
           theme_type_id: string
           title: string
           updated_at: string
@@ -293,7 +293,7 @@ export type Database = {
           description?: string | null
           id?: string
           product_type_id?: string | null
-          status: string
+          status: Database["public"]["Enums"]["topic_status_type"]
           theme_type_id: string
           title: string
           updated_at?: string
@@ -305,7 +305,7 @@ export type Database = {
           description?: string | null
           id?: string
           product_type_id?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["topic_status_type"]
           theme_type_id?: string
           title?: string
           updated_at?: string
@@ -800,12 +800,24 @@ export type Database = {
       }
     }
     Enums: {
+      content_status_type:
+        | "draft"
+        | "approved"
+        | "scheduled"
+        | "published"
+        | "rejected"
       platform_type:
         | "facebook"
         | "instagram"
         | "tiktok"
         | "threads"
         | "linkedin"
+      topic_status_type:
+        | "draft"
+        | "approved"
+        | "rejected"
+        | "generating"
+        | "completed"
       user_role: "admin" | "manager" | "staff"
     }
     CompositeTypes: {
@@ -922,7 +934,21 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      content_status_type: [
+        "draft",
+        "approved",
+        "scheduled",
+        "published",
+        "rejected",
+      ],
       platform_type: ["facebook", "instagram", "tiktok", "threads", "linkedin"],
+      topic_status_type: [
+        "draft",
+        "approved",
+        "rejected",
+        "generating",
+        "completed",
+      ],
       user_role: ["admin", "manager", "staff"],
     },
   },
