@@ -23,7 +23,7 @@ export function getPaginatedContent(content: Content[], currentPage: number, row
 /**
  * Count draft items
  */
-export function countDraftItems(activeTab: 'all' | 'draft' | 'approved' | 'scheduled', allContent: Content[], draftContent: Content[]): number {
+export function countDraftItems(activeTab: 'all' | 'draft' | 'approved' | 'scheduled' | 'rejected' | 'published', allContent: Content[], draftContent: Content[]): number {
   if (activeTab === 'all') {
     return allContent.filter(item => item.status === 'draft').length;
   }
