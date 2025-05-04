@@ -44,17 +44,7 @@ export function TopicCard({ topic, onApprove, onReject, onView, onEdit }: TopicC
       );
     }
     
-    if (topic.status === 'completed') {
-      return (
-        <Button 
-          className="w-full"
-          onClick={() => onView && onView(topic)}
-        >
-          Xem nội dung
-        </Button>
-      );
-    }
-    
+    // For approved and rejected topics, just show the View button
     return (
       <Button 
         variant="outline" 

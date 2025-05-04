@@ -58,9 +58,15 @@ router.get('/:id', async (req, res) => {
 // Create new topic
 router.post('/', async (req, res) => {
   try {
+    // Set the default status to 'draft' if not specified
+    const topicData = {
+      ...req.body,
+      status: req.body.status || 'draft'
+    };
+    
     const { data, error } = await supabase
       .from('content_topics')
-      .insert(req.body)
+      .insert(topicData)
       .select();
     
     if (error) throw error;
@@ -79,6 +85,14 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // Validate status if it's being updated
+    if (req.body.status && !['draft', 'approved', 'rejected'].includes(req.body.status)) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Status must be one of: draft, approved, rejected'
+      });
+    }
     
     const { data, error } = await supabase
       .from('content_topics')
@@ -131,7 +145,6 @@ router.delete('/:id', async (req, res) => {
 router.post('/:id/approve', async (req, res) => {
   try {
     const { id } = req.params;
-    const approvalDate = new Date().toISOString();
     
     const { data, error } = await supabase
       .from('content_topics')

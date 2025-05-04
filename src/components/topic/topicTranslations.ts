@@ -11,8 +11,6 @@ interface TopicTranslationsType {
     draft: Record<string, string>;
     approved: Record<string, string>;
     rejected: Record<string, string>;
-    generating: Record<string, string>;
-    completed: Record<string, string>;
   };
 }
 
@@ -66,7 +64,7 @@ export const topicTranslations: TopicTranslationsType = {
     th: 'กำลังส่ง...',
     id: 'Mengirim...'
   },
-  // Status translations for topics
+  // Status translations for topics - updated to only include the three statuses
   topicStatus: {
     draft: {
       vi: 'Chờ duyệt',
@@ -91,22 +89,6 @@ export const topicTranslations: TopicTranslationsType = {
       es: 'Rechazado',
       th: 'ปฏิเสธ',
       id: 'Ditolak'
-    },
-    generating: {
-      vi: 'Đang tạo',
-      en: 'Generating',
-      fr: 'Génération',
-      es: 'Generando',
-      th: 'กำลังสร้าง',
-      id: 'Menghasilkan'
-    },
-    completed: {
-      vi: 'Hoàn thành',
-      en: 'Completed',
-      fr: 'Terminé',
-      es: 'Completado',
-      th: 'เสร็จสมบูรณ์',
-      id: 'Selesai'
     }
   }
 };

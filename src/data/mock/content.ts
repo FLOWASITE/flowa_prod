@@ -43,7 +43,7 @@ export const mockContents: Content[] = [
     platform: 'linkedin',
     text: 'Hành trình xây dựng và phát triển thương hiệu từ những ngày đầu thành lập đến nay, với những cột mốc đáng nhớ và khó khăn đã vượt qua.',
     imageUrl: 'https://source.unsplash.com/800x600/?brand',
-    status: 'generating',
+    status: 'draft', // Changed from 'generating' to match topic status
     createdAt: new Date('2023-04-08'),
     updatedAt: new Date('2023-04-09'),
   },
@@ -54,7 +54,7 @@ export const mockContents: Content[] = [
     platform: 'youtube',
     text: 'Video so sánh chi tiết sản phẩm Y với các đối thủ cạnh tranh trên thị trường, giúp bạn có cái nhìn khách quan và đưa ra lựa chọn tốt nhất.',
     imageUrl: 'https://source.unsplash.com/800x600/?comparison',
-    status: 'completed',
+    status: 'approved', // Changed from 'completed' to match topic status
     createdAt: new Date('2023-04-05'),
     updatedAt: new Date('2023-04-07'),
   },
@@ -98,7 +98,7 @@ export const mockContents: Content[] = [
     platform: 'instagram',
     text: 'Kêu gọi cộng đồng tham gia thử thách sáng tạo nội dung với chủ đề [tên chủ đề], cơ hội thể hiện tài năng và nhận những phần thưởng giá trị.',
     imageUrl: 'https://source.unsplash.com/800x600/?challenge',
-    status: 'generating',
+    status: 'draft', // Changed from 'generating' to match topic status
     createdAt: new Date('2023-03-27'),
     updatedAt: new Date('2023-03-28'),
   },
@@ -109,7 +109,7 @@ export const mockContents: Content[] = [
     platform: 'youtube',
     text: 'Buổi phỏng vấn độc quyền với chuyên gia hàng đầu về sản phẩm, giải đáp mọi thắc mắc và chia sẻ những thông tin hữu ích.',
     imageUrl: 'https://source.unsplash.com/800x600/?interview',
-    status: 'completed',
+    status: 'approved', // Changed from 'completed' to match topic status
     createdAt: new Date('2023-03-25'),
     updatedAt: new Date('2023-03-26'),
   },

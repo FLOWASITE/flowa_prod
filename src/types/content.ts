@@ -6,7 +6,7 @@ export interface Topic {
   productTypeId?: string;
   title: string;
   description: string;
-  status: 'draft' | 'approved' | 'rejected' | 'generating' | 'completed';
+  status: 'draft' | 'approved' | 'rejected'; // Updated to only include the three status types
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;

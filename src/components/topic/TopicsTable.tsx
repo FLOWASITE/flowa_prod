@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { Check, Eye, Pencil, X } from 'lucide-react';
@@ -36,7 +37,7 @@ interface TopicsTableProps {
   handleRowsPerPageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   setSelectedPlatform: (platform: string) => void;
   getTranslation: (key: string) => string;
-  // New action handlers
+  // Action handlers
   handleViewTopic?: (topic: Topic) => void;
   handleApproveTopic?: (topic: Topic) => void;
   handleEditTopic?: (topic: Topic) => void;
@@ -58,7 +59,7 @@ export function TopicsTable({
   handleRowsPerPageChange,
   setSelectedPlatform,
   getTranslation,
-  // New action handlers
+  // Action handlers
   handleViewTopic,
   handleApproveTopic,
   handleEditTopic,
@@ -93,25 +94,6 @@ export function TopicsTable({
       </Badge>
     );
   };
-
-  // Get translated status text
-  const getStatusTranslation = (status: string) => {
-    const lang = currentLanguage.code;
-    if (topicTranslations.topicStatus?.[status]?.[lang]) {
-      return topicTranslations.topicStatus[status][lang];
-    }
-    return status;
-  };
-
-  // Status badge for visualizing topic status
-  const statusBadge = (status: string) => {
-    return <TopicStatusBadge status={status} />;
-  };
-
-  // Get product icon (placeholder function)
-  const getProductIcon = (productId: string) => {
-    return null; // In a real app, you'd return an icon component here
-  };
   
   // Mobile card view for topics
   const renderMobileTopicCard = (topic: Topic, index: number) => {
@@ -127,7 +109,7 @@ export function TopicsTable({
             />
             <span className="text-sm text-gray-500">#{rowIndex}</span>
           </div>
-          {statusBadge(topic.status)}
+          <TopicStatusBadge status={topic.status} />
         </div>
         
         <h3 className="font-medium text-lg mb-2">{topic.title}</h3>
@@ -275,7 +257,9 @@ export function TopicsTable({
                       </Badge>
                     </TableCell>
                     <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
-                    <TableCell>{statusBadge(topic.status)}</TableCell>
+                    <TableCell>
+                      <TopicStatusBadge status={topic.status} />
+                    </TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1">
                         {/* View Button */}
@@ -350,4 +334,9 @@ export function TopicsTable({
       </div>
     </div>
   );
+  
+  // Get product icon (placeholder function)
+  function getProductIcon(productId: string) {
+    return null; // In a real app, you'd return an icon component here
+  }
 }
