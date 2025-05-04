@@ -8,7 +8,7 @@ interface TablePaginationProps {
   currentPage: number;
   rowsPerPage: number;
   totalItems: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
   handlePageChange?: (page: number) => void; // For backwards compatibility
   onRowsPerPageChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -26,7 +26,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   const displayPageCount = isMobile ? 3 : 5;
   
   // Use either onPageChange or handlePageChange (for backward compatibility)
-  const handleChange = handlePageChange || onPageChange;
+  const handleChange = onPageChange || handlePageChange;
   
   // Calculate the range of page numbers to display
   const getPageRange = () => {
