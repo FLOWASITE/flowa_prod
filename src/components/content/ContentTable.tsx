@@ -2,8 +2,7 @@
 import React from 'react';
 import { Table, TableBody } from '@/components/ui/table';
 import { Content } from '@/types';
-import { format } from 'date-fns';
-import { platformIcons } from '../chat/PlatformIcons';
+import { usePlatformUtils } from './table/usePlatformUtils';
 
 // Import our components
 import { TableFilters } from './table/TableFilters';
@@ -58,26 +57,8 @@ export const ContentTable: React.FC<ContentTableProps> = ({
   onSelectAll,
   showBatchSelection = false
 }) => {
-  // Helper functions
-  const formatDate = (date: Date | undefined) => {
-    return date ? format(date, 'dd/MM/yyyy') : '-';
-  };
-
-  const getPlatformIcon = (platform: string) => {
-    return platformIcons[platform as keyof typeof platformIcons] || null;
-  };
-
-  // Get unique platforms for filter
-  const getUniquePlatforms = () => {
-    const platforms = new Set<string>();
-    allItems.forEach(item => {
-      if (item.platform) {
-        platforms.add(item.platform);
-      }
-    });
-    return Array.from(platforms);
-  };
-
+  const { formatDate, getPlatformIcon, getUniquePlatforms } = usePlatformUtils(allItems);
+  
   // Handle select all checkbox
   const handleSelectAllChange = (checked: boolean) => {
     if (checked && onSelectAll) {
