@@ -18,6 +18,8 @@ import { TableFilters } from '@/components/content/table/TableFilters';
 import { Topic } from '@/types';
 import { mockProductTypes } from '@/data/mock/products';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { topicTranslations } from './topicTranslations';
 
 interface TopicsTableProps {
   topics: Topic[];
@@ -63,6 +65,7 @@ export function TopicsTable({
   handleRejectTopic
 }: TopicsTableProps) {
   const isMobile = useIsMobile();
+  const { currentLanguage } = useLanguage();
   
   // Function to get product name from product ID
   const getProductNameById = (productId: string | undefined) => {
@@ -91,6 +94,12 @@ export function TopicsTable({
     );
   };
 
+  // Get translated status text
+  const getStatusTranslation = (status: string) => {
+    const lang = currentLanguage.code;
+    return topicTranslations.topicStatus[status]?.[lang] || status;
+  };
+
   // Status badge for visualizing topic status
   const statusBadge = (status: string) => {
     const statusClasses = {
@@ -103,7 +112,7 @@ export function TopicsTable({
     
     return (
       <Badge variant="outline" className={statusClasses[status]}>
-        {status}
+        {getStatusTranslation(status)}
       </Badge>
     );
   };

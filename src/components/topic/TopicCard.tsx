@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Topic } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { topicTranslations } from './topicTranslations';
 
 interface TopicCardProps {
   topic: Topic;
@@ -15,6 +17,13 @@ interface TopicCardProps {
 }
 
 export function TopicCard({ topic, onApprove, onReject, onView, onEdit }: TopicCardProps) {
+  const { currentLanguage } = useLanguage();
+
+  const getStatusTranslation = (status: string) => {
+    const lang = currentLanguage.code;
+    return topicTranslations.topicStatus[status]?.[lang] || status;
+  };
+
   const statusColors = {
     draft: "bg-gray-200 text-gray-800",
     approved: "bg-green-100 text-green-800",
@@ -74,11 +83,7 @@ export function TopicCard({ topic, onApprove, onReject, onView, onEdit }: TopicC
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <Badge variant="outline" className={statusColors[topic.status]}>
-            {topic.status === 'draft' && 'Chờ duyệt'}
-            {topic.status === 'approved' && 'Đã duyệt'}
-            {topic.status === 'rejected' && 'Từ chối'}
-            {topic.status === 'generating' && 'Đang tạo'}
-            {topic.status === 'completed' && 'Hoàn thành'}
+            {getStatusTranslation(topic.status)}
           </Badge>
           <div className="text-sm text-muted-foreground">
             {formatDistanceToNow(topic.createdAt, { addSuffix: true })}
