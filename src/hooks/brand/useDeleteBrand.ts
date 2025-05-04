@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Brand } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,24 +32,24 @@ export const useDeleteBrand = (
       }
       
       // Execute the actual deletion in the background
-      setTimeout(() => {
-        deleteFromDatabase(brand.id)
-          .then(() => {
-            sonnerToast.success(t('deleteSuccess'));
-          })
-          .catch(error => {
-            console.error('Background deletion error:', error);
-            toast({
-              title: t('deleteError'),
-              description: error instanceof Error ? error.message : 'Unknown error',
-              variant: 'destructive',
-            });
-          })
-          .finally(() => {
-            setIsDeleting(false);
+      // We don't await this operation to keep UI responsive
+      deleteFromDatabase(brand.id)
+        .then(() => {
+          sonnerToast.success(t('deleteSuccess'));
+        })
+        .catch(error => {
+          console.error('Background deletion error:', error);
+          toast({
+            title: t('deleteError'),
+            description: error instanceof Error ? error.message : 'Unknown error',
+            variant: 'destructive',
           });
-      }, 100);
+        })
+        .finally(() => {
+          setIsDeleting(false);
+        });
       
+      // Return true to signal success for UI updates
       return true;
     } catch (error) {
       console.error('Error initiating brand deletion:', error);

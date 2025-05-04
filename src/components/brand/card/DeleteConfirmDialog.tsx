@@ -32,18 +32,16 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   };
 
   // Handle confirmation with optimistic UI update
-  const handleConfirm = async (e: React.MouseEvent) => {
+  const handleConfirm = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent default form submission
     
-    // Critical: Close dialog IMMEDIATELY to unblock UI
+    // Close dialog immediately first - MOST IMPORTANT STEP
     onOpenChange(false);
     
-    // Then process the deletion in the background
-    try {
-      await onConfirm();
-    } catch (error) {
+    // Then process the deletion in the background without awaiting
+    onConfirm().catch(error => {
       console.error("Error during confirmation:", error);
-    }
+    });
   };
 
   return (
