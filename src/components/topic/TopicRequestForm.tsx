@@ -18,7 +18,7 @@ export function TopicRequestForm() {
   const { currentLanguage } = useLanguage();
   
   // Get first 3 product names from mockProductTypes for example buttons
-  const productExamples = mockProductTypes;
+  const productExamples = mockProductTypes.slice(0, 3);
   
   const getTranslation = (key: string) => {
     const lang = currentLanguage.code;
