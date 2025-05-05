@@ -1,4 +1,3 @@
-
 // Topic translations interface to define the nested structure
 interface TopicTranslationsType {
   cardTitle: Record<string, string>;
@@ -15,7 +14,7 @@ interface TopicTranslationsType {
 }
 
 // Topic translations for multiple languages
-export const topicTranslations: TopicTranslationsType = {
+export const topicTranslations = {
   cardTitle: {
     vi: 'Tạo chủ đề nội dung',
     en: 'Create Content Topic',
@@ -90,5 +89,15 @@ export const topicTranslations: TopicTranslationsType = {
       th: 'ปฏิเสธ',
       id: 'Ditolak'
     }
+  },
+  
+  // New keys
+  generateTopic: {
+    en: 'Generate Topic with AI',
+    vi: 'Tạo chủ đề với AI'
+  },
+  generateTopicPrompt: {
+    en: 'Please generate 3 content topics for our brand that would engage our audience.',
+    vi: 'Vui lòng tạo 3 chủ đề nội dung cho thương hiệu của chúng tôi để thu hút khán giả.'
   }
 };
