@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, BrainCircuit } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ExampleRequestButtons } from './ExampleRequestButtons';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -74,19 +74,6 @@ export function TopicRequestFormContent({
                 onSelectExample={onPromptChange}
               />
             </div>
-          </div>
-          
-          <div className="mt-auto">
-            <Button 
-              type="button" 
-              variant="default" 
-              className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20"
-              onClick={() => onPromptChange(getTranslation('generateTopicPrompt'))}
-            >
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
-              <BrainCircuit className="mr-2 h-5 w-5 animate-pulse" />
-              {getTranslation('generateTopic')}
-            </Button>
           </div>
         </div>
       </div>
