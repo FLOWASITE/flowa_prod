@@ -75,10 +75,6 @@ export const useSidebarNavItems = (currentLanguage: Language) => {
         label: getTranslation('schedule', currentLanguage),
         icon: Calendar,
         href: '/schedule',
-        badge: {
-          text: 'Beta',
-          variant: 'beta',
-        }
       },
       {
         label: getTranslation('fileManager', currentLanguage),

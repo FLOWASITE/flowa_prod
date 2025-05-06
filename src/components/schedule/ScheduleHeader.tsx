@@ -29,7 +29,6 @@ export const ScheduleHeader: React.FC<ScheduleHeaderProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-bold">Lịch đăng bài</h1>
-            <Badge variant="outline" className="bg-yellow-400 text-yellow-800">Beta</Badge>
           </div>
           <p className="text-muted-foreground">Quản lý tất cả bài đăng từ một nơi.</p>
         </div>
