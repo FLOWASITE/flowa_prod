@@ -28,21 +28,19 @@ export function ExampleRequestButtons({
 
   return (
     <div className="grid gap-2">
-      <div className="flex flex-wrap gap-2">
-        {productExamples.map(product => (
-          <Button
-            key={product.id}
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onSelectExample(getProductRequestText(product.name))}
-            className="flex items-center gap-1"
-          >
-            <Tag className="h-3 w-3" />
-            {product.name}
-          </Button>
-        ))}
-      </div>
+      {productExamples.map(product => (
+        <Button
+          key={product.id}
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onSelectExample(getProductRequestText(product.name))}
+          className="flex justify-start items-center gap-2 w-full text-left"
+        >
+          <Tag className="h-3 w-3 flex-shrink-0" />
+          <span className="truncate">{product.name}</span>
+        </Button>
+      ))}
     </div>
   );
 }
