@@ -18,7 +18,7 @@ export function TopicRequestForm() {
   const { currentLanguage } = useLanguage();
   
   // Get first 3 product names from mockProductTypes for example buttons
-  const productExamples = mockProductTypes;
+  const productExamples = mockProductTypes.slice(0, 3);
   
   const getTranslation = (key: string) => {
     const lang = currentLanguage.code;
@@ -43,14 +43,14 @@ export function TopicRequestForm() {
   };
   
   return (
-    <Card className="border-2 border-primary/10 shadow-md">
-      <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 pb-4">
-        <CardTitle className="text-primary">{getTranslation('cardTitle')}</CardTitle>
+    <Card>
+      <CardHeader>
+        <CardTitle>{getTranslation('cardTitle')}</CardTitle>
         <CardDescription>
           {getTranslation('cardDescription')}
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent>
         <TopicRequestFormContent
           promptText={promptText}
           isSending={isSending}

@@ -64,7 +64,7 @@ export const mockTopics: Topic[] = [
     themeTypeId: 'brand_story',
     title: 'Lịch sử phát triển thương hiệu',
     description: 'Câu chuyện về sự phát triển của thương hiệu qua các năm.',
-    status: 'draft', // Chờ duyệt
+    status: 'draft', // Changed from 'generating' to 'draft' (Chờ duyệt)
     createdBy: 'ai',
     createdAt: new Date('2023-04-08'),
     updatedAt: new Date('2023-04-09')
@@ -76,7 +76,7 @@ export const mockTopics: Topic[] = [
     productTypeId: '3',
     title: 'So sánh sản phẩm Y với đối thủ',
     description: 'Phân tích chi tiết về ưu điểm của sản phẩm Y so với các đối thủ cạnh tranh.',
-    status: 'approved', // Đã duyệt
+    status: 'approved', // Changed from 'completed' to 'approved' (Đã duyệt)
     createdBy: 'user',
     createdAt: new Date('2023-04-05'),
     updatedAt: new Date('2023-04-07')

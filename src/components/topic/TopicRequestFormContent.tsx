@@ -34,48 +34,38 @@ export function TopicRequestFormContent({
 
   return (
     <form onSubmit={onSubmit} className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        {/* Chatbot Area - 2/3 width on desktop */}
-        <div className="md:col-span-2 grid gap-2">
+      <div className="grid gap-4 md:gap-6">
+        <div className="grid gap-2">
           <Textarea
             id="prompt"
             value={promptText}
             onChange={(e) => onPromptChange(e.target.value)}
             placeholder={getTranslation('placeholder')}
-            className="min-h-[150px] md:min-h-[200px] resize-none bg-white focus-visible:ring-primary/40 focus-visible:ring-offset-primary/10 transition-all"
+            className="min-h-[100px] md:min-h-[120px]"
             required
           />
-          
-          <div className="flex items-center justify-end pt-2">
-            <Button 
-              type="submit" 
-              className="w-full md:w-auto hover:shadow-lg transition-all" 
-              disabled={!promptText || isSending}
-            >
-              {isSending ? (
-                <span className="animate-pulse">{getTranslation('sending')}</span>
-              ) : (
-                <>
-                  <Send className="mr-2 h-4 w-4" />
-                  {getTranslation('submitButton')}
-                </>
-              )}
-            </Button>
-          </div>
         </div>
         
-        {/* Suggestions Area - 1/3 width on desktop */}
-        <div className="md:col-span-1 grid gap-4 bg-surface-container-default p-4 rounded-md shadow-sm border border-gray-100">
-          <div>
-            <h3 className="text-sm font-medium mb-2 text-secondary">{getTranslation('examplesLabel')}</h3>
-            <div className="grid gap-2">
-              <ExampleRequestButtons
-                productExamples={productExamples}
-                onSelectExample={onPromptChange}
-              />
-            </div>
-          </div>
+        <div className="grid gap-2">
+          <Label>{getTranslation('examplesLabel')}</Label>
+          <ExampleRequestButtons
+            productExamples={productExamples}
+            onSelectExample={onPromptChange}
+          />
         </div>
+      </div>
+      
+      <div className="flex items-center pt-4 md:pt-6">
+        <Button type="submit" className="w-full" disabled={!promptText || isSending}>
+          {isSending ? (
+            <span className="animate-pulse">{getTranslation('sending')}</span>
+          ) : (
+            <>
+              <Send className="mr-2 h-4 w-4" />
+              {getTranslation('submitButton')}
+            </>
+          )}
+        </Button>
       </div>
     </form>
   );

@@ -1,32 +1,26 @@
 
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import { isSupabaseConnected } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 export const useSupabaseConnection = () => {
-  const [useLocalData, setUseLocalData] = useState(true);
-  const [isChecking, setIsChecking] = useState(true);
+  const [useLocalData, setUseLocalData] = useState(false);
 
+  // Check if Supabase is connected
   useEffect(() => {
     const checkConnection = async () => {
-      try {
-        setIsChecking(true);
-        const connected = await isSupabaseConnected();
-        console.log('Supabase connection status:', connected);
-        setUseLocalData(!connected);
-      } catch (error) {
-        console.error('Error checking Supabase connection:', error);
+      const connected = await isSupabaseConnected();
+      if (!connected) {
         setUseLocalData(true);
-      } finally {
-        setIsChecking(false);
+        toast.warning('Sử dụng dữ liệu mẫu', {
+          description: 'Không thể kết nối với cơ sở dữ liệu, đang sử dụng dữ liệu mẫu.'
+        });
       }
     };
-
+    
     checkConnection();
   }, []);
 
-  return {
-    useLocalData,
-    setUseLocalData,
-    isChecking
-  };
+  return { useLocalData, setUseLocalData };
 };
