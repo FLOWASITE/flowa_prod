@@ -35,7 +35,7 @@ export function ExampleRequestButtons({
           variant="outline"
           size="sm"
           onClick={() => onSelectExample(getProductRequestText(product.name))}
-          className="flex justify-start items-center gap-2 w-full text-left"
+          className="flex justify-start items-center gap-2 w-full text-left hover:bg-primary/5 transition-all hover:border-primary/30 hover:text-primary"
         >
           <Tag className="h-3 w-3 flex-shrink-0" />
           <span className="truncate">{product.name}</span>

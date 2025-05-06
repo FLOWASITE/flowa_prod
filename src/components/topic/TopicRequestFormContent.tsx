@@ -42,14 +42,14 @@ export function TopicRequestFormContent({
             value={promptText}
             onChange={(e) => onPromptChange(e.target.value)}
             placeholder={getTranslation('placeholder')}
-            className="min-h-[150px] md:min-h-[200px] resize-none"
+            className="min-h-[150px] md:min-h-[200px] resize-none bg-white focus-visible:ring-primary/40 focus-visible:ring-offset-primary/10 transition-all"
             required
           />
           
           <div className="flex items-center justify-end pt-2">
             <Button 
               type="submit" 
-              className="w-full md:w-auto" 
+              className="w-full md:w-auto hover:shadow-lg transition-all" 
               disabled={!promptText || isSending}
             >
               {isSending ? (
@@ -65,9 +65,9 @@ export function TopicRequestFormContent({
         </div>
         
         {/* Suggestions Area - 1/3 width on desktop */}
-        <div className="md:col-span-1 grid gap-4 bg-gray-50 dark:bg-gray-800/30 p-4 rounded-md">
+        <div className="md:col-span-1 grid gap-4 bg-surface-container-default p-4 rounded-md shadow-sm border border-gray-100">
           <div>
-            <h3 className="text-sm font-medium mb-2">{getTranslation('examplesLabel')}</h3>
+            <h3 className="text-sm font-medium mb-2 text-secondary">{getTranslation('examplesLabel')}</h3>
             <div className="grid gap-2">
               <ExampleRequestButtons
                 productExamples={productExamples}
@@ -80,10 +80,11 @@ export function TopicRequestFormContent({
             <Button 
               type="button" 
               variant="default" 
-              className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+              className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20"
               onClick={() => onPromptChange(getTranslation('generateTopicPrompt'))}
             >
-              <BrainCircuit className="mr-2 h-5 w-5" />
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
+              <BrainCircuit className="mr-2 h-5 w-5 animate-pulse" />
               {getTranslation('generateTopic')}
             </Button>
           </div>

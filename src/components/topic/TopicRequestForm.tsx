@@ -43,14 +43,14 @@ export function TopicRequestForm() {
   };
   
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{getTranslation('cardTitle')}</CardTitle>
+    <Card className="border-2 border-primary/10 shadow-md">
+      <CardHeader className="bg-gradient-to-r from-primary/5 to-secondary/5 pb-4">
+        <CardTitle className="text-primary">{getTranslation('cardTitle')}</CardTitle>
         <CardDescription>
           {getTranslation('cardDescription')}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <TopicRequestFormContent
           promptText={promptText}
           isSending={isSending}
