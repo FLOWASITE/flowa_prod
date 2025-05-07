@@ -12,10 +12,11 @@ import {
   MessagesSquare
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { handleFacebookLogin } from '@/FBLogin';
 
 export function SocialConnections() {
   const { currentLanguage } = useLanguage();
-  
+
   const translations = {
     connectAccount: {
       vi: 'Kết nối tài khoản mới',
@@ -40,7 +41,7 @@ export function SocialConnections() {
   };
 
   const socialPlatforms = [
-    { 
+    {
       name: 'Facebook',
       icon: Facebook,
       actions: ['+ Profile', '+ Page'],
@@ -108,6 +109,7 @@ export function SocialConnections() {
               <button
                 key={action}
                 className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                onClick={() => { platform.name === 'Facebook' ? handleFacebookLogin() : alert(`Redirecting to ${platform.name} ${action}`) }}
               >
                 {action}
               </button>

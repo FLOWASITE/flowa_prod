@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { 
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -31,7 +31,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  
+
   const {
     formData,
     formError,
@@ -66,8 +66,8 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onOpenChange={(newOpen) => {
         if (newOpen === false) {
           resetForm();
@@ -88,43 +88,43 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
               {t('createNewBrand')}
             </DialogTitle>
           </DialogHeader>
-          
+
           <Tabs defaultValue="basic" className="flex-1">
             <div className="flex border-b bg-white/95 dark:bg-gray-950/95">
               <TabsList className="h-auto p-0 bg-transparent flex-wrap">
-                <TabsTrigger 
-                  value="basic" 
+                <TabsTrigger
+                  value="basic"
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
                   1. {t('brandName')} & Logo
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="tone" 
+                <TabsTrigger
+                  value="tone"
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
                   2. {t('toneOfVoice')}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="themes" 
+                <TabsTrigger
+                  value="themes"
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
                   3. {t('themes')}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="knowledge" 
+                <TabsTrigger
+                  value="knowledge"
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
                   4. {t('brandKnowledge')}
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="social" 
+                <TabsTrigger
+                  value="social"
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
                 >
                   5. {t('socialConnections')}
                 </TabsTrigger>
               </TabsList>
             </div>
-            
+
             <div className="p-6 max-h-[60vh] overflow-y-auto bg-white/80 dark:bg-gray-950/80">
               <TabsContent value="basic" className="mt-0 space-y-6">
                 {formError.name && (
@@ -134,28 +134,28 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                     </AlertDescription>
                   </Alert>
                 )}
-                <BasicInfoTab 
+                <BasicInfoTab
                   formData={formData}
                   handleChange={handleChange}
                   error={formError}
                   translations={newBrandDialogTranslations}
                 />
               </TabsContent>
-              
+
               <TabsContent value="tone" className="mt-0 space-y-4">
-                <TonesTab 
+                <TonesTab
                   selectedTones={selectedTones}
                   setSelectedTones={setSelectedTones}
                 />
               </TabsContent>
-              
+
               <TabsContent value="themes" className="mt-0 space-y-4">
                 <ThemesTab
                   selectedThemes={selectedThemes}
                   setSelectedThemes={setSelectedThemes}
                 />
               </TabsContent>
-              
+
               <TabsContent value="knowledge" className="mt-0 space-y-6">
                 <BrandKnowledgeTab
                   brandKnowledge={updatedBrandKnowledge}
@@ -164,17 +164,17 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
                   setProducts={setProducts}
                 />
               </TabsContent>
-              
+
               <TabsContent value="social" className="mt-0">
                 <SocialConnectionsTab />
               </TabsContent>
             </div>
           </Tabs>
-          
+
           <DialogFooter className="p-6 bg-white/95 dark:bg-gray-950/95 border-t">
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => {
                 resetForm();
                 setOpen(false);
@@ -183,7 +183,7 @@ export function NewBrandDialog({ onBrandCreated }: NewBrandDialogProps) {
             >
               {t('cancel')}
             </Button>
-            <Button 
+            <Button
               type="submit"
               className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300 shadow-md hover:shadow-lg"
             >

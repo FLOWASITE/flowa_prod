@@ -7,7 +7,7 @@ export const useAddBrand = (onFetchBrands: () => void) => {
   const { toast } = useToast();
 
   const handleAddBrand = async (newBrand: Brand) => {
-    try {      
+    try {
       const brandData = {
         name: newBrand.name,
         description: newBrand.description,
@@ -18,18 +18,20 @@ export const useAddBrand = (onFetchBrands: () => void) => {
         tone: newBrand.tone,
         themes: newBrand.themes || [],
       };
-      
+
+      console.log('Brand data to insert:', brandData);
+
       const { data, error } = await supabase.from('brands').insert(brandData).select();
-      
+
       if (error) {
         console.error('Error adding brand:', error);
         throw error;
       }
-      
+
       if (!data || !data[0]) {
         throw new Error('No data returned after brand creation');
       }
-      
+
       if (newBrand.knowledge) {
         const knowledgeData = {
           brand_id: data[0].id,
@@ -38,9 +40,9 @@ export const useAddBrand = (onFetchBrands: () => void) => {
           target_audience: newBrand.knowledge.targetAudience,
           guidelines: newBrand.knowledge.guidelines,
         };
-        
+
         const { error: knowledgeError } = await supabase.from('brand_knowledge').insert(knowledgeData);
-        
+
         if (knowledgeError) {
           console.error('Error adding brand knowledge:', knowledgeError);
         }
@@ -52,15 +54,15 @@ export const useAddBrand = (onFetchBrands: () => void) => {
             question: pair.question,
             answer: pair.answer
           }));
-          
+
           const { error: qaPairsError } = await supabase.from('qa_pairs').insert(qaPairsData);
-          
+
           if (qaPairsError) {
             console.error('Error adding QA pairs:', qaPairsError);
           }
         }
       }
-      
+
       if (newBrand.products && newBrand.products.length > 0) {
         const productsData = newBrand.products.map(product => ({
           brand_id: data[0].id,
@@ -71,19 +73,19 @@ export const useAddBrand = (onFetchBrands: () => void) => {
           pricing: product.pricing || null,
           benefits: product.benefits || null
         }));
-        
+
         const { error: productsError } = await supabase.from('products').insert(productsData);
-        
+
         if (productsError) {
           console.error('Error adding products:', productsError);
         }
       }
-      
+
       toast({
         title: 'Brand created successfully',
         variant: 'default',
       });
-      
+
       onFetchBrands(); // Refresh the brands list
     } catch (error) {
       console.error('Error adding brand:', error);

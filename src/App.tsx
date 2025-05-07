@@ -42,7 +42,7 @@ function App() {
     const checkConnection = async () => {
       try {
         const connected = await isSupabaseConnected();
-        
+
         // Show connection status notification
         if (connected) {
           toast.success("Connected to backend successfully", {
@@ -59,6 +59,25 @@ function App() {
     };
 
     checkConnection();
+  }, []);
+
+  useEffect(() => {
+    const initFacebookSDK = () => {
+      window.FB.init({
+        appId: '1371052354162968',
+        cookie: true,
+        xfbml: true,
+        version: 'v19.0'
+      });
+    };
+
+    // Kiểm tra xem SDK đã có trong window chưa
+    if (window.FB) {
+      initFacebookSDK();
+    } else {
+      // Lắng nghe khi SDK sẵn sàng
+      window.fbAsyncInit = initFacebookSDK;
+    }
   }, []);
 
   return (

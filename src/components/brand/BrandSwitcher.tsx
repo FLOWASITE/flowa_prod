@@ -47,7 +47,7 @@ export function BrandSwitcher() {
   const checkSupabaseConnection = async () => {
     const connected = await isSupabaseConnected();
     setIsConnected(connected);
-    
+
     if (connected) {
       fetchBrands();
     } else {
@@ -62,17 +62,17 @@ export function BrandSwitcher() {
   const fetchBrands = async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('brands')
         .select('*')
         .order('created_at', { ascending: false });
-      
+
       if (error) {
         console.error('Error fetching brands:', error);
         throw error;
       }
-      
+
       if (data && data.length > 0) {
         const mappedBrands: Brand[] = data.map(item => ({
           id: item.id,
@@ -89,7 +89,7 @@ export function BrandSwitcher() {
           createdAt: new Date(item.created_at),
           updatedAt: new Date(item.updated_at),
         }));
-        
+
         setBrands(mappedBrands);
         setSelectedBrand(mappedBrands[0]);
       } else {
@@ -101,7 +101,7 @@ export function BrandSwitcher() {
     } catch (error) {
       console.error('Error fetching brands:', error);
       toast.error('Error fetching brands');
-      
+
       setBrands(mockBrands);
       if (mockBrands.length > 0) {
         setSelectedBrand(mockBrands[0]);
@@ -118,8 +118,8 @@ export function BrandSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="w-[280px] justify-between font-medium text-sm bg-white dark:bg-gray-900"
         >
           <Store className="mr-2 h-4 w-4" />
