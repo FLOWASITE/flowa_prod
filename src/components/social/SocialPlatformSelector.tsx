@@ -1,9 +1,12 @@
+
 import React from 'react';
 import { Facebook, Instagram, Linkedin, Youtube, Twitter, MessageSquare, Share2, Plus, Store, Eye, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PlatformIcon } from '@/components/schedule/PlatformIcon';
 
 export function SocialPlatformSelector() {
   const { currentLanguage } = useLanguage();
@@ -144,7 +147,7 @@ export function SocialPlatformSelector() {
 
   return (
     <>
-      {/* Connected accounts section */}
+      {/* Connected accounts section - New section added matching the image */}
       <div className="bg-white dark:bg-gray-800 border rounded-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-2">
           <div>
@@ -163,7 +166,7 @@ export function SocialPlatformSelector() {
           <div key={account.id} className="border rounded-lg p-4 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 overflow-hidden rounded-full border bg-gray-100">
+                <div className="w-10 h-10 overflow-hidden rounded-full border bg-gray-100 flex items-center justify-center">
                   {account.platform === 'facebook' && <Facebook className="w-full h-full text-[#1877F2] p-1" />}
                 </div>
                 <div>
@@ -174,7 +177,7 @@ export function SocialPlatformSelector() {
               
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">Running</span>
+                  <span className="text-sm">{t('running')}</span>
                   <Switch checked={account.running} />
                 </div>
                 <div className="flex items-center gap-1">
