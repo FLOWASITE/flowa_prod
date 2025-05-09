@@ -25,6 +25,9 @@ import SocialConnections from "./pages/SocialConnections";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
+
 
 // Create a React Query client with default settings
 const queryClient = new QueryClient({
@@ -67,7 +70,7 @@ function App() {
         appId: '1371052354162968',
         cookie: true,
         xfbml: true,
-        version: 'v19.0'
+        version: 'v22.0'
       });
     };
 
@@ -81,36 +84,40 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <LanguageProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/brands" element={<Brands />} />
-              <Route path="/brands/:id" element={<BrandDetails />} />
-              <Route path="/topics" element={<Topics />} />
-              <Route path="/content" element={<Content />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/crm" element={<Crm />} />
-              <Route path="/schedule" element={<Schedule />} />
-              <Route path="/filemanager" element={<FileManager />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/account-type" element={<AccountType />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/invoices" element={<Invoices />} />
-              <Route path="/profile-settings" element={<ProfileSettings />} />
-              <Route path="/social-connections" element={<SocialConnections />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </LanguageProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <GoogleOAuthProvider clientId="663238634600-kot6od7eevdv9mqlb8i7vt08nm8dr4dj.apps.googleusercontent.com">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <LanguageProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/brands" element={<Brands />} />
+                <Route path="/brands/:id" element={<BrandDetails />} />
+                <Route path="/topics" element={<Topics />} />
+                <Route path="/content" element={<Content />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/crm" element={<Crm />} />
+                <Route path="/schedule" element={<Schedule />} />
+                <Route path="/filemanager" element={<FileManager />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/account-type" element={<AccountType />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/invoices" element={<Invoices />} />
+                <Route path="/profile-settings" element={<ProfileSettings />} />
+                <Route path="/social-connections" element={<SocialConnections />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </LanguageProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
+
   );
 }
 

@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
 // Supabase project configuration
-const SUPABASE_URL = "https://cbcxaikcqaznmztilqca.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiY3hhaWtjcWF6bm16dGlscWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4NTYxOTUsImV4cCI6MjA2MTQzMjE5NX0.YdGESCNbkkMY2Y40BdSVZtNzXE6gWrrJoB2uuI_KKwM";
+const SUPABASE_URL = "https://scvsehtlvntbgpfwdisv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjdnNlaHRsdm50YmdwZndkaXN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY2MDIwNTUsImV4cCI6MjA2MjE3ODA1NX0.U-9mlQnhL0AjoMO1sL-n811LYAQzHOz4WDYYLj4ex3k";
 
 // Create Supabase client with type information
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -24,15 +24,15 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
 export const isSupabaseConnected = async () => {
   try {
     console.log("Testing Supabase connection...");
-    
+
     // Try a simple query to check if Supabase is connected
     const { data, error } = await supabase.from('brands').select('id').limit(1);
-    
+
     if (error) {
       console.error("Supabase connection error:", error.message, error.details);
       return false;
     }
-    
+
     console.log("Supabase is connected successfully.");
     return true;
   } catch (error) {
@@ -45,14 +45,14 @@ export const isSupabaseConnected = async () => {
 export const api = {
   // Add the supabase client to the API for direct access
   supabase,
-  
+
   // Brand management
   brands: {
     getAll: async () => await supabase
       .from('brands')
       .select('*')
       .order('created_at', { ascending: false }),
-      
+
     getById: async (id: string | undefined) => {
       if (!id) return { data: null, error: new Error('Invalid ID') };
       return await supabase
@@ -66,13 +66,13 @@ export const api = {
         .eq('id', id)
         .single();
     },
-      
+
     create: async (brandData: any) => await supabase
       .from('brands')
       .insert(brandData)
       .select()
   },
-  
+
   // Product management
   products: {
     getByBrandId: async (brandId: string | undefined) => {
@@ -83,7 +83,7 @@ export const api = {
         .eq('brand_id', brandId);
     }
   },
-  
+
   // Knowledge management
   knowledge: {
     getByBrandId: async (brandId: string | undefined) => {
@@ -95,7 +95,7 @@ export const api = {
         .single();
     }
   },
-  
+
   // QA pairs management
   qaPairs: {
     getByBrandId: async (brandId: string | undefined) => {
@@ -116,14 +116,14 @@ export const api = {
         .select('*')
         .order('name');
     },
-    
+
     createTopic: async (topicData: { name: string, description?: string }) => {
       return await supabase
         .from('topics')
         .insert(topicData)
         .select();
     },
-    
+
     updateTopic: async (topicId: string, topicData: { name?: string, description?: string }) => {
       return await supabase
         .from('topics')
@@ -134,32 +134,32 @@ export const api = {
         .eq('id', topicId)
         .select();
     },
-    
+
     deleteTopic: async (topicId: string) => {
       return await supabase
         .from('topics')
         .delete()
         .eq('id', topicId);
     },
-    
+
     // Platforms
     getPlatforms: async (topicId?: string) => {
       let query = supabase.from('platforms').select('*');
-      
+
       if (topicId) {
         query = query.eq('topic_id', topicId);
       }
-      
+
       return await query.order('name');
     },
-    
+
     createPlatform: async (platformData: { topic_id: string, platform_type: string, name: string, description?: string }) => {
       return await supabase
         .from('platforms')
         .insert(platformData)
         .select();
     },
-    
+
     updatePlatform: async (platformId: string, platformData: { name?: string, description?: string }) => {
       return await supabase
         .from('platforms')
@@ -170,57 +170,57 @@ export const api = {
         .eq('id', platformId)
         .select();
     },
-    
+
     deletePlatform: async (platformId: string) => {
       return await supabase
         .from('platforms')
         .delete()
         .eq('id', platformId);
     },
-    
+
     // Files
     getFiles: async (platformId?: string) => {
       let query = supabase.from('files').select('*');
-      
+
       if (platformId) {
         query = query.eq('platform_id', platformId);
       }
-      
+
       return await query.order('created_at', { ascending: false });
     },
-    
+
     searchFiles: async (searchParams: { query?: string, tag?: string, date?: Date | null }) => {
       let query = supabase.from('files').select('*');
-      
+
       if (searchParams.query) {
         query = query.ilike('name', `%${searchParams.query}%`);
       }
-      
+
       if (searchParams.tag) {
         query = query.contains('tags', [searchParams.tag]);
       }
-      
+
       if (searchParams.date) {
         const startOfDay = new Date(searchParams.date);
         startOfDay.setHours(0, 0, 0, 0);
-        
+
         const endOfDay = new Date(searchParams.date);
         endOfDay.setHours(23, 59, 59, 999);
-        
+
         query = query.gte('created_at', startOfDay.toISOString())
-                   .lte('created_at', endOfDay.toISOString());
+          .lte('created_at', endOfDay.toISOString());
       }
-      
+
       return await query.order('created_at', { ascending: false });
     },
-    
+
     uploadFile: async (fileData: { platform_id: string, name: string, file_type: string, content?: string, file_path?: string, file_size?: number, tags?: string[] }) => {
       return await supabase
         .from('files')
         .insert(fileData)
         .select();
     },
-    
+
     updateFile: async (fileId: string, fileData: { name?: string, content?: string, tags?: string[] }) => {
       return await supabase
         .from('files')
@@ -231,7 +231,7 @@ export const api = {
         .eq('id', fileId)
         .select();
     },
-    
+
     deleteFile: async (fileId: string) => {
       return await supabase
         .from('files')
@@ -255,7 +255,7 @@ export const api = {
       const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
         .select('*');
-      
+
       if (rolesError) {
         console.error("Error fetching user roles:", rolesError);
         return { data: null, error: rolesError };
@@ -263,7 +263,7 @@ export const api = {
 
       // Get users from auth schema using admin functions
       const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-      
+
       if (authError) {
         console.error("Error fetching auth users:", authError);
         return { data: null, error: authError };
@@ -273,7 +273,7 @@ export const api = {
       const combined = authUsers?.users.map(user => {
         const profile = profilesData?.find(p => p.id === user.id) || {};
         const role = rolesData?.find(r => r.user_id === user.id)?.role || 'staff';
-        
+
         return {
           id: user.id,
           email: user.email,
@@ -288,7 +288,7 @@ export const api = {
 
       return { data: combined, error: null };
     },
-    
+
     updateRole: async (userId: string, role: 'admin' | 'manager' | 'staff') => {
       // Check if role exists for user
       const { data: existingRole } = await supabase
@@ -296,7 +296,7 @@ export const api = {
         .select('*')
         .eq('user_id', userId)
         .single();
-      
+
       if (existingRole) {
         // Update existing role
         return await supabase
@@ -310,56 +310,56 @@ export const api = {
           .insert({ user_id: userId, role });
       }
     },
-    
+
     updateProfile: async (userId: string, profileData: { first_name?: string, last_name?: string, avatar_url?: string }) => {
       return await supabase
         .from('profiles')
         .update(profileData)
         .eq('id', userId);
     },
-    
+
     invite: async (email: string, role: 'admin' | 'manager' | 'staff' = 'staff') => {
       // Create a new user
       const { data, error } = await supabase.auth.admin.inviteUserByEmail(email);
-      
+
       if (error) {
         console.error("Error inviting user:", error);
         return { data: null, error };
       }
-      
+
       // Set the user's role
       if (data?.user?.id) {
         const { error: roleError } = await supabase
           .from('user_roles')
           .insert({ user_id: data.user.id, role });
-        
+
         if (roleError) {
           console.error("Error setting user role:", roleError);
           return { data, error: roleError };
         }
       }
-      
+
       return { data, error: null };
     },
-    
+
     delete: async (userId: string) => {
       // Delete user from auth schema
       return await supabase.auth.admin.deleteUser(userId);
     },
-    
+
     hasRole: async (userId: string, role: 'admin' | 'manager' | 'staff') => {
       try {
         const { data, error } = await supabase.rpc('has_role', { _user_id: userId, _role: role });
-        
+
         if (error) throw error;
-        
+
         return { data, error: null };
       } catch (error) {
         console.error("Error checking user role:", error);
         return { data: false, error };
       }
     },
-    
+
     getCurrentUserRole: async () => {
       try {
         const { data: session } = await supabase.auth.getSession();
@@ -367,17 +367,17 @@ export const api = {
           console.log("User not authenticated in getCurrentUserRole");
           return { data: null, error: new Error('User not authenticated') };
         }
-        
+
         const userId = session.session.user.id;
         const userEmail = session.session.user.email;
         console.log("Checking role for user:", userId, userEmail);
-        
+
         // Force admin role for all currently logged-in users
         if (userEmail) {
           console.log("Admin role forced for user:", userEmail);
           return { data: 'admin', error: null };
         }
-        
+
         // This is the fallback logic which we won't need anymore
         // Check each role in order of privilege
         const { data: isAdmin } = await supabase.rpc('has_role', { _user_id: userId, _role: 'admin' });
@@ -385,13 +385,13 @@ export const api = {
           console.log("User has admin role");
           return { data: 'admin', error: null };
         }
-        
+
         const { data: isManager } = await supabase.rpc('has_role', { _user_id: userId, _role: 'manager' });
         if (isManager) {
           console.log("User has manager role");
           return { data: 'manager', error: null };
         }
-        
+
         console.log("User has staff role");
         return { data: 'staff', error: null };
       } catch (error) {

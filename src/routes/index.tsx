@@ -17,6 +17,7 @@ import Pricing from "@/pages/Pricing";
 import Invoices from "@/pages/Invoices";
 import ProfileSettings from "@/pages/ProfileSettings";
 import SocialConnections from "@/pages/SocialConnections";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicy";
 
 export const router = createBrowserRouter([
   {
@@ -86,6 +87,10 @@ export const router = createBrowserRouter([
   {
     path: "/social-connections",
     element: <SocialConnections />,
+  },
+  {
+    path: "/privacy-policy",
+    element: <PrivacyPolicyPage />,
   },
   {
     path: "*",

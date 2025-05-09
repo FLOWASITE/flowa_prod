@@ -5,10 +5,10 @@ import { RecentTopics } from '@/components/dashboard/RecentTopics';
 import { ContentOverview } from '@/components/dashboard/ContentOverview';
 import { OnboardingSteps } from '@/components/dashboard/OnboardingSteps';
 import { SocialConnections } from '@/components/dashboard/SocialConnections';
-import { 
-  Layers, 
-  MessageSquare, 
-  PenTool, 
+import {
+  Layers,
+  MessageSquare,
+  PenTool,
   Share2
 } from 'lucide-react';
 import { mockTopics } from '@/data/mockData';
@@ -17,6 +17,7 @@ import { isSupabaseConnected, supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 import { Brand } from '@/types';
 import { toast } from 'sonner';
+import SocialAccountConnectedList from '@/pages/SocialAccountConnectedList';
 
 interface DashboardProps {
   backendStatus?: 'checking' | 'connected' | 'disconnected';
@@ -34,7 +35,7 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
     if (initialStatus) {
       setStatus(initialStatus);
     }
-    
+
     // Get user information if available
     const getUserProfile = async () => {
       const { data: session } = await supabase.auth.getSession();
@@ -44,7 +45,7 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
           .select('first_name, last_name')
           .eq('id', session.session.user.id)
           .single();
-          
+
         if (profile) {
           const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
           if (fullName) {
@@ -53,7 +54,7 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
         }
       }
     };
-    
+
     // Get the most recent brand
     const getLatestBrand = async () => {
       try {
@@ -62,12 +63,12 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
           .select('*')
           .order('created_at', { ascending: false })
           .limit(1);
-          
+
         if (error) {
           console.error('Error fetching brands:', error);
           return;
         }
-        
+
         if (data && data.length > 0) {
           const brand: Brand = {
             id: data[0].id,
@@ -84,14 +85,14 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
             createdAt: new Date(data[0].created_at),
             updatedAt: new Date(data[0].updated_at),
           };
-          
+
           setCurrentBrand(brand);
         }
       } catch (error) {
         console.error('Error fetching latest brand:', error);
       }
     };
-    
+
     getUserProfile();
     getLatestBrand();
     checkSupabaseConnection();
@@ -102,27 +103,27 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
     const connected = await isSupabaseConnected();
     setStatus(connected ? 'connected' : 'disconnected');
   };
-  
+
   const contentStatusData = [
-    { 
-      name: currentLanguage.code === 'vi' ? 'Nháp' : 'Draft', 
-      value: 12, 
-      color: '#94a3b8' 
+    {
+      name: currentLanguage.code === 'vi' ? 'Nháp' : 'Draft',
+      value: 12,
+      color: '#94a3b8'
     },
-    { 
-      name: currentLanguage.code === 'vi' ? 'Đã duyệt' : 'Approved', 
-      value: 8, 
-      color: '#22c55e' 
+    {
+      name: currentLanguage.code === 'vi' ? 'Đã duyệt' : 'Approved',
+      value: 8,
+      color: '#22c55e'
     },
-    { 
-      name: currentLanguage.code === 'vi' ? 'Đã lên lịch' : 'Scheduled', 
-      value: 5, 
-      color: '#eab308' 
+    {
+      name: currentLanguage.code === 'vi' ? 'Đã lên lịch' : 'Scheduled',
+      value: 5,
+      color: '#eab308'
     },
-    { 
-      name: currentLanguage.code === 'vi' ? 'Đã xuất bản' : 'Published', 
-      value: 20, 
-      color: '#3b82f6' 
+    {
+      name: currentLanguage.code === 'vi' ? 'Đã xuất bản' : 'Published',
+      value: 20,
+      color: '#3b82f6'
     },
   ];
 
@@ -194,9 +195,11 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
       </div>
 
       <OnboardingSteps />
-      
+
+      <SocialAccountConnectedList />
+
       <SocialConnections />
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title={getTranslation('totalBrands')}
@@ -222,7 +225,7 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
           trend={{ value: 5, isPositive: false }}
         />
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
           <RecentTopics topics={mockTopics} />
