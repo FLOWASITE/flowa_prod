@@ -11,7 +11,7 @@ export const useTopicsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedPlatform, setSelectedPlatform] = useState('all');
-  
+
   // Pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -24,8 +24,8 @@ export const useTopicsPage = () => {
 
   // Filter topics by product type
   const filteredTopics = useMemo(() => {
-    return selectedPlatform === 'all' 
-      ? mockTopics 
+    return selectedPlatform === 'all'
+      ? mockTopics
       : mockTopics.filter(topic => topic.productTypeId === selectedPlatform);
   }, [selectedPlatform]);
 
@@ -39,9 +39,9 @@ export const useTopicsPage = () => {
   const uniqueProductIds = useMemo(() => {
     return [...new Set(mockTopics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
   }, []);
-  
+
   const { approveTopic, rejectTopic, isLoading: statusUpdateLoading } = useTopicStatusUpdate();
-  
+
   // Add new action handlers for topic actions
   const handleViewTopic = (topic: Topic) => {
     // Navigate to topic details or open a modal
@@ -66,7 +66,7 @@ export const useTopicsPage = () => {
       // Refresh topics if needed
     }
   };
-  
+
   const translations = {
     title: {
       vi: 'Chủ đề',

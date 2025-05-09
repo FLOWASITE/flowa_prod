@@ -27,9 +27,9 @@ export function BrandsGrid({ loading, brands, onBrandUpdated }: BrandsGridProps)
         ))
       ) : brands.length > 0 ? (
         brands.map(brand => (
-          <BrandCard 
-            key={brand.id} 
-            brand={brand} 
+          <BrandCard
+            key={brand.id}
+            brand={brand}
             onBrandUpdated={handleBrandUpdate}
           />
         ))

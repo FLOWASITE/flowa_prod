@@ -23,13 +23,13 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [currentBrand, setCurrentBrand] = useState<Brand>(brand);
-  
+
   const { isDeleting, handleDeleteBrand } = useDeleteBrand(
-    currentBrand, 
+    currentBrand,
     onBrandUpdated,
     currentLanguage.code
   );
-  
+
   const t = (key: keyof typeof brandCardTranslations) => {
     return brandCardTranslations[key][currentLanguage.code] || brandCardTranslations[key].en;
   };
@@ -48,40 +48,40 @@ export function BrandCard({ brand, onBrandUpdated }: BrandCardProps) {
 
   return (
     <>
-      <Card className="group bg-white/90 dark:bg-gray-800/90 transition-all duration-200 hover:shadow-md backdrop-blur-sm">
-        <div className="p-6 space-y-4">
-          <div className="flex items-start justify-between">
-            <BrandLogo logo={currentBrand.logo} name={currentBrand.name} />
-            
-            <BrandActions
-              onEdit={() => setShowEditDialog(true)}
-              onDelete={() => setShowDeleteConfirmation(true)}
-              languageCode={currentLanguage.code}
-            />
-          </div>
+      <Card className="group bg-white/90 dark:bg-gray-800/90 transition-all duration-200 hover:shadow-md backdrop-blur-sm p-6 flex flex-col justify-between gap-4">
+        {/* <div className="p-6 space-y-4"> */}
+        <div className="flex items-start justify-between">
+          <BrandLogo logo={currentBrand.logo} name={currentBrand.name} />
 
-          <div>
-            <h3 className="font-semibold text-lg text-left">{currentBrand.name}</h3>
-            <p className="text-sm text-muted-foreground mt-1 text-left line-clamp-2">
-              {currentBrand.description}
-            </p>
-          </div>
-
-          <Button 
-            variant="default" 
-            className="w-full bg-primary/10 hover:bg-primary/20 text-primary"
-            onClick={() => navigate(`/brands/${currentBrand.id}`)}
-          >
-            {t('viewDetails')}
-          </Button>
+          <BrandActions
+            onEdit={() => setShowEditDialog(true)}
+            onDelete={() => setShowDeleteConfirmation(true)}
+            languageCode={currentLanguage.code}
+          />
         </div>
+
+        <div>
+          <h3 className="font-semibold text-lg text-left">{currentBrand.name}</h3>
+          <p className="text-sm text-muted-foreground mt-1 text-left line-clamp-2">
+            {currentBrand.description}
+          </p>
+        </div>
+
+        <Button
+          variant="default"
+          className="w-full bg-primary/10 hover:bg-primary/20 text-primary"
+          onClick={() => navigate(`/brands/${currentBrand.id}`)}
+        >
+          {t('viewDetails')}
+        </Button>
+        {/* </div> */}
       </Card>
-      
-      <EditBrandDialog 
-        brand={currentBrand} 
-        open={showEditDialog} 
-        onOpenChange={setShowEditDialog} 
-        onBrandUpdated={handleBrandUpdated} 
+
+      <EditBrandDialog
+        brand={currentBrand}
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        onBrandUpdated={handleBrandUpdated}
       />
 
       <DeleteConfirmDialog

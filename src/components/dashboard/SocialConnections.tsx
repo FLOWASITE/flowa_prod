@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import {
@@ -9,13 +8,15 @@ import {
   Twitter,
   MessageSquare,
   Share2,
-  MessagesSquare
+  MessagesSquare,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { getAccessToken, handleFacebookLogin, handleGoogleLogin, handleInstagramLogin } from '@/FBLogin';
+import { FaSquareThreads } from 'react-icons/fa6';
 
 export function SocialConnections() {
   const { currentLanguage } = useLanguage();
-  
+
   const translations = {
     connectAccount: {
       vi: 'Kết nối tài khoản mới',
@@ -40,7 +41,7 @@ export function SocialConnections() {
   };
 
   const socialPlatforms = [
-    { 
+    {
       name: 'Facebook',
       icon: Facebook,
       actions: ['+ Profile', '+ Page'],
@@ -51,6 +52,12 @@ export function SocialConnections() {
       icon: Instagram,
       actions: ['+ Profile', '+ Business'],
       color: '#E4405F'
+    },
+    {
+      name: 'Thread',
+      icon: FaSquareThreads,
+      actions: ['+ Profile', '+ Business'],
+      color: '#0f0f0f'
     },
     {
       name: 'LinkedIn',
@@ -108,9 +115,28 @@ export function SocialConnections() {
               <button
                 key={action}
                 className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                onClick={() => {
+                  if (platform.name === 'Facebook') {
+                    handleFacebookLogin();
+                  } else if (platform.name === 'Instagram') {
+                    handleInstagramLogin();
+                  }
+                  else if (platform.name === 'TikTok') {
+                    const clientId = 'awntdpvuyyff1rkh';
+                    const redirectUri = 'http://localhost:3000/tiktok/callback';
+                    const scope = 'user.info.basic';
+                    window.location.href = `https://www.tiktok.com/auth/authorize/?client_key=${clientId}&scope=${scope}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}`;
+                  }
+                  else if (platform.name === 'YouTube') {
+                    handleGoogleLogin();
+                  } else {
+                    alert(`Redirecting to ${platform.name} ${action}`);
+                  }
+                }}
               >
                 {action}
               </button>
+
             ))}
           </div>
         ))}
