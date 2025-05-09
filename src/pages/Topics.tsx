@@ -27,16 +27,17 @@ const Topics = () => {
     handleViewTopic,
     handleApproveTopic,
     handleEditTopic,
-    handleRejectTopic
+    handleRejectTopic,
+    updateTopics
   } = useTopicsPage();
-  const [topics, setTopics] = useState<[]>([]);
+
 
   return (
     <Layout>
       <div className="space-y-8 overflow-y-auto">
         {/* Topic Request Form Section */}
         <div>
-          <TopicRequestForm setTopics={setTopics} />
+          <TopicRequestForm updateTopics={updateTopics} />
         </div>
 
         {/* Topic Management Section */}
@@ -52,7 +53,7 @@ const Topics = () => {
           <TopicsTable
             topics={filteredTopics}
             filteredTopics={filteredTopics}
-            paginatedTopics={topics}
+            paginatedTopics={paginatedTopics}
             selectedTopics={selectedTopics}
             currentPage={currentPage}
             rowsPerPage={rowsPerPage}

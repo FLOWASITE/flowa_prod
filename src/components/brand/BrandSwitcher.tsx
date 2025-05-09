@@ -13,6 +13,8 @@ import { mockBrands } from '@/data/mockData';
 import { supabase, isSupabaseConnected } from '@/integrations/supabase/client';
 import { Brand } from '@/types';
 import { toast } from 'sonner';
+import { useDispatch } from 'react-redux';
+import { selectBrand } from '@/redux/features/brands/selectedBrandSlice';
 
 const translations = {
   switchBrand: {
@@ -39,6 +41,7 @@ export function BrandSwitcher() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     checkSupabaseConnection();
@@ -92,10 +95,12 @@ export function BrandSwitcher() {
 
         setBrands(mappedBrands);
         setSelectedBrand(mappedBrands[0]);
+        dispatch(selectBrand(mappedBrands[0].id));
       } else {
         setBrands(mockBrands);
         if (mockBrands.length > 0) {
           setSelectedBrand(mockBrands[0]);
+          dispatch(selectBrand(mockBrands[0].id));
         }
       }
     } catch (error) {
@@ -105,6 +110,7 @@ export function BrandSwitcher() {
       setBrands(mockBrands);
       if (mockBrands.length > 0) {
         setSelectedBrand(mockBrands[0]);
+        dispatch(selectBrand(mockBrands[0].id));
       }
     } finally {
       setLoading(false);
@@ -131,7 +137,7 @@ export function BrandSwitcher() {
         {brands.map((brand) => (
           <DropdownMenuItem
             key={brand.id}
-            onClick={() => setSelectedBrand(brand)}
+            onClick={() => { setSelectedBrand(brand); dispatch(selectBrand(brand.id)); }}
             className="justify-between"
           >
             <div className="flex items-center">

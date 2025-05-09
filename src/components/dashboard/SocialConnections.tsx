@@ -11,7 +11,7 @@ import {
   MessagesSquare,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getAccessToken, handleFacebookLogin, handleGoogleLogin, handleInstagramLogin } from '@/FBLogin';
+import { getAccessToken, handleFacebookLogin, handleGoogleBusinessLogin, handleGoogleLogin, handleInstagramLogin, handleTwitterLogin } from '@/SocialLogin';
 import { FaSquareThreads } from 'react-icons/fa6';
 
 export function SocialConnections() {
@@ -120,6 +120,8 @@ export function SocialConnections() {
                     handleFacebookLogin();
                   } else if (platform.name === 'Instagram') {
                     handleInstagramLogin();
+                  } else if (platform.name === 'X (Twitter)') {
+                    handleTwitterLogin();
                   }
                   else if (platform.name === 'TikTok') {
                     const clientId = 'awntdpvuyyff1rkh';
@@ -129,7 +131,11 @@ export function SocialConnections() {
                   }
                   else if (platform.name === 'YouTube') {
                     handleGoogleLogin();
-                  } else {
+                  }
+                  else if (platform.name === 'Universal Posting') {
+                    handleGoogleBusinessLogin();
+                  }
+                  else {
                     alert(`Redirecting to ${platform.name} ${action}`);
                   }
                 }}

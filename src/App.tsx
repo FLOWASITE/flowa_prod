@@ -27,7 +27,10 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
-
+import OAuth2Callback from "./utils/oauth/OAuth2Callback";
+import { Provider } from 'react-redux';
+import { store } from "./redux/app/store";
+import TwitterCallback from "./utils/oauth/TwitterCallback";
 
 // Create a React Query client with default settings
 const queryClient = new QueryClient({
@@ -84,40 +87,43 @@ function App() {
   }, []);
 
   return (
-    <GoogleOAuthProvider clientId="663238634600-kot6od7eevdv9mqlb8i7vt08nm8dr4dj.apps.googleusercontent.com">
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <LanguageProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/brands" element={<Brands />} />
-                <Route path="/brands/:id" element={<BrandDetails />} />
-                <Route path="/topics" element={<Topics />} />
-                <Route path="/content" element={<Content />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/crm" element={<Crm />} />
-                <Route path="/schedule" element={<Schedule />} />
-                <Route path="/filemanager" element={<FileManager />} />
-                <Route path="/users" element={<Users />} />
-                <Route path="/account-type" element={<AccountType />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/profile-settings" element={<ProfileSettings />} />
-                <Route path="/social-connections" element={<SocialConnections />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </LanguageProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </GoogleOAuthProvider>
-
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId="663238634600-kot6od7eevdv9mqlb8i7vt08nm8dr4dj.apps.googleusercontent.com">
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <LanguageProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/brands" element={<Brands />} />
+                  <Route path="/brands/:id" element={<BrandDetails />} />
+                  <Route path="/topics" element={<Topics />} />
+                  <Route path="/content" element={<Content />} />
+                  <Route path="/chat" element={<Chat />} />
+                  <Route path="/crm" element={<Crm />} />
+                  <Route path="/schedule" element={<Schedule />} />
+                  <Route path="/filemanager" element={<FileManager />} />
+                  <Route path="/users" element={<Users />} />
+                  <Route path="/account-type" element={<AccountType />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/invoices" element={<Invoices />} />
+                  <Route path="/profile-settings" element={<ProfileSettings />} />
+                  <Route path="/social-connections" element={<SocialConnections />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/oauth2callback" element={<OAuth2Callback />} />
+                  <Route path="/auth/twitter/callback" element={<TwitterCallback />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </LanguageProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </GoogleOAuthProvider>
+    </Provider>
   );
 }
 

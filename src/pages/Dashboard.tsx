@@ -18,6 +18,8 @@ import { useState } from 'react';
 import { Brand } from '@/types';
 import { toast } from 'sonner';
 import SocialAccountConnectedList from '@/pages/SocialAccountConnectedList';
+import GoogleBusinessLocation from '@/components/popup/GoogleBusinessLocation';
+import axios from 'axios';
 
 interface DashboardProps {
   backendStatus?: 'checking' | 'connected' | 'disconnected';
@@ -30,6 +32,27 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
   );
   const [userName, setUserName] = useState<string>('Duy Vo');
   const [currentBrand, setCurrentBrand] = useState<Brand | null>(null);
+  const [googleBusinessLocationOpen, setGoogleBusinessLocationOpen] = useState(false);
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('google_access_token');
+
+    if (token) {
+      axios.get('https://mybusinessbusinessinformation.googleapis.com/v1/locations', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(res => {
+          setLocations(res.data.locations || []);
+          console.log(res.data.locations);
+        })
+        .catch(err => {
+          console.error('Lỗi gọi API:', err);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     if (initialStatus) {
@@ -185,6 +208,7 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
 
   return (
     <Layout>
+      {googleBusinessLocationOpen ? <GoogleBusinessLocation /> : <></>}
       <div className="mb-8">
         <h1 className="text-4xl font-bold">{userName}</h1>
         {currentBrand && (

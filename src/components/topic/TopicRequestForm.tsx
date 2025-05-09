@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Card,
@@ -13,7 +12,7 @@ import { topicTranslations } from './topicTranslations';
 import { TopicRequestFormContent } from './TopicRequestFormContent';
 import { generateTopics } from '@/service/topicService';
 
-export function TopicRequestForm({ setTopics }: { setTopics: (topics: any[]) => void }) {
+export function TopicRequestForm({ updateTopics }: { updateTopics: (response: any) => void }) {
   const [promptText, setPromptText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const { currentLanguage } = useLanguage();
@@ -30,24 +29,6 @@ export function TopicRequestForm({ setTopics }: { setTopics: (topics: any[]) => 
     setPromptText(text);
   };
 
-  function transformTopicsData(response) {
-
-
-    return response.topics.map((topic, index) => ({
-      id: (index + 1).toString(),
-      brandId: topic.brand_id || '1',
-      themeTypeId: topic.category || 'product_highlight',
-      productTypeId: topic.product_id ? '2' : undefined,
-      title: topic.title,
-      description: topic.target_audience,
-      status: topic.status,
-      createdBy: 'ai',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }));
-  }
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSending(true);
@@ -62,7 +43,7 @@ export function TopicRequestForm({ setTopics }: { setTopics: (topics: any[]) => 
     };
     try {
       const response = await generateTopics(requestData);
-      setTopics(transformTopicsData(response));
+      updateTopics(response);
       setPromptText('');
     } catch (error) {
       console.error('Lỗi khi gửi API:', error);

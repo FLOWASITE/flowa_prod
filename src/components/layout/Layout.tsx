@@ -14,7 +14,8 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Default to collapsed
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+
 
   const handleCollapsedChange = (collapsed: boolean) => {
     setSidebarCollapsed(collapsed);
@@ -26,7 +27,7 @@ export function Layout({ children }: LayoutProps) {
       <div className="hidden md:block fixed left-0 top-0 h-full z-20">
         <Sidebar onCollapsedChange={handleCollapsedChange} />
       </div>
-      
+
       {/* Mobile sidebar - shown in a sheet when triggered */}
       {isMobile && (
         <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -41,11 +42,11 @@ export function Layout({ children }: LayoutProps) {
           </SheetContent>
         </Sheet>
       )}
-      
+
       {/* Header content area */}
-      <div 
+      <div
         className="fixed top-0 left-0 right-0 z-30 transition-all duration-300"
-        style={{ 
+        style={{
           marginLeft: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // Adjust width based on sidebar state
         }}
       >
@@ -53,9 +54,9 @@ export function Layout({ children }: LayoutProps) {
       </div>
 
       {/* Main content with padding that adjusts based on sidebar state */}
-      <div 
+      <div
         className="flex-1 w-full transition-all duration-300"
-        style={{ 
+        style={{
           marginLeft: isMobile ? 0 : sidebarCollapsed ? '64px' : '256px', // 16px (w-16) or 64px (w-64) in pixels
           marginTop: '4rem' // Add top margin for fixed header (64px)
         }}

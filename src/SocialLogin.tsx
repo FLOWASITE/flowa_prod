@@ -53,14 +53,16 @@ export const handleInstagramLogin = () => {
     window.location.href = authUrl;
 };
 
-export const facebookLogin = () => {
-    const clientId = '708527221627170';
-    const redirectUri = 'http://localhost:3000/facebook/callback';
-    const scope = 'public_profile,email';
 
-    window.location.href =
-        `https://www.facebook.com/v19.0/dialog/oauth?client_id=${clientId}` +
-        `&redirect_uri=${redirectUri}&scope=${scope}&response_type=code`;
+export const handleGoogleBusinessLogin = () => {
+    const clientId = '663238634600-kot6od7eevdv9mqlb8i7vt08nm8dr4dj.apps.googleusercontent.com';
+    const redirectUri = 'https://localhost:8080/oauth2callback';
+    const scope = 'https://www.googleapis.com/auth/business.manage';
+
+    const oauth2Url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&include_granted_scopes=true&prompt=consent`;
+
+    window.location.href = oauth2Url;
+
 };
 
 export const handleGoogleLogin = () => {
@@ -98,3 +100,35 @@ export const handleGoogleLogin = () => {
         console.error("Google SDK chưa sẵn sàng.");
     }
 };
+
+export const handleTwitterLogin = async () => {
+    try {
+        const client_id = "TTFvOGtnVXF4ZUhicnF6NExiTGY6MTpjaQ";  // Lấy từ ứng dụng của bạn trên Twitter Developer Dashboard
+        const redirect_uri = "https://localhost:8080/auth/twitter/callback";  // URL callback của bạn
+
+        // Xây dựng URL yêu cầu OAuth2
+        const oauthUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=tweet.read%20users.read%20offline.access&state=random_state_string&code_challenge=code_challenge_string&code_challenge_method=S256`;
+
+        // Mở cửa sổ đăng nhập Twitter
+        window.location.href = oauthUrl;
+    } catch (error) {
+        console.error('Error during Twitter login:', error);
+    }
+};
+
+
+// Helpers
+function generateCodeVerifier() {
+    const array = new Uint32Array(56 / 2);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+}
+
+async function generateCodeChallenge(verifier) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(verifier);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    return btoa(String.fromCharCode(...new Uint8Array(digest)))
+        .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+

@@ -18,6 +18,8 @@ import Invoices from "@/pages/Invoices";
 import ProfileSettings from "@/pages/ProfileSettings";
 import SocialConnections from "@/pages/SocialConnections";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicy";
+import OAuth2Callback from "@/utils/oauth/OAuth2Callback";
+import TwitterCallback from "@/utils/oauth/TwitterCallback";
 
 export const router = createBrowserRouter([
   {
@@ -88,9 +90,14 @@ export const router = createBrowserRouter([
     path: "/social-connections",
     element: <SocialConnections />,
   },
+
   {
-    path: "/privacy-policy",
-    element: <PrivacyPolicyPage />,
+    path: "/oauth2callback",
+    element: <OAuth2Callback />,
+  },
+  {
+    path: "/auth/twitter/callback",
+    element: <TwitterCallback />,
   },
   {
     path: "*",

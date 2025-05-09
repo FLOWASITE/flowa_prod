@@ -11,7 +11,7 @@ export const useTopicsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedPlatform, setSelectedPlatform] = useState('all');
-
+  const [topics, setTopics] = useState<Topic[]>([]);
   // Pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -22,23 +22,44 @@ export const useTopicsPage = () => {
     setCurrentPage(1); // Reset to first page
   };
 
+  const updateTopics = (response) => {
+    const newTopics = transformTopicsData(response);
+    setTopics(prevTopics => [...prevTopics, ...newTopics]);
+  };
+
+  function transformTopicsData(response) {
+    return response.topics.map((topic, index) => ({
+      id: (index + 1).toString(),
+      brandId: topic.brand_id || '1',
+      themeTypeId: topic.category || 'product_highlight',
+      productTypeId: topic.product_id ? '2' : undefined,
+      title: topic.title,
+      description: topic.target_audience,
+      status: topic.status,
+      createdBy: 'ai',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+  }
+
   // Filter topics by product type
   const filteredTopics = useMemo(() => {
     return selectedPlatform === 'all'
-      ? mockTopics
-      : mockTopics.filter(topic => topic.productTypeId === selectedPlatform);
-  }, [selectedPlatform]);
+      ? topics
+      : topics.filter(topic => topic.productTypeId === selectedPlatform);
+  }, [selectedPlatform, topics]);
 
-  // Get paginated topics
+  // Paginated topics
   const paginatedTopics = useMemo(() => {
     const startIndex = (currentPage - 1) * rowsPerPage;
     return filteredTopics.slice(startIndex, startIndex + rowsPerPage);
   }, [filteredTopics, currentPage, rowsPerPage]);
 
-  // Get unique product types for filtering
+  // Unique productTypeId
   const uniqueProductIds = useMemo(() => {
-    return [...new Set(mockTopics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
-  }, []);
+    return [...new Set(topics.map(topic => topic.productTypeId))].filter(Boolean) as string[];
+  }, [topics]);
+
 
   const { approveTopic, rejectTopic, isLoading: statusUpdateLoading } = useTopicStatusUpdate();
 
@@ -204,6 +225,7 @@ export const useTopicsPage = () => {
     handleApproveTopic,
     handleEditTopic,
     handleRejectTopic,
-    statusUpdateLoading
+    statusUpdateLoading,
+    updateTopics
   };
 };
