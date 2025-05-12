@@ -19,8 +19,8 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Create Supabase client for backend use
-const supabaseUrl = process.env.SUPABASE_URL || 'https://scvsehtlvntbgpfwdisv.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjdnNlaHRsdm50YmdwZndkaXN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY2MDIwNTUsImV4cCI6MjA2MjE3ODA1NX0.U-9mlQnhL0AjoMO1sL-n811LYAQzHOz4WDYYLj4ex3k';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 
 // Middleware

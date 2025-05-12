@@ -11,12 +11,13 @@ import {
   MessagesSquare,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getAccessToken, handleFacebookLogin, handleGoogleBusinessLogin, handleGoogleLogin, handleInstagramLogin, handleTwitterLogin } from '@/SocialLogin';
+import { handleFacebookLogin, handleGoogleBusinessLogin, handleInstagramLogin, handleTwitterLogin, handleYoutubeLogin, } from '@/utils/SocialLogin';
 import { FaSquareThreads } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
 
 export function SocialConnections() {
   const { currentLanguage } = useLanguage();
-
+  const dispatch = useDispatch();
   const translations = {
     connectAccount: {
       vi: 'Kết nối tài khoản mới',
@@ -40,62 +41,130 @@ export function SocialConnections() {
     return translations[key][currentLanguage.code] || translations[key]['en'];
   };
 
+  // Cập nhật lại socialPlatforms:
   const socialPlatforms = [
     {
       name: 'Facebook',
       icon: Facebook,
-      actions: ['+ Profile', '+ Page'],
-      color: '#1877F2'
+      color: '#1877F2',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => handleFacebookLogin(dispatch)
+        },
+        {
+          label: '+ Page',
+          handler: () => alert('Redirecting to Facebook Page connection')
+        }
+      ]
     },
     {
       name: 'Instagram',
       icon: Instagram,
-      actions: ['+ Profile', '+ Business'],
-      color: '#E4405F'
+      color: '#E4405F',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => handleInstagramLogin()
+        },
+        {
+          label: '+ Business',
+          handler: () => alert('Redirecting to Instagram Business connection')
+        }
+      ]
     },
     {
       name: 'Thread',
       icon: FaSquareThreads,
-      actions: ['+ Profile', '+ Business'],
-      color: '#0f0f0f'
+      color: '#0f0f0f',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => alert('Thread Profile connected')
+        },
+        {
+          label: '+ Business',
+          handler: () => alert('Thread Business connected')
+        }
+      ]
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
-      actions: ['+ Profile', '+ Company'],
-      color: '#0A66C2'
+      color: '#0A66C2',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => alert('Redirecting to LinkedIn Profile')
+        },
+        {
+          label: '+ Company',
+          handler: () => alert('Redirecting to LinkedIn Company')
+        }
+      ]
     },
     {
       name: 'X (Twitter)',
       icon: Twitter,
-      actions: ['+ Profile'],
-      color: '#000000'
+      color: '#000000',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => handleTwitterLogin()
+        }
+      ]
     },
     {
       name: 'YouTube',
       icon: Youtube,
-      actions: ['+ Channel'],
-      color: '#FF0000'
+      color: '#FF0000',
+      actions: [
+        {
+          label: '+ Channel',
+          handler: () => handleYoutubeLogin(dispatch)
+        }
+      ]
     },
     {
       name: 'Pinterest',
       icon: Share2,
-      actions: ['+ Profile'],
-      color: '#BD081C'
+      color: '#BD081C',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => alert('Redirecting to Pinterest')
+        }
+      ]
     },
     {
       name: 'TikTok',
       icon: MessageSquare,
-      actions: ['+ Profile'],
-      color: '#000000'
+      color: '#000000',
+      actions: [
+        {
+          label: '+ Profile',
+          handler: () => {
+            const clientId = 'awntdpvuyyff1rkh';
+            const redirectUri = 'http://localhost:3000/tiktok/callback';
+            const scope = 'user.info.basic';
+            window.location.href = `https://www.tiktok.com/auth/authorize/?client_key=${clientId}&scope=${scope}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}`;
+          }
+        }
+      ]
     },
     {
       name: 'Universal Posting',
       icon: MessagesSquare,
-      actions: ['+ Add'],
-      color: '#6366f1'
+      color: '#6366f1',
+      actions: [
+        {
+          label: '+ Add',
+          handler: () => handleGoogleBusinessLogin()
+        }
+      ]
     }
   ];
+
 
   return (
     <Card className="p-6">
@@ -113,37 +182,14 @@ export function SocialConnections() {
             </div>
             {platform.actions.map((action) => (
               <button
-                key={action}
+                key={action.label}
                 className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-sm"
-                onClick={() => {
-                  if (platform.name === 'Facebook') {
-                    handleFacebookLogin();
-                  } else if (platform.name === 'Instagram') {
-                    handleInstagramLogin();
-                  } else if (platform.name === 'X (Twitter)') {
-                    handleTwitterLogin();
-                  }
-                  else if (platform.name === 'TikTok') {
-                    const clientId = 'awntdpvuyyff1rkh';
-                    const redirectUri = 'http://localhost:3000/tiktok/callback';
-                    const scope = 'user.info.basic';
-                    window.location.href = `https://www.tiktok.com/auth/authorize/?client_key=${clientId}&scope=${scope}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}`;
-                  }
-                  else if (platform.name === 'YouTube') {
-                    handleGoogleLogin();
-                  }
-                  else if (platform.name === 'Universal Posting') {
-                    handleGoogleBusinessLogin();
-                  }
-                  else {
-                    alert(`Redirecting to ${platform.name} ${action}`);
-                  }
-                }}
+                onClick={action.handler}
               >
-                {action}
+                {action.label}
               </button>
-
             ))}
+
           </div>
         ))}
       </div>

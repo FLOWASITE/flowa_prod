@@ -31,6 +31,7 @@ import OAuth2Callback from "./utils/oauth/OAuth2Callback";
 import { Provider } from 'react-redux';
 import { store } from "./redux/app/store";
 import TwitterCallback from "./utils/oauth/TwitterCallback";
+import TwitterPost from "./TwitterPost";
 
 // Create a React Query client with default settings
 const queryClient = new QueryClient({
@@ -68,27 +69,57 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const initFacebookSDK = () => {
-      window.FB.init({
-        appId: '1371052354162968',
+    // Khởi tạo SDK Facebook khi component mount
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: import.meta.env.VITE_FACEBOOK_APP_ID,
         cookie: true,
         xfbml: true,
         version: 'v22.0'
       });
+
+      FB.AppEvents.logPageView();
     };
 
-    // Kiểm tra xem SDK đã có trong window chưa
-    if (window.FB) {
-      initFacebookSDK();
-    } else {
-      // Lắng nghe khi SDK sẵn sàng
-      window.fbAsyncInit = initFacebookSDK;
-    }
+    // Tải SDK Facebook
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Cleanup khi component unmount
+    return () => {
+      if (window.FB) {
+        window.FB = undefined;
+      }
+    };
   }, []);
+
+  // useEffect(() => {
+  //   const initFacebookSDK = () => {
+  //     window.FB.init({
+  //       appId: '1371052354162968',
+  //       cookie: true,
+  //       xfbml: true,
+  //       version: 'v22.0'
+  //     });
+  //   };
+
+  //   // Kiểm tra xem SDK đã có trong window chưa
+  //   if (window.FB) {
+  //     initFacebookSDK();
+  //   } else {
+  //     // Lắng nghe khi SDK sẵn sàng
+  //     window.fbAsyncInit = initFacebookSDK;
+  //   }
+  // }, []);
 
   return (
     <Provider store={store}>
-      <GoogleOAuthProvider clientId="663238634600-kot6od7eevdv9mqlb8i7vt08nm8dr4dj.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={"663238634600-kot6od7eevdv9mqlb8i7vt08nm8dr4dj.apps.googleusercontent.com"}>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <LanguageProvider>
@@ -116,6 +147,7 @@ function App() {
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                   <Route path="/oauth2callback" element={<OAuth2Callback />} />
                   <Route path="/auth/twitter/callback" element={<TwitterCallback />} />
+                  <Route path="/post-twitter" element={<TwitterPost />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>

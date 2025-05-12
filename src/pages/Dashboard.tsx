@@ -34,25 +34,33 @@ const Dashboard = ({ backendStatus: initialStatus }: DashboardProps) => {
   const [currentBrand, setCurrentBrand] = useState<Brand | null>(null);
   const [googleBusinessLocationOpen, setGoogleBusinessLocationOpen] = useState(false);
   const [locations, setLocations] = useState([]);
-
+  const [businessInfo, setBusinessInfo] = useState<any>(null); // State lưu thông tin doanh nghiệp
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    const token = localStorage.getItem('google_access_token');
+    const getGoogleBusinessInfo = async () => {
+      const token = localStorage.getItem('googlebusiness_access_token');
+      const isOAuthSuccess = sessionStorage.getItem('oauth_success') === 'true';
 
-    if (token) {
-      axios.get('https://mybusinessbusinessinformation.googleapis.com/v1/locations', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(res => {
-          setLocations(res.data.locations || []);
-          console.log(res.data.locations);
-        })
-        .catch(err => {
-          console.error('Lỗi gọi API:', err);
+      // Chỉ gọi API nếu mới redirect từ OAuth
+      if (!token || !isOAuthSuccess) return;
+
+      try {
+        const res = await axios.post('http://localhost:8009/google-business/me', {
+          access_token: token,
         });
-    }
+        console.log(res.data);
+        setBusinessInfo(res.data);
+      } catch (err: any) {
+        console.error('Lỗi lấy thông tin doanh nghiệp:', err.response?.data || err.message);
+        setError('Lỗi khi lấy thông tin doanh nghiệp');
+      } finally {
+        sessionStorage.removeItem('oauth_success'); // Xoá flag để tránh gọi lại khi F5
+      }
+    };
+
+    getGoogleBusinessInfo();
   }, []);
+
 
   useEffect(() => {
     if (initialStatus) {

@@ -11,9 +11,11 @@ const OAuth2Callback = () => {
         const accessToken = params.get('access_token');
 
         if (accessToken) {
-            localStorage.setItem('google_access_token', accessToken);
+            localStorage.setItem('googlebusiness_access_token', accessToken);
+            sessionStorage.setItem('oauth_success', 'true'); // Đánh dấu redirect thành công
             navigate('/dashboard');
-        } else {
+        }
+        else {
             console.error('Không nhận được access_token');
         }
     }, [navigate]);

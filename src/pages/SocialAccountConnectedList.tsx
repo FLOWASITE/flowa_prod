@@ -2,65 +2,60 @@ import React, { useEffect, useState } from 'react';
 import { Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SocialAccountConnected from '../components/social/SocialAccountConnected';
+import { useSelector } from 'react-redux';
+import { getSocialAccountsByUser, getSocialAccountsByUserAndBrand } from '@/service/socialAccountService';
 
 interface SocialAccount {
     id: string;
+    account_id: string;
     name: string;
     platform: string;
-    isRunning: boolean;
+    status: boolean;
     postCount: number;
-    profileImageUrl: string;
+    picture: string;
 }
 
 const SocialAccountConnectedList = () => {
     const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>([]);
+    const selectedBrandId = useSelector((state) => state.selectedBrand.brandId);
+    const accountsFromRedux = useSelector((state) => state.socialAccount.accounts);
 
     useEffect(() => {
-        // Lấy dữ liệu từ localStorage cho Facebook và YouTube
-        const facebookId = localStorage.getItem('facebookUserID') || 'unknown-id';
-        const facebookName = localStorage.getItem('facebookUserName') || 'Facebook User';
-        const facebookAccessToken = localStorage.getItem('facebookAccessToken');
-        const facebookProfileImageUrl = localStorage.getItem("facebookUserProfilePicture");
-
-        const youtubeId = localStorage.getItem('googleUserID') || 'unknown-id';
-        const youtubeName = localStorage.getItem('googleUserName') || 'YouTube User';
-        const youtubeAccessToken = localStorage.getItem('googleAccessToken');
-        const youtubeProfileImageUrl = localStorage.getItem("googleUserProfilePicture");
-
-        const accounts: SocialAccount[] = [];
-
-        // Nếu có dữ liệu Facebook trong localStorage, thêm vào danh sách
-        if (facebookAccessToken) {
-            accounts.push({
-                id: facebookAccessToken,
-                name: facebookName,
-                platform: 'Facebook',
-                isRunning: true,
-                postCount: 1, // Giả định
-                profileImageUrl: facebookProfileImageUrl || 'default-fb-image-url', // Hình ảnh đại diện mặc định nếu không có
-            });
+        // Khi dữ liệu từ Redux thay đổi, cập nhật lại state cục bộ
+        if (accountsFromRedux) {
+            setSocialAccounts(accountsFromRedux);
         }
+    }, [accountsFromRedux]);
 
-        // Nếu có dữ liệu YouTube trong localStorage, thêm vào danh sách
-        if (youtubeAccessToken) {
-            accounts.push({
-                id: youtubeAccessToken,
-                name: youtubeName,
-                platform: 'YouTube',
-                isRunning: true,
-                postCount: 1, // Giả định
-                profileImageUrl: youtubeProfileImageUrl || 'default-ytb-image-url', // Hình ảnh đại diện mặc định nếu không có
-            });
-        }
+    useEffect(() => {
+        const fetchSocialAccounts = async () => {
+            try {
+                const aa = await getSocialAccountsByUserAndBrand("11111111-1111-1111-1111-111111111111", selectedBrandId);
+                console.log(aa);
+                setSocialAccounts(aa.map(account => ({
+                    id: account.id,
+                    account_id: account.account_id,
+                    name: account.account_name,
+                    platform: account.platform_name,
+                    status: account.status === 'active',
+                    postCount: 0,
+                    picture: account.account_picture,
+                })));
+            } catch (error) {
+                console.error("Lỗi khi lấy tài khoản:", error);
+            }
+        };
 
-        setSocialAccounts(accounts);
-    }, []);
+        fetchSocialAccounts();
+    }, [selectedBrandId]);
+
+
 
     const handleToggleStatus = (id: string) => {
         setSocialAccounts(prevAccounts =>
             prevAccounts.map(account =>
                 account.id === id
-                    ? { ...account, isRunning: !account.isRunning } // chỉ toggle status của account có id tương ứng
+                    ? { ...account, status: !account.status } // chỉ toggle status của account có id tương ứng
                     : account // giữ nguyên các account còn lại
             )
         );
@@ -88,10 +83,10 @@ const SocialAccountConnectedList = () => {
                                 key={account.id}
                                 name={account.name}
                                 platform={account.platform}
-                                isRunning={account.isRunning}
-                                postCount={account.postCount}
-                                profileImageSrc={account.profileImageUrl}
-                                onToggleStatus={() => handleToggleStatus(account.id)}
+                                status={account.status}
+                                postCount={1}
+                                picture={account.picture}
+                                onToggleStatus={() => handleToggleStatus(account.account_id)}
                             />
                         ))
                     ) : (

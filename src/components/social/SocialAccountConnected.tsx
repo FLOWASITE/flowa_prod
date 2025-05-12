@@ -1,24 +1,24 @@
 import React from 'react';
-import { Eye, Facebook, Youtube } from 'lucide-react';
+import { Eye, Facebook, Twitter, X, Youtube } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 
 interface SocialAccountCardProps {
     name: string;
     platform: string;
-    isRunning: boolean;
+    status: boolean;
     postCount: number;
     onToggleStatus: () => void;
-    profileImageSrc?: string;
+    picture?: string;
 }
 
 const SocialAccountConnected = ({
     name,
     platform,
-    isRunning,
+    status,
     postCount,
     onToggleStatus,
-    profileImageSrc
+    picture
 }: SocialAccountCardProps) => {
     const getPlatformIcon = () => {
         switch (platform.toLowerCase()) {
@@ -26,20 +26,22 @@ const SocialAccountConnected = ({
                 return <Facebook className="h-6 w-6 text-[#1877F2]" />;
             case 'youtube':
                 return <Youtube className="h-6 w-6 text-[#FF0000]" />;
+            case 'twitter':
+                return <X className="h-6 w-6 text-[#000000]" />;
             default:
                 return null;
         }
     };
 
     return (
-        <div className="border rounded-lg p-4 bg-white" style={{ maxWidth: '700px', minWidth: '400px' }}>
+        <div className="border rounded-lg p-4 bg-white" style={{ maxWidth: '700px', minWidth: '350px' }}>
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
                     <div className="relative h-12 w-12">
                         <div className="h-12 w-12 rounded-full border overflow-hidden bg-gray-200">
-                            {profileImageSrc ? (
+                            {picture ? (
                                 <img
-                                    src={profileImageSrc}
+                                    src={picture}
                                     alt={`${name}'s profile`}
                                     className="h-full w-full object-cover"
                                 />
@@ -61,15 +63,15 @@ const SocialAccountConnected = ({
                 <div className="flex items-center gap-2">
                     <span className={cn(
                         "text-sm font-medium",
-                        isRunning ? "text-social-running" : "text-gray-500"
+                        status ? "text-social-running" : "text-gray-500"
                     )}>
-                        {isRunning ? "Running" : "Paused"}
+                        {status ? "Running" : "Paused"}
                     </span>
                     <Switch
-                        checked={isRunning}
+                        checked={status}
                         onCheckedChange={onToggleStatus}
                         className={cn(
-                            isRunning && "bg-social-running"
+                            status && "bg-social-running"
                         )}
                     />
                 </div>
