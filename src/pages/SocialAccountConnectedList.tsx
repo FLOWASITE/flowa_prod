@@ -17,7 +17,7 @@ interface SocialAccount {
 
 const SocialAccountConnectedList = () => {
     const [socialAccounts, setSocialAccounts] = useState<SocialAccount[]>([]);
-    const selectedBrandId = useSelector((state) => state.selectedBrand.brandId);
+    const selectedBrandId = useSelector((state) => state.selectedBrand.selectedBrand);
     const accountsFromRedux = useSelector((state) => state.socialAccount.accounts);
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const SocialAccountConnectedList = () => {
     useEffect(() => {
         const fetchSocialAccounts = async () => {
             try {
-                const aa = await getSocialAccountsByUserAndBrand("11111111-1111-1111-1111-111111111111", selectedBrandId);
+                const aa = await getSocialAccountsByUserAndBrand("11111111-1111-1111-1111-111111111111", selectedBrandId?.id);
                 console.log(aa);
                 setSocialAccounts(aa.map(account => ({
                     id: account.id,

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Check, ChevronDown, Store } from 'lucide-react';
 import {
@@ -13,7 +12,7 @@ import { mockBrands } from '@/data/mockData';
 import { supabase, isSupabaseConnected } from '@/integrations/supabase/client';
 import { Brand } from '@/types';
 import { toast } from 'sonner';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectBrand } from '@/redux/features/brands/selectedBrandSlice';
 
 const translations = {
@@ -37,35 +36,32 @@ const translations = {
 
 export function BrandSwitcher() {
   const { currentLanguage } = useLanguage();
-  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
+  const dispatch = useDispatch();
+  const selectedBrand = useSelector((state) => state.selectedBrand.selectedBrand);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isConnected, setIsConnected] = useState<boolean | null>(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    checkSupabaseConnection();
-  }, []);
+    const init = async () => {
+      const connected = await isSupabaseConnected();
 
-  const checkSupabaseConnection = async () => {
-    const connected = await isSupabaseConnected();
-    setIsConnected(connected);
-
-    if (connected) {
-      fetchBrands();
-    } else {
-      setLoading(false);
-      setBrands(mockBrands);
-      if (mockBrands.length > 0) {
-        setSelectedBrand(mockBrands[0]);
+      if (connected) {
+        await fetchBrands();
+      } else {
+        setBrands(mockBrands);
+        if (mockBrands.length > 0) {
+          dispatch(selectBrand(mockBrands[0]));
+        }
       }
-    }
-  };
+
+      setLoading(false);
+    };
+
+    init();
+  }, []);
 
   const fetchBrands = async () => {
     try {
-      setLoading(true);
-
       const { data, error } = await supabase
         .from('brands')
         .select('*')
@@ -89,18 +85,16 @@ export function BrandSwitcher() {
           },
           tone: item.tone || 'Professional',
           themes: item.themes || [],
-          createdAt: new Date(item.created_at),
-          updatedAt: new Date(item.updated_at),
+          createdAt: item.created_at,  // Lưu dưới dạng chuỗi ISO
+          updatedAt: item.updated_at,  // Lưu dưới dạng chuỗi ISO
         }));
 
         setBrands(mappedBrands);
-        setSelectedBrand(mappedBrands[0]);
-        dispatch(selectBrand(mappedBrands[0].id));
+        dispatch(selectBrand(mappedBrands[0]));  // Lưu cả đối tượng brand, không chỉ id
       } else {
         setBrands(mockBrands);
         if (mockBrands.length > 0) {
-          setSelectedBrand(mockBrands[0]);
-          dispatch(selectBrand(mockBrands[0].id));
+          dispatch(selectBrand(mockBrands[0]));  // Lưu cả đối tượng brand, không chỉ id
         }
       }
     } catch (error) {
@@ -109,13 +103,11 @@ export function BrandSwitcher() {
 
       setBrands(mockBrands);
       if (mockBrands.length > 0) {
-        setSelectedBrand(mockBrands[0]);
-        dispatch(selectBrand(mockBrands[0].id));
+        dispatch(selectBrand(mockBrands[0]));  // Lưu cả đối tượng brand, không chỉ id
       }
-    } finally {
-      setLoading(false);
     }
   };
+
 
   const getTranslation = (key: keyof typeof translations) => {
     return translations[key][currentLanguage.code] || translations[key]['en'];
@@ -137,7 +129,7 @@ export function BrandSwitcher() {
         {brands.map((brand) => (
           <DropdownMenuItem
             key={brand.id}
-            onClick={() => { setSelectedBrand(brand); dispatch(selectBrand(brand.id)); }}
+            onClick={() => dispatch(selectBrand(brand))}
             className="justify-between"
           >
             <div className="flex items-center">

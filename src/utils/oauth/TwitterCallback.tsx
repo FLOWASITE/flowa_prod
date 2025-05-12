@@ -5,11 +5,14 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { addSocialAccount } from "@/redux/features/social_account/socialAccountSlice";
 import { createSocialAccount } from "@/service/socialAccountService";
+import { useSelector } from "react-redux";
+
 export default function TwitterCallback() {
     const [params] = useSearchParams();
     const navigate = useNavigate();
     const code = params.get("code");
     const dispatch = useDispatch();
+    const selectedBrand = useSelector((state) => state.selectedBrand.selectedBrand);
 
     useEffect(() => {
         const codeVerifier = localStorage.getItem("twitter_code_verifier");
@@ -35,7 +38,7 @@ export default function TwitterCallback() {
 
                     createSocialAccount({
                         platform_name: "Twitter",
-                        brand_id: "55555555-5555-5555-5555-555555555555",
+                        brand_id: selectedBrand?.id,
                         account_name: username || "",
                         account_id: user_id || "",
                         access_token: access_token,

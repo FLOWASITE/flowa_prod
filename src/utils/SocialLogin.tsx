@@ -145,11 +145,21 @@ export const handleTwitterLogin = async () => {
         localStorage.setItem("twitter_code_verifier", codeVerifier);
 
         const scope = [
-            "tweet.write",
             "tweet.read",
-            "users.read",
-            "offline.access"
+            "tweet.write",
+            "tweet.moderate.write",   // Quản lý reply settings
+            "users.read",             // Đọc thông tin user
+            "follows.read",           // Đọc followers
+            "follows.write",          // Theo dõi người khác
+            "offline.access",         // Lấy refresh token
+            "space.read",             // Đọc thông tin Spaces
+            "mute.read", "mute.write",
+            "like.read", "like.write",
+            "list.read", "list.write",
+            "block.read", "block.write",
+            "bookmark.read", "bookmark.write"
         ].join("%20");
+
 
         const oauthUrl = `https://twitter.com/i/oauth2/authorize` +
             `?response_type=code` +

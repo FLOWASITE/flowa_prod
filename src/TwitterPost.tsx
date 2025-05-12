@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Cookies from "js-cookie";
+
 
 const TwitterPost = () => {
     const [tweetContent, setTweetContent] = useState("");
     const [status, setStatus] = useState<string | null>(null);
 
     // Lấy Twitter access token từ localStorage
-    const accessToken = localStorage.getItem('twitterAccessToken');
+    const accessToken = Cookies.get("twitterAccessToken");
+
 
     const handlePostTweet = async () => {
         if (!accessToken) {

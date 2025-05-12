@@ -1,25 +1,26 @@
 // src/features/brands/selectedBrandSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Brand } from '@/types';
 
 interface SelectedBrandState {
-  brandId: string | null;
+  selectedBrand: Brand | null;
 }
 
 const initialState: SelectedBrandState = {
-  brandId: null
+  selectedBrand: null,
 };
 
 const selectedBrandSlice = createSlice({
   name: 'selectedBrand',
   initialState,
   reducers: {
-    selectBrand(state, action: PayloadAction<string>) {
-      state.brandId = action.payload;
+    selectBrand(state, action: PayloadAction<Brand>) {
+      state.selectedBrand = action.payload;
     },
     clearSelectedBrand(state) {
-      state.brandId = null;
-    }
-  }
+      state.selectedBrand = null;
+    },
+  },
 });
 
 export const { selectBrand, clearSelectedBrand } = selectedBrandSlice.actions;
