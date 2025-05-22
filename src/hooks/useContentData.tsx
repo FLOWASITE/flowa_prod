@@ -35,10 +35,13 @@ export const useContentData = () => {
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
+    isCreateDialogOpen,
+    setIsCreateDialogOpen,
     handleApprove,
     handleDelete,
     handleView,
-    handleCreateNew
+    handleCreateNew,
+    handleCreateSuccess
   } = useContentActions(useLocalData, topics);
 
   // Batch selection state
@@ -91,6 +94,8 @@ export const useContentData = () => {
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
+    isCreateDialogOpen,
+    setIsCreateDialogOpen,
     currentPage,
     rowsPerPage,
     selectedPlatform,
@@ -103,6 +108,7 @@ export const useContentData = () => {
     handleDelete,
     handleView,
     handleCreateNew,
+    handleCreateSuccess,
     handlePageChange,
     handleRowsPerPageChange,
     handlePlatformChange,

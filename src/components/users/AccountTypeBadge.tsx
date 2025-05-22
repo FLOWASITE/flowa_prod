@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Crown, Star, Award, Diamond } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
-type AccountType = 'free' | 'basic' | 'professional' | 'enterprise';
+export type AccountType = 'free' | 'basic' | 'professional' | 'enterprise';
 
 interface AccountTypeBadgeProps {
   type: AccountType;

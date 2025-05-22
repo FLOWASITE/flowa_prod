@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, Crown, Settings, LogOut, Users, HelpCircle, BriefcaseBusiness, Receipt, FileText, Share2 } from 'lucide-react';
 import { 
@@ -16,9 +15,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LanguageSelector } from './LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { BrandSwitcher } from '../brand/BrandSwitcher';
-import { supabase } from '@/lib/supabase';
 import { Link } from 'react-router-dom';
-import { AccountTypeBadge } from '../users/AccountTypeBadge';
+import { AccountTypeBadge, AccountType } from '../users/AccountTypeBadge';
 
 interface HeaderProps {
   sidebarCollapsed?: boolean;
@@ -29,40 +27,44 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
   const [userName, setUserName] = useState('Duy Vo');
   const [userEmail, setUserEmail] = useState('flowasite@gmail.com');
   const [userAvatar, setUserAvatar] = useState('/lovable-uploads/d57b3adf-cd81-4107-87ea-4015235e8c5e.png');
-  const [accountType, setAccountType] = useState('professional');
+  const [accountType, setAccountType] = useState<AccountType>('professional');
   
-  useEffect(() => {
+  // useEffect(() => {
     // Get user information if available
-    const getUserProfile = async () => {
-      try {
-        const { data: session } = await supabase.auth.getSession();
-        if (session?.session?.user) {
-          setUserEmail(session.session.user.email || 'flowasite@gmail.com');
+    // const getUserProfile = async () => {
+    //   try {
+    //     if (!supabase) {
+    //       console.error('Supabase client is not available.');
+    //       return;
+    //     }
+    //     const { data: session } = await supabase.auth.getSession();
+    //     if (session?.session?.user) {
+    //       setUserEmail(session.session.user.email || 'flowasite@gmail.com');
           
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('first_name, last_name, avatar_url')
-            .eq('id', session.session.user.id)
-            .maybeSingle();
+    //       const { data: profile } = await supabase
+    //         .from('profiles')
+    //         .select('first_name, last_name, avatar_url')
+    //         .eq('id', session.session.user.id)
+    //         .maybeSingle();
             
-          if (profile) {
-            const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
-            if (fullName) {
-              setUserName(fullName);
-            }
+    //       if (profile) {
+    //         const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+    //         if (fullName) {
+    //           setUserName(fullName);
+    //         }
             
-            if (profile.avatar_url) {
-              setUserAvatar(profile.avatar_url);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      }
-    };
+    //         if (profile.avatar_url) {
+    //           setUserAvatar(profile.avatar_url);
+    //         }
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching user profile:', error);
+    //   }
+    // };
     
-    getUserProfile();
-  }, []);
+  //   getUserProfile();
+  // }, []);
   
   return (
     <header className="border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm py-4 px-6 shadow-sm h-16">
@@ -141,7 +143,7 @@ export function Header({ sidebarCollapsed = false }: HeaderProps) {
                 
                 {/* Account Type Badge - Now clickable */}
                 <div className="ml-auto">
-                  <AccountTypeBadge type={accountType as any} size="md" />
+                  <AccountTypeBadge type={accountType} size="md" />
                 </div>
               </div>
               <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-800" />

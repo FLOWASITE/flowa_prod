@@ -3,11 +3,14 @@ import { useState } from 'react';
 import { Content, Topic } from '@/types';
 import { apiClient } from '@/api/apiClient';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useContentActions = (useLocalData: boolean, topics: Topic[]) => {
+  const queryClient = useQueryClient();
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [isApprovalDialogOpen, setIsApprovalDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const handleApprove = (content: Content) => {
     const topic = topics.find(t => t.id === content.topicId);
@@ -45,7 +48,13 @@ export const useContentActions = (useLocalData: boolean, topics: Topic[]) => {
   };
 
   const handleCreateNew = () => {
-    toast.info('Tính năng đang phát triển');
+    // Open the create content dialog
+    setIsCreateDialogOpen(true);
+  };
+  
+  const handleCreateSuccess = (newContent: Content) => {
+    // Invalidate content query to refresh the content list
+    queryClient.invalidateQueries({ queryKey: ['content'] });
   };
 
   return {
@@ -53,9 +62,12 @@ export const useContentActions = (useLocalData: boolean, topics: Topic[]) => {
     selectedTopic,
     isApprovalDialogOpen,
     setIsApprovalDialogOpen,
+    isCreateDialogOpen,
+    setIsCreateDialogOpen,
     handleApprove,
     handleDelete,
     handleView,
-    handleCreateNew
+    handleCreateNew,
+    handleCreateSuccess
   };
 };

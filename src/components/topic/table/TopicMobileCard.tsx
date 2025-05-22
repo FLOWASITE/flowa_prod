@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Topic } from '@/types';
+import { formatDateSafely } from '@/lib/utils';
 import { TopicStatusBadge } from '../TopicStatusBadge';
 import { TopicActions } from './TopicActions';
 import { TopicProductBadge } from './TopicProductBadge';
@@ -69,7 +69,7 @@ export const TopicMobileCard: React.FC<TopicMobileCardProps> = ({
       
       <div className="mb-4">
         <p className="text-xs text-gray-500">Created</p>
-        <p className="text-sm">{format(topic.createdAt, 'dd/MM/yyyy')}</p>
+        <p className="text-sm">{formatDateSafely(topic.createdAt)}</p>
       </div>
       
       <div className="flex justify-end gap-2 border-t pt-3">

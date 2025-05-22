@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { TableRow, TableCell } from '@/components/ui/table';
+import { formatDateSafely } from '@/lib/utils';
 import { Topic } from '@/types';
 import { TopicStatusBadge } from '../TopicStatusBadge';
 import { TopicActions } from './TopicActions';
@@ -56,7 +56,7 @@ export const TopicTableRow: React.FC<TopicTableRowProps> = ({
           {topic.themeTypeId || 'General'}
         </Badge>
       </TableCell>
-      <TableCell>{format(topic.createdAt, 'dd/MM/yyyy')}</TableCell>
+      <TableCell>{formatDateSafely(topic.createdAt)}</TableCell>
       <TableCell>
         <TopicStatusBadge status={topic.status} />
       </TableCell>

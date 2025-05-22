@@ -1,4 +1,3 @@
-
 export interface Topic {
   id: string;
   brandId: string;
@@ -10,6 +9,13 @@ export interface Topic {
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;
+  // Optional fields for pending topics / more details
+  tone_of_voice?: string;
+  target_audience?: string;
+  keywords?: string[];
+  content_goals?: string[];
+  notes?: string;
+  prompt?: string; 
 }
 
 export interface Content {

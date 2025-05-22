@@ -5,7 +5,9 @@ import { ContentHeader } from '@/components/content/ContentHeader';
 import { ContentTabs } from '@/components/content/ContentTabs';
 import { LocalDataWarning } from '@/components/content/LocalDataWarning';
 import { BatchApprovalDialog } from '@/components/content/BatchApprovalDialog';
+import { CreateContentDialog } from '@/components/content/CreateContentDialog';
 import { useContentDataContext } from './ContentPageProvider';
+import { useApprovedTopicsFetch } from '@/hooks/useApprovedTopicsFetch';
 
 export const ContentPageView: React.FC = () => {
   const {
@@ -15,6 +17,8 @@ export const ContentPageView: React.FC = () => {
     setIsApprovalDialogOpen,
     isBatchApprovalDialogOpen,
     setIsBatchApprovalDialogOpen,
+    isCreateDialogOpen,
+    setIsCreateDialogOpen,
     currentPage,
     rowsPerPage,
     selectedPlatform,
@@ -27,6 +31,7 @@ export const ContentPageView: React.FC = () => {
     handleDelete,
     handleView,
     handleCreateNew,
+    handleCreateSuccess,
     handlePageChange,
     handleRowsPerPageChange,
     handlePlatformChange,
@@ -38,6 +43,9 @@ export const ContentPageView: React.FC = () => {
     clearSelection,
     handleBatchApprove
   } = useContentDataContext();
+  
+  // Fetch approved topics directly from API
+  const { approvedTopics, isTopicsLoading: isApprovedTopicsLoading } = useApprovedTopicsFetch(useLocalData);
 
   // Get the selected content items
   const selectedContentItems = contentData.filter(item => selectedItems.includes(item.id));
@@ -89,6 +97,14 @@ export const ContentPageView: React.FC = () => {
         selectedContents={selectedContentItems}
         topics={topicsData}
         onSuccess={clearSelection}
+      />
+      
+      <CreateContentDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        approvedTopics={approvedTopics}
+        onSuccess={handleCreateSuccess}
+        isLoading={isApprovedTopicsLoading}
       />
     </div>
   );

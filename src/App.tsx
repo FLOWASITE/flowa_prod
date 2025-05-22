@@ -22,12 +22,13 @@ import Pricing from "./pages/Pricing";
 import Invoices from "./pages/Invoices";
 import ProfileSettings from "./pages/ProfileSettings";
 import SocialConnections from "./pages/SocialConnections";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
+import TokenHandler from "./pages/TokenHandler";
 import { isSupabaseConnected } from "./integrations/supabase/client";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import PrivacyPolicyPage from "./pages/PrivacyPolicy";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Create a React Query client with default settings
 const queryClient = new QueryClient({
@@ -92,24 +93,30 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                {/* Public routes */}
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/brands" element={<Brands />} />
-                <Route path="/brands/:id" element={<BrandDetails />} />
-                <Route path="/topics" element={<Topics />} />
-                <Route path="/content" element={<Content />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/crm" element={<Crm />} />
-                <Route path="/schedule" element={<Schedule />} />
-                <Route path="/filemanager" element={<FileManager />} />
-                <Route path="/users" element={<Users />} />
-                <Route path="/account-type" element={<AccountType />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/profile-settings" element={<ProfileSettings />} />
-                <Route path="/social-connections" element={<SocialConnections />} />
+                <Route path="/token-handler" element={<TokenHandler />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                
+                {/* Protected routes - require authentication */}
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/brands" element={<ProtectedRoute><Brands /></ProtectedRoute>} />
+                <Route path="/brands/:id" element={<ProtectedRoute><BrandDetails /></ProtectedRoute>} />
+                <Route path="/topics" element={<ProtectedRoute><Topics /></ProtectedRoute>} />
+                <Route path="/content" element={<ProtectedRoute><Content /></ProtectedRoute>} />
+                <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                <Route path="/crm" element={<ProtectedRoute><Crm /></ProtectedRoute>} />
+                <Route path="/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
+                <Route path="/filemanager" element={<ProtectedRoute><FileManager /></ProtectedRoute>} />
+                <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+                <Route path="/account-type" element={<ProtectedRoute><AccountType /></ProtectedRoute>} />
+                <Route path="/register" element={<ProtectedRoute><Register /></ProtectedRoute>} />
+                <Route path="/pricing" element={<ProtectedRoute><Pricing /></ProtectedRoute>} />
+                <Route path="/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
+                <Route path="/profile-settings" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+                <Route path="/social-connections" element={<ProtectedRoute><SocialConnections /></ProtectedRoute>} />
+                
+                {/* 404 route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
